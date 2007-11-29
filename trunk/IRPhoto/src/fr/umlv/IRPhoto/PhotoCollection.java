@@ -39,11 +39,12 @@ public class PhotoCollection {
 
 	};
 
-	public static void addCollection(String name) {
+	public static int addCollection(String name) {
 
 		PhotoCollection pc = new PhotoCollection(
 				counter++, name);
 		PhotoCollection.collections.add(pc);
+		return pc.id;
 	}
 
 	public static List<PhotoCollection> getCollections() {

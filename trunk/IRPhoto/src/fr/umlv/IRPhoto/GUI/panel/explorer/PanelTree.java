@@ -85,7 +85,7 @@ public class PanelTree {
 		return rootNode;
 	}
 
-	private static void addNode(String name) {
+	public static DefaultMutableTreeNode addCollection(String name) {
 
 		// add new node as a child of a selected node at the end
 		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(name);
@@ -103,13 +103,7 @@ public class PanelTree {
 
 		// Make the newly added node editable
 		// PanelTree.getM_tree().startEditingAtPath(path);
-
-	}
-
-	public static void addCollection(String name) {
-
-		addNode(name);
-		PhotoCollection.addCollection(name);
+		return newNode;
 	}
 
 	class CollectionsMouseListener implements MouseListener {

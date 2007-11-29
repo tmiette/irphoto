@@ -6,8 +6,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import fr.umlv.IRPhoto.Controller;
 
 public class PanelMenu {
 
@@ -52,32 +53,13 @@ public class PanelMenu {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				String input = askForNameCollection();
-				if (isValidCollectionName(input)) {
-					PanelTree.addCollection(input);
-				}
-
+				Controller.addCollection();
 			}
 		});
 
 		return jb;
 	}
 
-	private static boolean isValidCollectionName(String name) {
-
-		if (name == null) {
-			return false;
-		}
-		return true;
-	}
-
-	private static String askForNameCollection() {
-
-		String input = JOptionPane.showInputDialog(null,
-				"Entrer un nom de collection", "Nouvelle collection",
-				JOptionPane.PLAIN_MESSAGE);
-		return input;
-	}
 
 	private static JButton createDelButton() {
 
@@ -87,7 +69,7 @@ public class PanelMenu {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				PanelTree.deleteCollection();
+				Controller.deleteCollection();
 			}
 		});
 
