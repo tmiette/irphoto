@@ -116,8 +116,7 @@ public class MainTom2 {
       public void mouseClicked(MouseEvent e) {
         cardLayout.last(globalPanel);
         //FIXME enlever la scroll car elle ne correspond pas a l'onglet map
-        //bouttonsPanel.remove(scroll.getHorizontalScrollBar());
-        //bouttonsPanel.revalidate();
+        scroll.getHorizontalScrollBar().setEnabled(false);
       }
 
     });
@@ -127,7 +126,7 @@ public class MainTom2 {
       public void mouseClicked(MouseEvent e) {
         cardLayout.first(globalPanel);
         // remettre la scroll bar
-        //bouttonsPanel.add(scroll.getHorizontalScrollBar(), gbc);
+        scroll.getHorizontalScrollBar().setEnabled(true);
       }
     });
     
