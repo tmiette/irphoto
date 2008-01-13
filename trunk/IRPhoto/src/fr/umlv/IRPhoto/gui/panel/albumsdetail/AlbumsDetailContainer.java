@@ -14,14 +14,12 @@ public class AlbumsDetailContainer implements ContainerInitializer {
 
   @Override
   public JComponent initialize() {
-    final JPanel photoPanel = new JPanel();
-    final JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    final JPanel photoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     for (int i = 0; i < 50; i++) {
-      panel2.add(new JButton("button" + i));
+      photoPanel.add(new JButton("button" + i));
     }
-    panel2.setBackground(Color.BLUE);
-    panel2.setPreferredSize(new Dimension(2000, 2000));
-    photoPanel.add(panel2);
+    photoPanel.setBackground(Color.BLUE);
+    photoPanel.setPreferredSize(new Dimension(2000, 2000));
     return photoPanel;
   }
 

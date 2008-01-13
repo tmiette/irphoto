@@ -10,18 +10,18 @@ public class MainContainer implements ContainerInitializer {
 
   @Override
   public JComponent initialize() {
-    final JSplitPane spliter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+    final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
         true, ContainerFactory.createAlbumsListContainer(),
         initializeRightContainer());
-    return spliter;
+    return splitPane;
   }
 
-  public static JComponent initializeRightContainer() {
-    final JSplitPane spliter = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true,
+  private static JComponent initializeRightContainer() {
+    final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true,
         ContainerFactory.createTabbedContainer(), ContainerFactory
             .createFeaturesContainer());
-    spliter.setOneTouchExpandable(true);
-    return spliter;
+    splitPane.setOneTouchExpandable(true);
+    return splitPane;
   }
 
 }
