@@ -28,6 +28,9 @@ public class TestAlbum {
 			}
 			alm.addAlbum(album);
 		}
+		
+		PhotoListModel plm = new PhotoListModel(alm.getAlbums().get(0));
+		System.out.println(plm.getPhotosSortByName());
 
 		AlbumListView alv = new AlbumListView(alm);
 		frame.getContentPane().add(alv.getPanel());
