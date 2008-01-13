@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 
-public class FeaturesPanel implements ContainerInitializer {
+public class FeaturesContainer implements ContainerInitializer {
 
   @Override
   public JComponent initialize() {
