@@ -36,7 +36,7 @@ public class TitleAlbum {
 	}
 
 	private JPanel createPhotoListPanel(Album album) {
-		JPanel miniaturePanel = new JPanel();
+		final JPanel miniaturePanel = new JPanel();
 		for (Photo photo : album.getPhotos()) {
 			miniaturePanel.add(PhotoPreview.getPanel(photo));
 		}
