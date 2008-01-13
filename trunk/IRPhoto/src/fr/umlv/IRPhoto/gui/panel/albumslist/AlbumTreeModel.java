@@ -1,5 +1,7 @@
 package fr.umlv.IRPhoto.gui.panel.albumslist;
 
+import java.io.File;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -32,8 +34,8 @@ public class AlbumTreeModel extends DefaultTreeModel {
     this.removeNodeFromParent(node);
   }
   
-  public void linkAlbum(DefaultMutableTreeNode node, String newName){
-    ((Album) node.getUserObject()).setName(newName);
+  public void linkAlbum(DefaultMutableTreeNode node, File albumFile){
+    ((Album) node.getUserObject()).setName(albumFile.getName());
     this.fireTreeNodesChanged(node, node.getPath(), null, null);
   }
 
