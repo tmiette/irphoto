@@ -8,19 +8,19 @@ import javax.swing.tree.TreeNode;
 
 import fr.umlv.IRPhoto.album.Album;
 
-public class AlbumTreeModel extends DefaultTreeModel {
+public class AlbumsListModel extends DefaultTreeModel {
 
   private static final long serialVersionUID = 3282725357639187525L;
 
-  public AlbumTreeModel() {
+  public AlbumsListModel() {
     this(new DefaultMutableTreeNode("Albums"));
   }
 
-  private AlbumTreeModel(TreeNode root) {
+  private AlbumsListModel(TreeNode root) {
     this(root, false);
   }
 
-  private AlbumTreeModel(TreeNode root, boolean asksAllowsChildren) {
+  private AlbumsListModel(TreeNode root, boolean asksAllowsChildren) {
     super(root, asksAllowsChildren);
   }
 

@@ -5,7 +5,7 @@ import javax.swing.JComponent;
 import fr.umlv.IRPhoto.gui.panel.MainContainer;
 import fr.umlv.IRPhoto.gui.panel.TabbedPaneContainer;
 import fr.umlv.IRPhoto.gui.panel.albumsdetail.AlbumsDetailContainer;
-import fr.umlv.IRPhoto.gui.panel.albumslist.AlbumTree;
+import fr.umlv.IRPhoto.gui.panel.albumslist.AlbumListContainer;
 import fr.umlv.IRPhoto.gui.panel.features.FeaturesPanel;
 import fr.umlv.IRPhoto.gui.panel.map.MapContainer;
 
@@ -16,7 +16,7 @@ public class ContainerFactory {
   }
 
   public static JComponent createAlbumsListContainer() {
-    return new AlbumTree().initialize();
+    return new AlbumListContainer().initialize();
   }
 
   public static JComponent createFeaturesContainer() {

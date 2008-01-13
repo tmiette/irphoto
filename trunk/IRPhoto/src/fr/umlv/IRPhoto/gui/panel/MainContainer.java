@@ -13,6 +13,7 @@ public class MainContainer implements ContainerInitializer {
     final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
         true, ContainerFactory.createAlbumsListContainer(),
         initializeRightContainer());
+    splitPane.setDividerLocation(0.5);
     return splitPane;
   }
 
@@ -21,6 +22,7 @@ public class MainContainer implements ContainerInitializer {
         ContainerFactory.createTabbedContainer(), ContainerFactory
             .createFeaturesContainer());
     splitPane.setOneTouchExpandable(true);
+    splitPane.setDividerLocation(0.5);
     return splitPane;
   }
 
