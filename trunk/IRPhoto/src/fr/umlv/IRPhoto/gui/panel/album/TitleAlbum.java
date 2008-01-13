@@ -1,6 +1,7 @@
 package fr.umlv.IRPhoto.gui.panel.album;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +28,7 @@ public class TitleAlbum {
 
 		this.photoListPanel = createPhotoListPanel(album);
 		this.photoListPanel.setVisible(false);
+		this.photoListPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		this.panel = new JPanel();
 		this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.Y_AXIS));

@@ -18,8 +18,12 @@ public class TestAlbum {
 			for (int i = 0; i < 10; i++) {
 				Photo photo = new Photo();
 				photo.setName("logo" + i);
+				
+
+				// photo
+				// .setPath("/home/akiri/workspace/IRPhoto/classes/fr/umlv/IRPhoto/gui/panel/album/logo.gif");
 				photo
-						.setPath("/home/akiri/workspace/IRPhoto/classes/fr/umlv/IRPhoto/gui/panel/album/logo.gif");
+				.setPath(TestAlbum.class.getResource("logo.gif").getPath());
 				album.addPhoto(photo);
 			}
 			alm.addAlbum(album);
