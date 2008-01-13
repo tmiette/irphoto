@@ -18,7 +18,7 @@ public class TitleAlbum {
   private final JPanel title;
   private final JPanel list;
 
-  public TitleAlbum(String title) {
+  public TitleAlbum(Al) {
     this.title = createTitlePanel(title);
     this.title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -33,7 +33,7 @@ public class TitleAlbum {
   }
 
   private JPanel createListPanel() {
-    final AlbumList list = new AlbumList();
+    final AlbumView list = new AlbumView();
     return list.getPanel();
   }
 
