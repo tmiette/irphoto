@@ -2,17 +2,32 @@ package fr.umlv.IRPhoto.gui.panel.album;
 
 import javax.swing.JFrame;
 
+import fr.umlv.IRPhoto.album.Album;
+import fr.umlv.IRPhoto.album.Photo;
+
 public class TestAlbum {
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-//		TitleAlbum ta = new TitleAlbum("titre");
-//		PhotoPreview pp = new PhotoPreview();
-//		AlbumList al = new AlbumList();
-//		frame.getContentPane().add(ta.getPanel());
-		
+
+		AlbumListModel alm = new AlbumListModel();
+		for (int j = 0; j < 5; j++) {
+			Album album = new Album();
+			album.setName("mes logos" + j);
+			for (int i = 0; i < 10; i++) {
+				Photo photo = new Photo();
+				photo.setName("logo" + i);
+				photo
+						.setPath("/home/akiri/workspace/IRPhoto/classes/fr/umlv/IRPhoto/gui/panel/album/logo.gif");
+				album.addPhoto(photo);
+			}
+			alm.addAlbum(album);
+		}
+
+		AlbumListView alv = new AlbumListView(alm);
+		frame.getContentPane().add(alv.getPanel());
+
 		frame.pack();
 		frame.setVisible(true);
 	}

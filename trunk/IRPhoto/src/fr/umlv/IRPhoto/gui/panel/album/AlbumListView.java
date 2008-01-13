@@ -1,11 +1,10 @@
 package fr.umlv.IRPhoto.gui.panel.album;
 
 import java.awt.Color;
-import java.awt.Container;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -16,17 +15,13 @@ public class AlbumListView {
 
 	private final JPanel albumListPanel;
 	private final JPanel panel;
-	// private final ArrayList<PhotoPreview> list;
 	private final AlbumListModel model;
 
 	public AlbumListView(AlbumListModel model) {
 		this.model = model;
 
-		// this.list = new ArrayList<PhotoPreview>();
-		// addPhotos();
-
 		this.albumListPanel = new JPanel();
-		createPanel();
+		createAlbumListPanel();
 
 		JScrollPane scrollPane = new JScrollPane(this.albumListPanel);
 		scrollPane
@@ -36,24 +31,14 @@ public class AlbumListView {
 		this.panel.add(scrollPane);
 	}
 
-	// private void addPhotos() {
-	// for (int i = 0; i < 10; i++) {
-	// this.list.add(new PhotoPreview());
-	// }
-	// }
-
-	private void createPanel() {
-		this.albumListPanel.setBorder(BorderFactory.createMatteBorder(10, 10,
-				10, 10, Color.blue));
+	private void createAlbumListPanel() {
+		this.albumListPanel.setLayout(new BoxLayout(this.albumListPanel, BoxLayout.Y_AXIS));
+		this.albumListPanel.setBorder(BorderFactory.createMatteBorder(1, 1,
+				1, 1, Color.MAGENTA));
 		List<Album> albums = this.model.getAlbums();
 		for (Album album : albums) {
-			this.addAlbum(album, this.albumListPanel);
+			this.albumListPanel.add(new TitleAlbum(album).getPanel());
 		}
-
-	}
-
-	private void addAlbum(Album album, Container container) {
-		// TODO Auto-generated method stub
 
 	}
 

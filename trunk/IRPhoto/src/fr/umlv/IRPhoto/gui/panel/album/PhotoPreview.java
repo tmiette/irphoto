@@ -1,43 +1,46 @@
 package fr.umlv.IRPhoto.gui.panel.album;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.net.URL;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+
+import fr.umlv.IRPhoto.album.Photo;
 
 public class PhotoPreview {
 
-	private final JLabel name; // without extension
-	private final URL url;
+	private final Photo photo;
 	private final JPanel panel;
-	// private final JPanel miniature;
+	private final JLabel name;
+	
+	// panels already created
+	private static final ArrayList<JPanel> panels = new ArrayList<JPanel>();
+	
+	// Miniature default dimension
 	public static final Dimension DEFAULT_MINIATURE_DIMENSION = new Dimension(
 			96, 96);
 
-	// TODO constructor with photo in argument
-	public PhotoPreview() {
-		this.name = new JLabel("nom");
+	private PhotoPreview(Photo photo) {
+		this.photo = photo;
+		
+		this.name = new JLabel(photo.getName());
 		this.name.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-		this.url = PhotoPreview.class.getResource("logo.gif");
 
 		this.panel = new JPanel();
 		this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.Y_AXIS));
 		this.panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		ImageIcon icon = new ImageIcon(this.url);
+		// TODO url pas valide
+		ImageIcon icon = new ImageIcon(this.photo.getPath());
 		double ratio = icon.getIconWidth()
 				/ DEFAULT_MINIATURE_DIMENSION.getWidth();
 		int w = (int) (icon.getIconWidth() / ratio);
@@ -45,12 +48,12 @@ public class PhotoPreview {
 		ImageIcon thumbnailIcon = new ImageIcon(getScaledImage(icon.getImage(),
 				w, h));
 
-		JLabel photo = new JLabel();
-		photo.setMaximumSize(DEFAULT_MINIATURE_DIMENSION);
-		photo.setIcon(thumbnailIcon);
-		photo.setAlignmentX(Component.CENTER_ALIGNMENT);
+		JLabel p = new JLabel();
+		p.setMaximumSize(DEFAULT_MINIATURE_DIMENSION);
+		p.setIcon(thumbnailIcon);
+		p.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		this.panel.add(photo);
+		this.panel.add(p);
 		this.panel.add(this.name);
 	}
 
@@ -65,16 +68,6 @@ public class PhotoPreview {
 	 *            desired height
 	 * @return - the new resized image
 	 */
-	// private Image getScaledImage(Image srcImg, int w, int h) {
-	// BufferedImage resizedImg = new BufferedImage(w, h,
-	// BufferedImage.TYPE_INT_RGB);
-	// Graphics2D g2 = resizedImg.createGraphics();
-	// g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-	// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-	// g2.drawImage(srcImg, 0, 0, w, h, null);
-	// g2.dispose();
-	// return resizedImg;
-	// }
 	private Image getScaledImage(Image srcImg, int w, int h) {
 		BufferedImage resizedImg = new BufferedImage(
 				DEFAULT_MINIATURE_DIMENSION.width,
@@ -89,7 +82,12 @@ public class PhotoPreview {
 		return resizedImg;
 	}
 
-	public JPanel getPanel() {
-		return this.panel;
+	public static JPanel getPanel(Photo photo) {
+		int index = panels.indexOf(photo);
+		if (index != -1) {
+			return panels.get(index);
+		} else {
+			return new PhotoPreview(photo).panel;
+		}
 	}
 }
