@@ -20,29 +20,27 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 
 public class AlbumTree implements ContainerInitializer {
 
-  private final JPanel mainPanel;
-  private final AlbumTreeModel model;
-  private final JTree tree;
-
-  public AlbumTree() {
-    this.mainPanel = new JPanel(new BorderLayout());
+  @Override
+  public JComponent initialize() {
+    // main panel
+    final JPanel mainPanel = new JPanel(new BorderLayout());
     final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    this.model = new AlbumTreeModel();
-    this.tree = new JTree(this.model);
-    this.tree.setEditable(false);
-    this.tree.setScrollsOnExpand(true);
-    this.tree.setSelectionRow(0);
-    this.tree.putClientProperty("JTree.lineStyle", "None");
+    final AlbumTreeModel model = new AlbumTreeModel();
+    final JTree tree = new JTree(model);
+    tree.setEditable(false);
+    tree.setScrollsOnExpand(true);
+    tree.setSelectionRow(0);
+    tree.putClientProperty("JTree.lineStyle", "None");
     final DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
     renderer.setLeafIcon(new ImageIcon(AlbumTree.class
-        .getResource("/icons/picture.png")));
+        .getResource("/icons/picture12x12.gif")));
     renderer.setOpenIcon(new ImageIcon(AlbumTree.class
-        .getResource("/icons/picture.png")));
+        .getResource("/icons//picture12x12.gif")));
     renderer.setClosedIcon(new ImageIcon(AlbumTree.class
-        .getResource("/icons/picture.png")));
+        .getResource("/icons//picture12x12.gif")));
     renderer.setBackgroundSelectionColor(Color.RED);
-    this.tree.setCellRenderer(renderer);
-    this.tree.addMouseListener(new MouseAdapter() {
+    tree.setCellRenderer(renderer);
+    tree.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2) {
@@ -61,7 +59,7 @@ public class AlbumTree implements ContainerInitializer {
         model.addAlbum();
         tree.expandRow(0);
         renderer.setLeafIcon(new ImageIcon(AlbumTree.class
-            .getResource("/icons/arrow.gif")));
+            .getResource("/icons/arrow12x12.gif")));
       }
     });
     final JButton removeButton = new JButton("-");
@@ -74,20 +72,16 @@ public class AlbumTree implements ContainerInitializer {
           model.removeAlbum(node);
           if (tree.getRowCount() == 1) {
             renderer.setLeafIcon(new ImageIcon(AlbumTree.class
-                .getResource("/icons/picture.png")));
+                .getResource("/icons//picture12x12.gif")));
           }
         }
       }
     });
     buttonPanel.add(addButton);
     buttonPanel.add(removeButton);
-    this.mainPanel.add(buttonPanel, BorderLayout.NORTH);
-    this.mainPanel.add(this.tree, BorderLayout.CENTER);
-  }
-
-  @Override
-  public JComponent initialize() {
-    return this.mainPanel;
+    mainPanel.add(buttonPanel, BorderLayout.NORTH);
+    mainPanel.add(tree, BorderLayout.CENTER);
+    return mainPanel;
   }
 
 }
