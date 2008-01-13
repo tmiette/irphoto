@@ -8,10 +8,10 @@ public class TestAlbum {
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		TitleAlbum ta = new TitleAlbum("titre");
+//		TitleAlbum ta = new TitleAlbum("titre");
 //		PhotoPreview pp = new PhotoPreview();
 //		AlbumList al = new AlbumList();
-		frame.getContentPane().add(ta.getPanel());
+//		frame.getContentPane().add(ta.getPanel());
 		
 		frame.pack();
 		frame.setVisible(true);

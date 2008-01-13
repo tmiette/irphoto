@@ -12,29 +12,32 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import fr.umlv.IRPhoto.album.Album;
+
 public class TitleAlbum {
 
   private final JPanel panel;
   private final JPanel title;
-  private final JPanel list;
+  private final JPanel miniaturePanel;
 
-  public TitleAlbum(Al) {
-    this.title = createTitlePanel(title);
+  public TitleAlbum(Album album) {
+    this.title = createTitlePanel(album.getName());
     this.title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-    this.list = createListPanel();
-    this.list.setVisible(false);
+    this.miniaturePanel = createMiniaturePanel();
+    this.miniaturePanel.setVisible(false);
 
     this.panel = new JPanel();
     this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.Y_AXIS));
     this.panel.add(this.title);
-    this.panel.add(this.list);
+    this.panel.add(this.miniaturePanel);
     this.panel.add(Box.createVerticalGlue());
   }
 
-  private JPanel createListPanel() {
-    final AlbumView list = new AlbumView();
-    return list.getPanel();
+  private JPanel createMiniaturePanel() {
+//    final AlbumView list = new AlbumView();
+//    return list.getPanel();
+	  return null;
   }
 
   private JPanel createTitlePanel(String title) {
@@ -83,7 +86,7 @@ public class TitleAlbum {
       @Override
       public void actionPerformed(ActionEvent e) {
 
-        TitleAlbum.this.list.setVisible(!TitleAlbum.this.list.isVisible());
+        TitleAlbum.this.miniaturePanel.setVisible(!TitleAlbum.this.miniaturePanel.isVisible());
       }
     });
     return b;
