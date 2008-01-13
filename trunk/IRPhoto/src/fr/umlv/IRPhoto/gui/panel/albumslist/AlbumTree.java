@@ -1,4 +1,4 @@
-package fr.umlv.IRPhoto.gui.panel.explorer2;
+package fr.umlv.IRPhoto.gui.panel.albumslist;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,12 +10,15 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-public class AlbumTree {
+import fr.umlv.IRPhoto.gui.ContainerInitializer;
+
+public class AlbumTree implements ContainerInitializer {
 
   private final JPanel mainPanel;
   private final AlbumTreeModel model;
@@ -82,7 +85,8 @@ public class AlbumTree {
     this.mainPanel.add(this.tree, BorderLayout.CENTER);
   }
 
-  public JPanel getPanel() {
+  @Override
+  public JComponent initialize() {
     return this.mainPanel;
   }
 
