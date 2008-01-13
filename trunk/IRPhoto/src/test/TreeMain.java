@@ -1,8 +1,9 @@
+package test;
 
 
 import javax.swing.JFrame;
 
-import fr.umlv.IRPhoto.gui.panel.explorer2.AlbumTree;
+import fr.umlv.IRPhoto.gui.panel.explorer.AlbumTree;
 
 public class TreeMain {
 

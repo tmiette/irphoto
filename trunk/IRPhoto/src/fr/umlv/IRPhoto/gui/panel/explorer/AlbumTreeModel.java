@@ -1,4 +1,4 @@
-package fr.umlv.IRPhoto.gui.panel.explorer2;
+package fr.umlv.IRPhoto.gui.panel.explorer;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
