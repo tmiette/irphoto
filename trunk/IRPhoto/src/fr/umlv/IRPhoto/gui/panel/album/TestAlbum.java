@@ -15,7 +15,7 @@ public class TestAlbum {
 		for (int j = 0; j < 5; j++) {
 			Album album = new Album();
 			album.setName("mes logos" + j);
-			for (int i = 0; i < 10; i++) {
+			for (int i = 100; i > 0; i--) {
 				Photo photo = new Photo();
 				photo.setName("logo" + i);
 				
@@ -23,7 +23,7 @@ public class TestAlbum {
 				// photo
 				// .setPath("/home/akiri/workspace/IRPhoto/classes/fr/umlv/IRPhoto/gui/panel/album/logo.gif");
 				photo
-				.setPath(TestAlbum.class.getResource("logo.gif").getPath());
+				.setPath("/home/akiri/workspace/IRPhoto/src/icons/photo.jpg");
 				album.addPhoto(photo);
 			}
 			alm.addAlbum(album);
@@ -34,7 +34,7 @@ public class TestAlbum {
 
 		AlbumListView alv = new AlbumListView(alm);
 		frame.getContentPane().add(alv.getPanel());
-
+		
 		frame.pack();
 		frame.setVisible(true);
 	}

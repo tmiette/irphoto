@@ -14,35 +14,33 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import fr.umlv.IRPhoto.album.Album;
-import fr.umlv.IRPhoto.album.Photo;
 
 public class TitleAlbum {
 
 	private final JPanel panel;
 	private final JPanel albumNamePanel;
-	private final JPanel photoListPanel;
+	private final PhotoListView photoListView;
 
 	public TitleAlbum(Album album) {
 		this.albumNamePanel = createTitlePanel(album.getName());
 		this.albumNamePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		this.albumNamePanel.setPreferredSize(new Dimension(800, 10));
 
-		this.photoListPanel = createPhotoListPanel(album);
-		this.photoListPanel.setVisible(false);
-		this.photoListPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		this.photoListView = createPhotoListPanel(album);
+		this.photoListView.getPanel().setVisible(false);
+		this.photoListView.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		this.panel = new JPanel();
 		this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.Y_AXIS));
 		this.panel.add(this.albumNamePanel);
-		this.panel.add(this.photoListPanel);
-		this.panel.add(Box.createVerticalGlue());
+		this.panel.add(this.photoListView.getPanel());
+//		this.panel.add(Box.createVerticalGlue());
 	}
 
-	private JPanel createPhotoListPanel(Album album) {
-		final JPanel miniaturePanel = new JPanel();
-		for (Photo photo : album.getPhotos()) {
-			miniaturePanel.add(PhotoPreview.getPanel(photo));
-		}
-		return miniaturePanel;
+	private PhotoListView createPhotoListPanel(Album album) {
+		PhotoListModel model = new PhotoListModel(album);
+		PhotoListView view = new PhotoListView(model);
+		return view;
 	}
 
 	private JPanel createTitlePanel(String title) {
@@ -91,8 +89,8 @@ public class TitleAlbum {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				TitleAlbum.this.photoListPanel
-						.setVisible(!TitleAlbum.this.photoListPanel.isVisible());
+				TitleAlbum.this.photoListView.getPanel().setVisible(
+						!TitleAlbum.this.photoListView.getPanel().isVisible());
 			}
 		});
 		return b;

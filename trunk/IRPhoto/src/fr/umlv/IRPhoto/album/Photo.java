@@ -72,7 +72,7 @@ public class Photo {
 	}
 
 	public String getType() {
-		return null;
+		return this.type;
 	}
 
 	public void setType(String type) {

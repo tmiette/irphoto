@@ -1,6 +1,7 @@
 package fr.umlv.IRPhoto.gui.panel.album;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -28,7 +29,9 @@ public class AlbumListView {
 				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 		this.panel = new JPanel();
+		this.panel.setPreferredSize(new Dimension(800, 600));
 		this.panel.add(scrollPane);
+		scrollPane.setPreferredSize(scrollPane.getParent().getPreferredSize());
 	}
 
 	private void createAlbumListPanel() {
