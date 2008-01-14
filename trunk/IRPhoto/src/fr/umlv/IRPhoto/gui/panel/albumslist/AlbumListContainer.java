@@ -19,14 +19,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
+import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 
 public class AlbumListContainer implements ContainerInitializer {
 
   private final JTree tree;
-  private final AlbumsListModel model;
+  private final AlbumModel albumModel;
   private final DefaultTreeCellRenderer renderer;
   private final ImageIcon rootIcon;
   private final ImageIcon leafIcon;
@@ -41,11 +43,11 @@ public class AlbumListContainer implements ContainerInitializer {
         .getResource("/icons/arrow12x12.gif"));
 
     // initialize tree model
-    this.model = new AlbumsListModel();
+    this.albumModel = new AlbumModelImpl();
 
     // initialize jtree
     this.renderer = this.initializeRenderer();
-    this.tree = this.initializeTree();
+    this.tree = this.initializeTree(new AlbumTreeModel(this.albumModel));
 
   }
 
@@ -62,10 +64,10 @@ public class AlbumListContainer implements ContainerInitializer {
     return panel;
   }
 
-  private JTree initializeTree() {
+  private JTree initializeTree(TreeModel model) {
 
     // initialize jtree
-    final JTree tree = new JTree(this.model);
+    final JTree tree = new JTree(model);
     tree.setBackground(new Color(238, 238, 238));
     tree.setEditable(false);
     tree.setScrollsOnExpand(true);
@@ -88,7 +90,7 @@ public class AlbumListContainer implements ContainerInitializer {
             // inform the model of changes
             File albumFile = selectNewAlbum();
             if (albumFile != null) {
-              model.linkAlbum(node, albumFile);
+              albumModel.linkAlbum((Album) node.getUserObject(), albumFile);
             }
           }
         }
@@ -119,7 +121,7 @@ public class AlbumListContainer implements ContainerInitializer {
       @Override
       public void actionPerformed(ActionEvent e) {
         // add a new album
-        model.addAlbum();
+        albumModel.addAlbum();
         tree.expandRow(0);
         renderer.setLeafIcon(leafIcon);
       }
@@ -134,7 +136,8 @@ public class AlbumListContainer implements ContainerInitializer {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
             .getLastSelectedPathComponent();
         if (node != null && !node.isRoot()) {
-          model.removeAlbum(node);
+          albumModel.removeAlbum((Album) node.getUserObject());
+          // model.removeAlbum(node);
           if (tree.getRowCount() == 1) {
             renderer.setLeafIcon(rootIcon);
           }
