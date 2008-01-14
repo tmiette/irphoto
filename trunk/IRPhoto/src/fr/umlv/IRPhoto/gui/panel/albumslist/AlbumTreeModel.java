@@ -34,28 +34,37 @@ public class AlbumTreeModel extends DefaultTreeModel {
 
       @Override
       public void albumRemoved(Album album) {
-        for (int i = 0; i < getChildCount(getRoot()); i++) {
-          DefaultMutableTreeNode node = (DefaultMutableTreeNode) getChild(
-              getRoot(), i);
-          if (node.getUserObject().equals(album)) {
-            removeNodeFromParent(node);
-          }
+
+        DefaultMutableTreeNode node = getNode(album);
+        if (node != null) {
+          removeNodeFromParent(node);
         }
       }
 
       @Override
       public void albumLinked(Album album) {
-        for (int i = 0; i < getChildCount(getRoot()); i++) {
-          DefaultMutableTreeNode node = (DefaultMutableTreeNode) getChild(
-              getRoot(), i);
-          if (node.getUserObject().equals(album)) {
-            fireTreeNodesChanged(node, node.getPath(), null, null);
-          }
+
+        DefaultMutableTreeNode node = getNode(album);
+        if (node != null) {
+          fireTreeNodesChanged(node, node.getPath(), null, null);
         }
 
       }
 
     });
+  }
+
+  private DefaultMutableTreeNode getNode(Album album) {
+
+    for (int i = 0; i < getChildCount(getRoot()); i++) {
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) getChild(
+          getRoot(), i);
+      if (album.equals(node.getUserObject())) {
+        return node;
+      }
+    }
+
+    return null;
   }
 
 }
