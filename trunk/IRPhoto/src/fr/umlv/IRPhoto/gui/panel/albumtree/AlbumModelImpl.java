@@ -2,6 +2,8 @@ package fr.umlv.IRPhoto.gui.panel.albumtree;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import fr.umlv.IRPhoto.album.Album;
@@ -74,6 +76,12 @@ public class AlbumModelImpl implements AlbumModel {
       album.setName(name);
       this.fireAlbumUpdated(album);
     }
+  }
+
+  @Override
+  public List<? extends Album> getSortedAlbums(Comparator<Album> comparator) {
+    Collections.sort(this.albums, comparator);
+    return Collections.unmodifiableList(this.albums);
   }
 
 }
