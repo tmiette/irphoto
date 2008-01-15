@@ -64,7 +64,7 @@ public class AlbumModelImpl implements AlbumModel {
 
   @Override
   public void linkAlbum(Album album, File albumFile) {
-    album.setFile(albumFile);
+    album.setDirectory(albumFile);
     this.fireAlbumUpdated(album);
   }
 
