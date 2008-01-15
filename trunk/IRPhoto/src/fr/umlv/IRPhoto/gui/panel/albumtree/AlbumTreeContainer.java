@@ -91,6 +91,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
             // inform the model of changes
             File albumFile = selectNewAlbum();
             if (albumFile != null) {
+            	Album.crawle(albumFile, node.getAlbum());
               albumModel.linkAlbum(node.getAlbum(), albumFile);
             }
           }

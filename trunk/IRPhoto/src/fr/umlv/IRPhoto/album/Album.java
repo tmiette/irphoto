@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.activation.MimetypesFileTypeMap;
+import javax.imageio.ImageIO;
+
 public class Album {
 
   private static int albumsCreated;
@@ -41,7 +44,7 @@ public class Album {
     if (!directory.equals(this.directory)) {
       this.directory = directory;
       this.photos.clear();
-      crawle(this.directory, this.photos);
+      crawle(this.directory, this);
     }
   }
 
@@ -78,7 +81,7 @@ public class Album {
     return this.id == a.id;
   }
 
-  public static void crawle(File directory, final ArrayList<Photo> photos) {
+  public static void crawle(File directory, final Album album) {
 
     ExecutorService executor = Executors.newFixedThreadPool(10);
 
@@ -88,11 +91,16 @@ public class Album {
         executor.execute(new Runnable() {
           @Override
           public void run() {
-            crawle(f, photos);
+            crawle(f, album);
           }
         });
       } else {
-        // TODO tester si le fichier est une photo
+    	  String mimeType = new MimetypesFileTypeMap().getContentType(f);
+			for (final String mime : ImageIO.getReaderMIMETypes()) {
+				if (mimeType.equals(mime)) {
+					album.addPhoto(new Photo(f));
+				}
+			}
       }
     }
   }
