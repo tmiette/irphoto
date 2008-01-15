@@ -2,7 +2,9 @@ package fr.umlv.IRPhoto.gui.panel.album;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -14,79 +16,95 @@ import fr.umlv.IRPhoto.album.Photo;
 
 public class PhotoListView {
 
-  private final Album album;
-  // Contains search text field and sort buttons
-  private final JPanel topPanel;
-  // Contains photos
-  private final JPanel photoListPanel;
-  // General panel
-  private final JPanel panel;
+	private final Album album;
+	// Contains search text field and sort buttons
+	private final JPanel topPanel;
+	// Contains photos
+	private JPanel photoListPanel;
+	// General panel
+	private final JPanel panel;
+	
+	private final ArrayList<PhotoPreview> photoPreviews;
 
-  public PhotoListView(Album album) {
-    this.album = album;
+	public PhotoListView(Album album) {
+		this.photoPreviews = new ArrayList<PhotoPreview>();
+		
+		this.album = album;
 
-    this.topPanel = createTopPanel();
+		this.topPanel = createTopPanel();
 
-    this.photoListPanel = createPhotoListPanel();
-    this.addPhotos(this.album.getSortedPhotos(Photo.NAME_ORDER),
-        this.photoListPanel);
+		this.photoListPanel = createPhotoListPanel();
+		this.addPhotos(this.album.getSortedPhotos(Photo.NAME_ORDER),
+				this.photoListPanel);
 
-    this.panel = new JPanel(new BorderLayout());
-    this.panel.add(this.topPanel, BorderLayout.NORTH);
-    this.panel.add(this.photoListPanel, BorderLayout.CENTER);
-  }
+		this.panel = new JPanel(new BorderLayout());
+		this.panel.add(this.topPanel, BorderLayout.NORTH);
+		this.panel.add(this.photoListPanel, BorderLayout.CENTER);
+	}
 
-  private JPanel createPhotoListPanel() {
-    JPanel panel = new JPanel();
-    panel.setBackground(Color.red);
-    return panel;
-  }
+	public void refresh() {
+		this.photoListPanel.removeAll();
+		this.photoPreviews.clear();
+		System.out.println(this.album.getPhotos());
+		this.addPhotos(this.album.getPhotos(), this.photoListPanel);
+		this.panel.setPreferredSize(new Dimension(600,600));
+		this.photoListPanel.validate();
+		this.panel.validate();
+	}
 
-  private JPanel createTopPanel() {
-    JPanel panel = new JPanel(null);
-    panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 3));
+	private JPanel createPhotoListPanel() {
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.red);
+		return panel;
+	}
 
-    final JTextField textField = new JTextField(2);
-    textField.setHorizontalAlignment(JTextField.LEADING);
-    textField.setColumns(20);
-    panel.add(textField);
+	private JPanel createTopPanel() {
+		JPanel panel = new JPanel(null);
+		panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 3));
 
-    final JButton alphaSortButton = createAlphaSortButton();
-    panel.add(alphaSortButton);
+		final JTextField textField = new JTextField(2);
+		textField.setHorizontalAlignment(JTextField.LEADING);
+		textField.setColumns(20);
+		panel.add(textField);
 
-    final JButton typeSortButton = createTypeSortButton();
-    panel.add(typeSortButton);
+		final JButton alphaSortButton = createAlphaSortButton();
+		panel.add(alphaSortButton);
 
-    final JButton dateSortButton = createDateSortButton();
-    panel.add(dateSortButton);
+		final JButton typeSortButton = createTypeSortButton();
+		panel.add(typeSortButton);
 
-    return panel;
-  }
+		final JButton dateSortButton = createDateSortButton();
+		panel.add(dateSortButton);
 
-  private boolean addPhotos(List<Photo> photos, JPanel panel) {
-    for (Photo photo : photos) {
-      panel.add(PhotoPreview.getPanel(photo));
-    }
-    return true;
-  }
+		return panel;
+	}
 
-  private JButton createDateSortButton() {
-    final JButton b = new JButton("date");
-    return b;
-  }
+	private boolean addPhotos(List<Photo> photos, JPanel panel) {
+		for (Photo photo : photos) {
+			PhotoPreview pp = new PhotoPreview(photo);
+			this.photoPreviews.add(pp);
+			panel.add(pp.getPanel());
+		}
+		return true;
+	}
 
-  private JButton createTypeSortButton() {
-    final JButton b = new JButton("type");
-    return b;
-  }
+	private JButton createDateSortButton() {
+		final JButton b = new JButton("date");
+		return b;
+	}
 
-  private JButton createAlphaSortButton() {
-    final JButton b = new JButton("alpha");
-    return b;
-  }
+	private JButton createTypeSortButton() {
+		final JButton b = new JButton("type");
+		return b;
+	}
 
-  public JPanel getPanel() {
-    return this.panel;
-  }
+	private JButton createAlphaSortButton() {
+		final JButton b = new JButton("alpha");
+		return b;
+	}
+
+	public JPanel getPanel() {
+		return this.panel;
+	}
 
 }

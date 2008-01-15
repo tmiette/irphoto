@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -22,14 +21,11 @@ public class PhotoPreview {
 	private final JPanel panel;
 	private final JLabel name;
 	
-	// panels already created
-	private static final ArrayList<PhotoPreview> photoPreviews = new ArrayList<PhotoPreview>();
-	
 	// Miniature default dimension
 	public static final Dimension DEFAULT_MINIATURE_DIMENSION = new Dimension(
 			96, 96);
 
-	private PhotoPreview(Photo photo) {
+	public PhotoPreview(Photo photo) {
 		this.photo = photo;
 		
 		this.name = new JLabel(photo.getName());
@@ -82,15 +78,7 @@ public class PhotoPreview {
 		return resizedImg;
 	}
 
-	public static JPanel getPanel(Photo photo) {
-		for (PhotoPreview photoPreview : photoPreviews) {
-			if (photoPreview.photo.equals(photo)) {
-				return photoPreview.panel;
-			}
-		}
-
-		PhotoPreview photoPreview = new PhotoPreview(photo);
-		photoPreviews.add(photoPreview);
-		return photoPreview.panel;
+	public JPanel getPanel() {
+		return this.panel;
 	}
 }

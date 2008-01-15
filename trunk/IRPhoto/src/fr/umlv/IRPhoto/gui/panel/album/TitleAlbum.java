@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -19,76 +18,79 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 
 public class TitleAlbum implements ContainerInitializer {
 
-  private final JPanel panel;
-  private final JPanel albumNamePanel;
-  private final PhotoListView photoListView;
-  private final Album album;
+	private final JPanel panel;
+	private final JPanel albumNamePanel;
+	private final PhotoListView photoListView;
+	private final Album album;
+	private JLabel albumTitle;
 
-  // panels already created
-  private static final ArrayList<TitleAlbum> titleAlbums = new ArrayList<TitleAlbum>();
+	public TitleAlbum(Album album) {
+		this.album = album;
 
-  private TitleAlbum(Album album) {
-    this.album = album;
+		// Contains album name and button displaying photos
+		this.albumNamePanel = createTitlePanel(this.album.getName());
 
-    this.albumNamePanel = createTitlePanel(this.album.getName());
-    this.albumNamePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		// Contains panel with photos and search & sort buttons
+		this.photoListView = createPhotoListPanel();
 
-    this.photoListView = createPhotoListPanel();
-    this.photoListView.getPanel().setVisible(false);
-    this.photoListView.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+		this.panel = new JPanel();
+		this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.Y_AXIS));
+		this.panel.add(this.albumNamePanel);
+		this.panel.add(this.photoListView.getPanel());
+		this.panel.setBorder(BorderFactory.createLineBorder(Color.black));
+	}
 
-    this.panel = new JPanel();
-    this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.Y_AXIS));
-    this.panel.add(this.albumNamePanel);
-    this.panel.add(this.photoListView.getPanel());
-    this.panel.setBorder(BorderFactory.createLineBorder(Color.black));
-  }
+	public void refreshView() {
+		this.albumTitle.setText(this.album.getName());
+		this.photoListView.refresh();
+		this.panel.validate();
+	}
 
-  private PhotoListView createPhotoListPanel() {
-    PhotoListView view = new PhotoListView(this.album);
-    return view;
-  }
+	private PhotoListView createPhotoListPanel() {
+		PhotoListView view = new PhotoListView(this.album);
+		view.getPanel().setVisible(false);
+		view.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+		return view;
+	}
 
-  private JPanel createTitlePanel(String title) {
-    final JPanel jp = new JPanel(new BorderLayout());
+	private JPanel createTitlePanel(String title) {
+		final JPanel jp = new JPanel(new BorderLayout());
+		jp.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-    jp.add(new JLabel(title), BorderLayout.WEST);
+		this.albumTitle = new JLabel(title);
+		jp.add(this.albumTitle, BorderLayout.WEST);
 
-    final JButton showPhotoList = createShowPhotoListButton();
-    jp.add(showPhotoList, BorderLayout.EAST);
+		final JButton showPhotoList = createShowPhotoListButton();
+		jp.add(showPhotoList, BorderLayout.EAST);
 
-    return jp;
-  }
+		return jp;
+	}
 
-  private JButton createShowPhotoListButton() {
-    final JButton b = new JButton("->");
-    b.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
+	private JButton createShowPhotoListButton() {
+		final JButton b = new JButton("->");
+		b.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 
-        TitleAlbum.this.photoListView.getPanel().setVisible(
-            !TitleAlbum.this.photoListView.getPanel().isVisible());
-      }
-    });
-    return b;
-  }
+				TitleAlbum.this.photoListView.getPanel().setVisible(
+						!TitleAlbum.this.photoListView.getPanel().isVisible());
+			}
+		});
+		return b;
+	}
 
-  public static JPanel getPanel(Album album) {
-    for (TitleAlbum titleAlbum : titleAlbums) {
-      if (titleAlbum.album.equals(album)) {
-        return titleAlbum.panel;
-      }
-    }
+	public JPanel getPanel() {
+		return this.panel;
+	}
+	
+	public Album getAlbum() {
+		return this.album;
+	}
 
-    TitleAlbum titleAlbum = new TitleAlbum(album);
-    titleAlbums.add(titleAlbum);
-    return titleAlbum.panel;
-  }
-
-  @Override
-  public JComponent initialize() {
-    // TODO Auto-generated method stub
-    return null;
-  }
+	@Override
+	public JComponent initialize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
