@@ -1,13 +1,13 @@
 package fr.umlv.IRPhoto.album;
 
+import java.io.File;
 import java.util.Comparator;
 
 public class Photo {
 
   private double latitude;
   private double longitude;
-  private String name;
-  private String path;
+  private File file;
   private String type;
   // TODO date de modif
 
@@ -39,6 +39,10 @@ public class Photo {
 
   };
 
+  public Photo(File file) {
+    this.file = file;
+  }
+
   public double getLatitude() {
     return this.latitude;
   }
@@ -56,32 +60,20 @@ public class Photo {
   }
 
   public String getName() {
-    return this.name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
+    return this.file.getName();
   }
 
   public String getPath() {
-    return this.path;
-  }
-
-  public void setPath(String path) {
-    this.path = path;
+    return this.file.getAbsolutePath();
   }
 
   public String getType() {
     return this.type;
   }
 
-  public void setType(String type) {
-    this.type = type;
-  }
-
   @Override
   public int hashCode() {
-    return this.path.hashCode() * this.name.hashCode();
+    return this.getPath().hashCode() * this.getName().hashCode();
   }
 
   @Override
@@ -97,9 +89,9 @@ public class Photo {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("Photo ").append("(name=").append(this.name).append(") ").append(
-        "(latidude=").append(this.latitude).append(", longitude=").append(
-        this.longitude).append(")");
+    sb.append("Photo ").append("(name=").append(this.getName()).append(") ")
+        .append("(latidude=").append(this.latitude).append(", longitude=")
+        .append(this.longitude).append(")");
     return sb.toString();
   }
 
