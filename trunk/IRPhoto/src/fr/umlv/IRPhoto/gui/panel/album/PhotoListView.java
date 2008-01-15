@@ -9,85 +9,84 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 
 public class PhotoListView {
 
-	private final PhotoListModel model;
-	// Contains search text field and sort buttons
-	private final JPanel topPanel;
-	// Contains photos
-	private final JPanel photoListPanel;
-	// General panel
-	private final JPanel panel;
+  private final Album album;
+  // Contains search text field and sort buttons
+  private final JPanel topPanel;
+  // Contains photos
+  private final JPanel photoListPanel;
+  // General panel
+  private final JPanel panel;
 
-	public PhotoListView(PhotoListModel model) {
-		this.model = model;
-		
-		this.topPanel = createTopPanel();
-		
-		this.photoListPanel = createPhotoListPanel();
-		this.addPhotos(this.model.getPhotosSortByName(), this.photoListPanel);
+  public PhotoListView(Album album) {
+    this.album = album;
 
-		this.panel = new JPanel(new BorderLayout());
-		this.panel.add(this.topPanel, BorderLayout.NORTH);
-		this.panel.add(this.photoListPanel, BorderLayout.CENTER);
-	}
+    this.topPanel = createTopPanel();
 
-	private JPanel createPhotoListPanel() {
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.red);
-		return panel;
-	}
+    this.photoListPanel = createPhotoListPanel();
+    this.addPhotos(this.album.getSortedPhotos(Photo.NAME_ORDER),
+        this.photoListPanel);
 
-	private JPanel createTopPanel() {
-		JPanel panel = new JPanel(null);
-		panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 3));
-		
-		final JTextField textField = new JTextField(2);
-		textField.setHorizontalAlignment(JTextField.LEADING);
-		textField.setColumns(20);
-		panel.add(textField);
+    this.panel = new JPanel(new BorderLayout());
+    this.panel.add(this.topPanel, BorderLayout.NORTH);
+    this.panel.add(this.photoListPanel, BorderLayout.CENTER);
+  }
 
-		final JButton alphaSortButton = createAlphaSortButton();
-		panel.add(alphaSortButton);
+  private JPanel createPhotoListPanel() {
+    JPanel panel = new JPanel();
+    panel.setBackground(Color.red);
+    return panel;
+  }
 
-		final JButton typeSortButton = createTypeSortButton();
-		panel.add(typeSortButton);
+  private JPanel createTopPanel() {
+    JPanel panel = new JPanel(null);
+    panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 3));
 
-		final JButton dateSortButton = createDateSortButton();
-		panel.add(dateSortButton);
-		
-		return panel;
-	}
+    final JTextField textField = new JTextField(2);
+    textField.setHorizontalAlignment(JTextField.LEADING);
+    textField.setColumns(20);
+    panel.add(textField);
 
-	private boolean addPhotos(List<Photo> photos, JPanel panel) {
-		for (Photo photo : photos) {
-			panel.add(PhotoPreview.getPanel(photo));
-		}
-		return true;
-	}
-	
-	private JButton createDateSortButton() {
-		final JButton b = new JButton("date");
-		return b;
-	}
+    final JButton alphaSortButton = createAlphaSortButton();
+    panel.add(alphaSortButton);
 
-	private JButton createTypeSortButton() {
-		final JButton b = new JButton("type");
-		return b;
-	}
+    final JButton typeSortButton = createTypeSortButton();
+    panel.add(typeSortButton);
 
-	private JButton createAlphaSortButton() {
-		final JButton b = new JButton("alpha");
-		return b;
-	}
+    final JButton dateSortButton = createDateSortButton();
+    panel.add(dateSortButton);
 
-	public JPanel getPanel() {
-		return this.panel;
-	}
+    return panel;
+  }
 
-	public PhotoListModel getModel() {
-		return this.model;
-	}
+  private boolean addPhotos(List<Photo> photos, JPanel panel) {
+    for (Photo photo : photos) {
+      panel.add(PhotoPreview.getPanel(photo));
+    }
+    return true;
+  }
+
+  private JButton createDateSortButton() {
+    final JButton b = new JButton("date");
+    return b;
+  }
+
+  private JButton createTypeSortButton() {
+    final JButton b = new JButton("type");
+    return b;
+  }
+
+  private JButton createAlphaSortButton() {
+    final JButton b = new JButton("alpha");
+    return b;
+  }
+
+  public JPanel getPanel() {
+    return this.panel;
+  }
+
 }
