@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import fr.umlv.IRPhoto.album.Album;
+import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 
 public class TitleAlbum implements ContainerInitializer {
@@ -40,6 +41,10 @@ public class TitleAlbum implements ContainerInitializer {
 		this.panel.setBorder(BorderFactory.createLineBorder(Color.black));
 	}
 
+	public void addPhoto(Photo photo) {
+		this.photoListView.addPhoto(photo);
+	}
+	
 	public void refreshView() {
 		this.albumTitle.setText(this.album.getName());
 		this.photoListView.refresh();

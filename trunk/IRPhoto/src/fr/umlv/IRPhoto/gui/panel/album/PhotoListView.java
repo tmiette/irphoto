@@ -107,4 +107,11 @@ public class PhotoListView {
 		return this.panel;
 	}
 
+	public void addPhoto(Photo photo) {
+		PhotoPreview pp = new PhotoPreview(photo);
+		this.photoListPanel.add(pp.getPanel());
+		this.photoPreviews.add(pp);
+		this.photoListPanel.validate();
+	}
+
 }

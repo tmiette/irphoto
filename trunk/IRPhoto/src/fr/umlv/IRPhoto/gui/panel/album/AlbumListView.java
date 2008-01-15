@@ -67,12 +67,15 @@ public class AlbumListView implements ContainerInitializer {
 		this.panel = createAlbumListPanel();
 	}
 	
+	/**
+	 * Updates TitleAlblum corresponding to album
+	 * @param album
+	 */
 	private void updateAlbum(Album album) {
 		for (int i = 0; i < this.titleAlbums.size(); i++) {
 
 			if (this.titleAlbums.get(i).getAlbum().equals(album)) {
 				this.titleAlbums.get(i).refreshView();
-				System.out.println("refresh");
 				return;
 			}
 		}
@@ -105,7 +108,7 @@ public class AlbumListView implements ContainerInitializer {
 			}
 		}
 	}
-
+	
 	private JPanel createAlbumListPanel() {
 		JPanel panel = new JPanel(null);
 		panel.setLayout(new GridBagLayout());
