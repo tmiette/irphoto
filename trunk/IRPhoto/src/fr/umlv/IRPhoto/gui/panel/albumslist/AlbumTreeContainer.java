@@ -2,14 +2,16 @@ package fr.umlv.IRPhoto.gui.panel.albumslist;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -17,33 +19,33 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeSelectionModel;
+import javax.swing.tree.TreePath;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.IconFactory;
+import fr.umlv.IRPhoto.gui.panel.albumslist.AlbumTreeModel.AlbumTreeNode;
 
-public class AlbumListContainer implements ContainerInitializer {
+public class AlbumTreeContainer implements ContainerInitializer {
 
   private final JTree tree;
   private final AlbumModel albumModel;
   private final DefaultTreeCellRenderer renderer;
-  private final ImageIcon rootIcon;
-  private final ImageIcon leafIcon;
+  private final Icon rootIcon;
+  private final Icon leafIcon;
   private JFileChooser fileChooser;
 
-  public AlbumListContainer() {
+  public AlbumTreeContainer(AlbumModel model) {
 
     // create icons
-    this.rootIcon = new ImageIcon(AlbumListContainer.class
-        .getResource("/icons/picture12x12.gif"));
-    this.leafIcon = new ImageIcon(AlbumListContainer.class
-        .getResource("/icons/arrow12x12.gif"));
+    this.rootIcon = IconFactory.getIcon("picture12x12.gif");
+    this.leafIcon = IconFactory.getIcon("arrow12x12.gif");
 
     // initialize tree model
-    this.albumModel = new AlbumModelImpl();
+    this.albumModel = model;
 
     // initialize jtree
     this.renderer = this.initializeRenderer();
@@ -69,12 +71,11 @@ public class AlbumListContainer implements ContainerInitializer {
     // initialize jtree
     final JTree tree = new JTree(model);
     tree.setBackground(new Color(238, 238, 238));
-    tree.setEditable(false);
+    tree.setEditable(true);
     tree.setScrollsOnExpand(true);
     tree.setSelectionRow(0);
     tree.putClientProperty("JTree.lineStyle", "None");
-    tree.getSelectionModel().setSelectionMode(
-        TreeSelectionModel.SINGLE_TREE_SELECTION);
+    ToolTipManager.sharedInstance().registerComponent(tree);
     tree.setCellRenderer(this.renderer);
 
     // add mouse listener to set up albums
@@ -83,14 +84,14 @@ public class AlbumListContainer implements ContainerInitializer {
       public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2) {
           // get the node clicked
-          DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+          AlbumTreeNode node = (AlbumTreeNode) tree
               .getLastSelectedPathComponent();
           // ignore root node
-          if (!node.isRoot()) {
+          if (tree.getModel().isLeaf(node)) {
             // inform the model of changes
             File albumFile = selectNewAlbum();
             if (albumFile != null) {
-              albumModel.linkAlbum((Album) node.getUserObject(), albumFile);
+              albumModel.linkAlbum(node.getAlbum(), albumFile);
             }
           }
         }
@@ -103,7 +104,31 @@ public class AlbumListContainer implements ContainerInitializer {
   private DefaultTreeCellRenderer initializeRenderer() {
 
     // initialize cell renderer
-    final DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+    final DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer() {
+
+      private static final long serialVersionUID = -2488272319873469559L;
+
+      @Override
+      public Component getTreeCellRendererComponent(JTree tree, Object value,
+          boolean selected, boolean expanded, boolean leaf, int row,
+          boolean hasFocus) {
+        super.getTreeCellRendererComponent(tree, value, selected, expanded,
+            leaf, row, hasFocus);
+        AlbumTreeNode node = (AlbumTreeNode) value;
+        Album a = node.getAlbum();
+        if (a != null) {
+          setText(a.getName());
+          setToolTipText(a.getName());
+        } else {
+          setText("Albums");
+          setToolTipText("Albums");
+        }
+        return this;
+      }
+
+    };
+
+    renderer.setToolTipText("test");
     renderer.setLeafIcon(this.rootIcon);
     renderer.setOpenIcon(this.rootIcon);
     renderer.setClosedIcon(this.rootIcon);
@@ -132,12 +157,16 @@ public class AlbumListContainer implements ContainerInitializer {
     removeButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        // remove the current album associated to the clicked node
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
-            .getLastSelectedPathComponent();
-        if (node != null && !node.isRoot()) {
-          albumModel.removeAlbum((Album) node.getUserObject());
-          // model.removeAlbum(node);
+
+        // remove albums associated to clicked nodes
+        ArrayList<Album> list = new ArrayList<Album>();
+        for (TreePath path : tree.getSelectionPaths()) {
+          AlbumTreeNode node = (AlbumTreeNode) path.getLastPathComponent();
+          Album a = node.getAlbum();
+          if (a != null) {
+            list.add(a);
+          }
+          albumModel.removeAlbum(list);
           if (tree.getRowCount() == 1) {
             renderer.setLeafIcon(rootIcon);
           }
@@ -153,8 +182,7 @@ public class AlbumListContainer implements ContainerInitializer {
   }
 
   private JLabel intializeLogo() {
-    final JLabel l = new JLabel(new ImageIcon(AlbumListContainer.class
-        .getResource("/icons/logo.gif")));
+    final JLabel l = new JLabel(IconFactory.getIcon("logo.gif"));
     return l;
   }
 

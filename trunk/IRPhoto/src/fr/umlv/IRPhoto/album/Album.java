@@ -1,5 +1,6 @@
 package fr.umlv.IRPhoto.album;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,6 +11,7 @@ public class Album {
   private final int id;
   private final ArrayList<Photo> photos;
   private String name;
+  private File file;
 
   public Album() {
     this.id = albumsCreated++;
@@ -23,6 +25,18 @@ public class Album {
 
   public void setName(String name) {
     this.name = name;
+    System.err.println("Jai setter le name a :" + this.name);
+  }
+
+  public File getFile() {
+    return this.file;
+  }
+
+  public void setFile(File file) {
+    if (this.hasDefaultName()) {
+      this.name = file.getName();
+    }
+    this.file = file;
   }
 
   public List<Photo> getPhotos() {
@@ -33,6 +47,10 @@ public class Album {
     return this.photos.add(photo);
   }
 
+  private boolean hasDefaultName() {
+    return this.name.equals("Album" + this.id);
+  }
+
   @Override
   public String toString() {
     return this.name;
@@ -40,7 +58,7 @@ public class Album {
 
   @Override
   public boolean equals(Object obj) {
-    
+
     if (!(obj instanceof Album)) {
       return false;
     }

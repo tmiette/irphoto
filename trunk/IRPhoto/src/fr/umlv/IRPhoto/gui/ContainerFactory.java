@@ -5,18 +5,22 @@ import javax.swing.JComponent;
 import fr.umlv.IRPhoto.gui.panel.MainContainer;
 import fr.umlv.IRPhoto.gui.panel.TabbedPaneContainer;
 import fr.umlv.IRPhoto.gui.panel.albumsdetail.AlbumsDetailContainer;
-import fr.umlv.IRPhoto.gui.panel.albumslist.AlbumListContainer;
+import fr.umlv.IRPhoto.gui.panel.albumslist.AlbumTreeContainer;
+import fr.umlv.IRPhoto.gui.panel.albumslist.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.albumslist.AlbumModelImpl;
 import fr.umlv.IRPhoto.gui.panel.features.FeaturesContainer;
 import fr.umlv.IRPhoto.gui.panel.map.MapContainer;
 
 public class ContainerFactory {
+
+  private static final AlbumModel albumModel = new AlbumModelImpl();
 
   public static JComponent createMainContainer() {
     return new MainContainer().initialize();
   }
 
   public static JComponent createAlbumsListContainer() {
-    return new AlbumListContainer().initialize();
+    return new AlbumTreeContainer(ContainerFactory.albumModel).initialize();
   }
 
   public static JComponent createFeaturesContainer() {

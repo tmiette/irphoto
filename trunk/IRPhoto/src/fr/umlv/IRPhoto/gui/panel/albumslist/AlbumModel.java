@@ -11,8 +11,8 @@ public interface AlbumModel {
 
   public void addAlbum();
 
-  public void removeAlbum(Album album);
-  
+  public void removeAlbum(List<Album> albums);
+
   public void linkAlbum(Album album, File albumFile);
 
   public void addAlbumListener(AlbumListener listener);

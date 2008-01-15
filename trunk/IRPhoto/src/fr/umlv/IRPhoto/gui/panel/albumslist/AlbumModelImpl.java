@@ -35,10 +35,12 @@ public class AlbumModelImpl implements AlbumModel {
   }
 
   @Override
-  public void removeAlbum(Album album) {
-    if (this.albums.contains(album)) {
-      this.albums.remove(album);
-      this.fireAlbumRemoved(album);
+  public void removeAlbum(List<Album> albums) {
+    for (Album album : albums) {
+      if (this.albums.contains(album)) {
+        this.albums.remove(album);
+        this.fireAlbumRemoved(album);
+      }
     }
   }
 
@@ -62,7 +64,8 @@ public class AlbumModelImpl implements AlbumModel {
 
   @Override
   public void linkAlbum(Album album, File albumFile) {
-    album.setName(albumFile.getName());
+    album.setFile(albumFile);
+    this.fireAlbumLinked(album);
   }
 
 }
