@@ -18,6 +18,7 @@ public class Album {
   private final ArrayList<Photo> photos;
   private String name;
   private File directory;
+  private static MimetypesFileTypeMap mimeTypesFileTypeMap = new MimetypesFileTypeMap();
 
   public Album() {
     this.id = albumsCreated++;
@@ -95,7 +96,7 @@ public class Album {
           }
         });
       } else {
-    	  String mimeType = new MimetypesFileTypeMap().getContentType(f);
+    	  String mimeType = mimeTypesFileTypeMap.getContentType(f);
 			for (final String mime : ImageIO.getReaderMIMETypes()) {
 				if (mimeType.equals(mime)) {
 					album.addPhoto(new Photo(f));
