@@ -6,9 +6,9 @@ import fr.umlv.IRPhoto.gui.panel.MainContainer;
 import fr.umlv.IRPhoto.gui.panel.TabbedPaneContainer;
 import fr.umlv.IRPhoto.gui.panel.album.AlbumListView;
 import fr.umlv.IRPhoto.gui.panel.albumsdetail.AlbumsDetailContainer;
-import fr.umlv.IRPhoto.gui.panel.albumslist.AlbumTreeContainer;
-import fr.umlv.IRPhoto.gui.panel.albumslist.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.albumslist.AlbumModelImpl;
+import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumModelImpl;
+import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumTreeContainer;
 import fr.umlv.IRPhoto.gui.panel.features.FeaturesContainer;
 import fr.umlv.IRPhoto.gui.panel.map.MapContainer;
 
