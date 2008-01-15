@@ -9,6 +9,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import fr.umlv.IRPhoto.album.Album;
+import fr.umlv.IRPhoto.album.Photo;
 
 public class AlbumTreeModel extends DefaultTreeModel {
 
@@ -35,6 +36,11 @@ public class AlbumTreeModel extends DefaultTreeModel {
       @Override
       public void albumUpdated(Album album) {
         getRootTreeNode().update(album);
+      }
+      
+      @Override
+      public void photoAdded(Album album, Photo photo) {
+        // do nothing
       }
 
     });
