@@ -39,7 +39,7 @@ public class ContainerFactory {
   }
 
   public static JComponent createAlbumListContainer() {
-    return new AlbumListView(albumModel).initialize();
+    return new AlbumListView(albumModel, photoSelectionModel).initialize();
   }
 
 }
