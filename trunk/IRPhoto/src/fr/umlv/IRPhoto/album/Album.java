@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Album {
 
@@ -11,7 +13,7 @@ public class Album {
   private final int id;
   private final ArrayList<Photo> photos;
   private String name;
-  private File file;
+  private File directory;
 
   public Album() {
     this.id = albumsCreated++;
@@ -27,15 +29,19 @@ public class Album {
     this.name = name;
   }
 
-  public File getFile() {
-    return this.file;
+  public File getDirectory() {
+    return this.directory;
   }
 
-  public void setFile(File file) {
+  public void setDirectory(File directory) {
     if (this.hasDefaultName()) {
-      this.name = file.getName();
+      this.name = directory.getName();
     }
-    this.file = file;
+    if (!directory.equals(this.directory)) {
+      this.directory = directory;
+      this.photos.clear();
+      crawle(this.directory, this.photos);
+    }
   }
 
   public List<Photo> getPhotos() {
@@ -64,6 +70,25 @@ public class Album {
 
     Album a = (Album) obj;
     return this.id == a.id;
+  }
+
+  public static void crawle(File directory, final ArrayList<Photo> photos) {
+
+    ExecutorService executor = Executors.newFixedThreadPool(10);
+
+    for (final File f : directory.listFiles()) {
+      if (f.isDirectory()) {
+        // Create a thread for each sub directory
+        executor.execute(new Runnable() {
+          @Override
+          public void run() {
+            crawle(f, photos);
+          }
+        });
+      }else{
+        //TODO tester si le fichier est une photo
+      }
+    }
   }
 
 }
