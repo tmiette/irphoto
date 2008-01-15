@@ -167,6 +167,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
             list.add(a);
           }
           albumModel.removeAlbum(list);
+          tree.setSelectionRow(0);
           if (tree.getRowCount() == 1) {
             renderer.setLeafIcon(rootIcon);
           }
