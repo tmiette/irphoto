@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import fr.umlv.IRPhoto.album.Album;
+import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumModel;
@@ -44,6 +45,12 @@ public class AlbumListView implements ContainerInitializer {
 			public void albumUpdated(Album album) {
 				AlbumListView.this.updateAlbum(album);
 				
+			}
+			
+			@Override
+			public void photoAdded(Album album, Photo photo) {
+			  // TODO Auto-generated method stub
+			  
 			}
 
 		});
