@@ -15,7 +15,7 @@ public class TestAlbum {
 		for (int j = 0; j < 5; j++) {
 			Album album = new Album();
 			album.setName("mes logos" + j);
-			for (int i = 100; i > 0; i--) {
+			for (int i = 10; i > 0; i--) {
 				Photo photo = new Photo();
 				photo.setName("logo" + i);
 				

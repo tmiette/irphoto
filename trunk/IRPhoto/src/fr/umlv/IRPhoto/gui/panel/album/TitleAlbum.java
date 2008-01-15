@@ -1,17 +1,16 @@
 package fr.umlv.IRPhoto.gui.panel.album;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Box;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import fr.umlv.IRPhoto.album.Album;
 
@@ -24,7 +23,6 @@ public class TitleAlbum {
 	public TitleAlbum(Album album) {
 		this.albumNamePanel = createTitlePanel(album.getName());
 		this.albumNamePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		this.albumNamePanel.setPreferredSize(new Dimension(800, 10));
 
 		this.photoListView = createPhotoListPanel(album);
 		this.photoListView.getPanel().setVisible(false);
@@ -34,7 +32,7 @@ public class TitleAlbum {
 		this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.Y_AXIS));
 		this.panel.add(this.albumNamePanel);
 		this.panel.add(this.photoListView.getPanel());
-//		this.panel.add(Box.createVerticalGlue());
+		this.panel.setBorder(BorderFactory.createLineBorder(Color.black));
 	}
 
 	private PhotoListView createPhotoListPanel(Album album) {
@@ -44,43 +42,14 @@ public class TitleAlbum {
 	}
 
 	private JPanel createTitlePanel(String title) {
-		final JPanel jp = new JPanel();
-		jp.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
+		final JPanel jp = new JPanel(new BorderLayout());
 
-		jp.add(new JLabel(title));
-		jp.add(Box.createHorizontalGlue());
-		final JTextField textField = new JTextField(2);
-		textField.setHorizontalAlignment(JTextField.LEADING);
-		textField.setColumns(20);
-		jp.add(textField);
-
-		final JButton alphaSortButton = createAlphaSortButton();
-		jp.add(alphaSortButton);
-
-		final JButton typeSortButton = createTypeSortButton();
-		jp.add(typeSortButton);
-
-		final JButton dateSortButton = createDateSortButton();
-		jp.add(dateSortButton);
-
+		jp.add(new JLabel(title), BorderLayout.WEST);
+		
 		final JButton showPhotoList = createShowPhotoListButton();
-		jp.add(showPhotoList);
+		jp.add(showPhotoList, BorderLayout.EAST);
+		
 		return jp;
-	}
-
-	private JButton createDateSortButton() {
-		final JButton b = new JButton("date");
-		return b;
-	}
-
-	private JButton createTypeSortButton() {
-		final JButton b = new JButton("type");
-		return b;
-	}
-
-	private JButton createAlphaSortButton() {
-		final JButton b = new JButton("alpha");
-		return b;
 	}
 
 	private JButton createShowPhotoListButton() {
