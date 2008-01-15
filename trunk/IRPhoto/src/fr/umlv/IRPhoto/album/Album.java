@@ -19,6 +19,7 @@ public class Album {
   private String name;
   private File directory;
   private static MimetypesFileTypeMap mimeTypesFileTypeMap = new MimetypesFileTypeMap();
+  private static final Object lock = new Object();
 
   public Album() {
     this.id = albumsCreated++;
@@ -50,16 +51,26 @@ public class Album {
   }
 
   public List<Photo> getPhotos() {
-    return Collections.unmodifiableList(this.photos);
+    synchronized (lock) {
+    	List<Photo> photos = new ArrayList<Photo>();
+		photos.addAll(this.photos);
+		return Collections.unmodifiableList(photos);
+	}
   }
 
   public List<Photo> getSortedPhotos(Comparator<Photo> comparator) {
-    Collections.sort(this.photos, comparator);
-    return Collections.unmodifiableList(this.photos);
+    synchronized (lock) {
+    	List<Photo> photos = new ArrayList<Photo>();
+    	Collections.sort(this.photos, comparator);
+		photos.addAll(this.photos);
+		return Collections.unmodifiableList(photos);
+	}
   }
 
   public boolean addPhoto(Photo photo) {
-    return this.photos.add(photo);
+    synchronized (lock) {
+		return this.photos.add(photo);
+	}
   }
 
   private boolean hasDefaultName() {
