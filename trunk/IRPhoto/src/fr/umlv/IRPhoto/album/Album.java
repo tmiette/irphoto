@@ -46,7 +46,7 @@ public class Album {
     if (!directory.equals(this.directory)) {
       this.directory = directory;
       this.photos.clear();
-      crawle(this.directory, this);
+//      crawle(this.directory, this);
     }
   }
 

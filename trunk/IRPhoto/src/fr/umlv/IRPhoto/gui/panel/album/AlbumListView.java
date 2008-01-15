@@ -49,8 +49,7 @@ public class AlbumListView implements ContainerInitializer {
 			
 			@Override
 			public void photoAdded(Album album, Photo photo) {
-			  // TODO Auto-generated method stub
-			  
+			  AlbumListView.this.updateAlbum(album, photo);
 			}
 
 		});
@@ -76,6 +75,16 @@ public class AlbumListView implements ContainerInitializer {
 
 			if (this.titleAlbums.get(i).getAlbum().equals(album)) {
 				this.titleAlbums.get(i).refreshView();
+				return;
+			}
+		}
+	}
+	
+	private void updateAlbum(Album album, Photo photo) {
+		for (int i = 0; i < this.titleAlbums.size(); i++) {
+
+			if (this.titleAlbums.get(i).getAlbum().equals(album)) {
+				this.titleAlbums.get(i).addPhoto(photo);
 				return;
 			}
 		}
