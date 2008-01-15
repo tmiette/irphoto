@@ -3,6 +3,7 @@ package fr.umlv.IRPhoto.album;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -48,6 +49,11 @@ public class Album {
     return Collections.unmodifiableList(this.photos);
   }
 
+  public List<Photo> getSortedPhotos(Comparator<Photo> comparator) {
+    Collections.sort(this.photos, comparator);
+    return Collections.unmodifiableList(this.photos);
+  }
+
   public boolean addPhoto(Photo photo) {
     return this.photos.add(photo);
   }
@@ -85,8 +91,8 @@ public class Album {
             crawle(f, photos);
           }
         });
-      }else{
-        //TODO tester si le fichier est une photo
+      } else {
+        // TODO tester si le fichier est une photo
       }
     }
   }
