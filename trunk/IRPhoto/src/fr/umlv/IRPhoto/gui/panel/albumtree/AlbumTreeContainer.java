@@ -87,7 +87,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
           AlbumTreeNode node = (AlbumTreeNode) tree
               .getLastSelectedPathComponent();
           // ignore root node
-          if (tree.getModel().isLeaf(node)) {
+          if (tree.getModel().isLeaf(node) && tree.getRowCount() != 1) {
             // inform the model of changes
             File albumFile = selectNewAlbum();
             if (albumFile != null) {
