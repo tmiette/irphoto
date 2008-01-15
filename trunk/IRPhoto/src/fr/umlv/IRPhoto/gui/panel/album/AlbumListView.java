@@ -28,13 +28,11 @@ public class AlbumListView implements ContainerInitializer {
 			@Override
 			public void albumAdded(Album album) {
 				AlbumListView.this.addAlbum(album);
-				
 			}
 
 			@Override
 			public void albumRemoved(Album album) {
-				// TODO Auto-generated method stub
-				
+				AlbumListView.this.removeAlbum(album);
 			}
 
 			@Override
@@ -57,13 +55,21 @@ public class AlbumListView implements ContainerInitializer {
 		this.panel = createAlbumListPanel();
 	}
 	
-	public void addAlbum(Album album) {
-		this.removeEndPanel();
+	private void addAlbum(Album album) {
 		this.constraints.gridy++;
-		JPanel newTitleAlbumPanel = new TitleAlbum(album).getPanel();
-		panel.add(newTitleAlbumPanel, this.constraints);
+		
+		JPanel newTitleAlbumPanel = TitleAlbum.getPanel(album);
+		this.panel.add(newTitleAlbumPanel, this.constraints);
+		
 		this.addEndPanel(this.panel);
 		this.panel.revalidate();
+	}
+	
+	private void removeAlbum(Album album) {
+		this.panel.remove(TitleAlbum.getPanel(album));
+		this.addEndPanel(this.panel);
+		// FIXME 
+		this.panel.repaint();
 	}
 
 	private JPanel createAlbumListPanel() {
@@ -76,15 +82,11 @@ public class AlbumListView implements ContainerInitializer {
 		List<? extends Album> albums = this.model.getAlbums();
 		for (Album album : albums) {
 			this.constraints.gridy++;
-			panel.add(new TitleAlbum(album).getPanel(), this.constraints);
+			panel.add(TitleAlbum.getPanel(album), this.constraints);
 		}
 		
 		this.addEndPanel(panel);
 		return panel;
-	}
-	
-	private void removeEndPanel() {
-		this.panel.remove(this.endPanel);
 	}
 	
 	private void  addEndPanel(JPanel panel) {

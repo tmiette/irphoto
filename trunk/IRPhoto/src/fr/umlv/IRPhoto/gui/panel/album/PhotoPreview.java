@@ -23,7 +23,7 @@ public class PhotoPreview {
 	private final JLabel name;
 	
 	// panels already created
-	private static final ArrayList<JPanel> panels = new ArrayList<JPanel>();
+	private static final ArrayList<PhotoPreview> photoPreviews = new ArrayList<PhotoPreview>();
 	
 	// Miniature default dimension
 	public static final Dimension DEFAULT_MINIATURE_DIMENSION = new Dimension(
@@ -83,11 +83,14 @@ public class PhotoPreview {
 	}
 
 	public static JPanel getPanel(Photo photo) {
-		int index = panels.indexOf(photo);
-		if (index != -1) {
-			return panels.get(index);
-		} else {
-			return new PhotoPreview(photo).panel;
+		for (PhotoPreview photoPreview : photoPreviews) {
+			if (photoPreview.photo.equals(photo)) {
+				return photoPreview.panel;
+			}
 		}
+
+		PhotoPreview photoPreview = new PhotoPreview(photo);
+		photoPreviews.add(photoPreview);
+		return photoPreview.panel;
 	}
 }

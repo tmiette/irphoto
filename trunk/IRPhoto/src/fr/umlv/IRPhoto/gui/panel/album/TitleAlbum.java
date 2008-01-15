@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -19,12 +20,18 @@ public class TitleAlbum {
 	private final JPanel panel;
 	private final JPanel albumNamePanel;
 	private final PhotoListView photoListView;
+	private final Album album;
 
-	public TitleAlbum(Album album) {
-		this.albumNamePanel = createTitlePanel(album.getName());
+	// panels already created
+	private static final ArrayList<TitleAlbum> titleAlbums = new ArrayList<TitleAlbum>();
+
+	private TitleAlbum(Album album) {
+		this.album = album;
+
+		this.albumNamePanel = createTitlePanel(this.album.getName());
 		this.albumNamePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		this.photoListView = createPhotoListPanel(album);
+		this.photoListView = createPhotoListPanel();
 		this.photoListView.getPanel().setVisible(false);
 		this.photoListView.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -35,8 +42,8 @@ public class TitleAlbum {
 		this.panel.setBorder(BorderFactory.createLineBorder(Color.black));
 	}
 
-	private PhotoListView createPhotoListPanel(Album album) {
-		PhotoListModel model = new PhotoListModel(album);
+	private PhotoListView createPhotoListPanel() {
+		PhotoListModel model = new PhotoListModel(this.album);
 		PhotoListView view = new PhotoListView(model);
 		return view;
 	}
@@ -45,10 +52,10 @@ public class TitleAlbum {
 		final JPanel jp = new JPanel(new BorderLayout());
 
 		jp.add(new JLabel(title), BorderLayout.WEST);
-		
+
 		final JButton showPhotoList = createShowPhotoListButton();
 		jp.add(showPhotoList, BorderLayout.EAST);
-		
+
 		return jp;
 	}
 
@@ -65,8 +72,16 @@ public class TitleAlbum {
 		return b;
 	}
 
-	public JPanel getPanel() {
-		return this.panel;
+	public static JPanel getPanel(Album album) {
+		for (TitleAlbum titleAlbum : titleAlbums) {
+			if (titleAlbum.album.equals(album)) {
+				return titleAlbum.panel;
+			}
+		}
+
+		TitleAlbum titleAlbum = new TitleAlbum(album);
+		titleAlbums.add(titleAlbum);
+		return titleAlbum.panel;
 	}
 
 }
