@@ -56,16 +56,24 @@ public class AlbumModelImpl implements AlbumModel {
     }
   }
 
-  protected void fireAlbumLinked(Album album) {
+  protected void fireAlbumUpdated(Album album) {
     for (AlbumListener listener : this.listeners) {
-      listener.albumLinked(album);
+      listener.albumUpdated(album);
     }
   }
 
   @Override
   public void linkAlbum(Album album, File albumFile) {
     album.setFile(albumFile);
-    this.fireAlbumLinked(album);
+    this.fireAlbumUpdated(album);
+  }
+
+  @Override
+  public void nameAlbum(Album album, String name) {
+    if (name == null || name.length() > 0) {
+      album.setName(name);
+      this.fireAlbumUpdated(album);
+    }
   }
 
 }

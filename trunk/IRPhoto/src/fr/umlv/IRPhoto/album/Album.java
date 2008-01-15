@@ -25,7 +25,6 @@ public class Album {
 
   public void setName(String name) {
     this.name = name;
-    System.err.println("Jai setter le name a :" + this.name);
   }
 
   public File getFile() {

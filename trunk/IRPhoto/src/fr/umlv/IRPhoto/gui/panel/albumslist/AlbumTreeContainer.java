@@ -97,7 +97,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
         }
       }
     });
-
+    
     return tree;
   }
 

@@ -8,6 +8,6 @@ public interface AlbumListener {
 
   public void albumRemoved(Album album);
   
-  public void albumLinked(Album album);
+  public void albumUpdated(Album album);
 
 }

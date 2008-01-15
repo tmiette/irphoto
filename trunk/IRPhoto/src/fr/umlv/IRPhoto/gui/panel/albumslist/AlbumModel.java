@@ -15,5 +15,7 @@ public interface AlbumModel {
 
   public void linkAlbum(Album album, File albumFile);
 
+  public void nameAlbum(Album album, String name);
+
   public void addAlbumListener(AlbumListener listener);
 }
