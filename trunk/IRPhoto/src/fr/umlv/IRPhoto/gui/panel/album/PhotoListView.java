@@ -2,7 +2,6 @@ package fr.umlv.IRPhoto.gui.panel.album;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,7 @@ public class PhotoListView {
 	private final JPanel panel;
 	
 	private final ArrayList<PhotoPreview> photoPreviews;
+	private static final Object lock = new Object();
 
 	public PhotoListView(Album album) {
 		this.photoPreviews = new ArrayList<PhotoPreview>();
@@ -47,7 +47,6 @@ public class PhotoListView {
 		this.photoPreviews.clear();
 		System.out.println(this.album.getPhotos());
 		this.addPhotos(this.album.getPhotos(), this.photoListPanel);
-		this.panel.setPreferredSize(new Dimension(600,600));
 		this.photoListPanel.validate();
 		this.panel.validate();
 	}
@@ -80,6 +79,7 @@ public class PhotoListView {
 	}
 
 	private boolean addPhotos(List<Photo> photos, JPanel panel) {
+		
 		for (Photo photo : photos) {
 			PhotoPreview pp = new PhotoPreview(photo);
 			this.photoPreviews.add(pp);
