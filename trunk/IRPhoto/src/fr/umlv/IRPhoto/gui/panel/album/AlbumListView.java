@@ -69,6 +69,7 @@ public class AlbumListView implements ContainerInitializer {
 		this.panel.remove(TitleAlbum.getPanel(album));
 		this.addEndPanel(this.panel);
 		// FIXME 
+		this.panel.revalidate();
 		this.panel.repaint();
 	}
 
