@@ -11,7 +11,7 @@ public class MainContainer implements ContainerInitializer {
   @Override
   public JComponent initialize() {
     final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-        true, ContainerFactory.createAlbumsListContainer(),
+        true, ContainerFactory.createAlbumTreeContainer(),
         initializeRightContainer());
     splitPane.setDividerLocation(0.5);
     return splitPane;

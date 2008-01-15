@@ -29,7 +29,7 @@ public class TabbedPaneContainer implements ContainerInitializer {
 
     // scroll pane for the albums details panel
     final JScrollPane scroll = new JScrollPane(ContainerFactory
-        .createAlbumsDetailContainer(),
+        .createAlbumListContainer(),
         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 

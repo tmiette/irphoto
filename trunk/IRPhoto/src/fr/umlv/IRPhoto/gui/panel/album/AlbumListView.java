@@ -6,19 +6,44 @@ import java.awt.GridBagLayout;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import fr.umlv.IRPhoto.album.Album;
+import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.panel.albumslist.AlbumListener;
+import fr.umlv.IRPhoto.gui.panel.albumslist.AlbumModel;
 
-public class AlbumListView {
+public class AlbumListView implements ContainerInitializer {
 
 	private final JPanel panel;
-	private final AlbumListModel model;
+	private final AlbumModel model;
 	private final GridBagConstraints constraints;
 	private final JPanel endPanel;
 
-	public AlbumListView(AlbumListModel model) {
+	public AlbumListView(AlbumModel model) {
 		this.model = model;
+		this.model.addAlbumListener(new AlbumListener() {
+
+			@Override
+			public void albumAdded(Album album) {
+				AlbumListView.this.addAlbum(album);
+				
+			}
+
+			@Override
+			public void albumRemoved(Album album) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void albumUpdated(Album album) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 		
 		this.constraints = new GridBagConstraints();
 		this.constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -35,8 +60,10 @@ public class AlbumListView {
 	public void addAlbum(Album album) {
 		this.removeEndPanel();
 		this.constraints.gridy++;
-		panel.add(new TitleAlbum(album).getPanel(), this.constraints);
+		JPanel newTitleAlbumPanel = new TitleAlbum(album).getPanel();
+		panel.add(newTitleAlbumPanel, this.constraints);
 		this.addEndPanel(this.panel);
+		this.panel.revalidate();
 	}
 
 	private JPanel createAlbumListPanel() {
@@ -46,7 +73,7 @@ public class AlbumListView {
 		panel.setBorder(BorderFactory.createMatteBorder(1, 1,
 				1, 1, Color.MAGENTA));
 		
-		List<Album> albums = this.model.getAlbums();
+		List<? extends Album> albums = this.model.getAlbums();
 		for (Album album : albums) {
 			this.constraints.gridy++;
 			panel.add(new TitleAlbum(album).getPanel(), this.constraints);
@@ -67,6 +94,11 @@ public class AlbumListView {
 	}
 
 	public JPanel getPanel() {
+		return this.panel;
+	}
+
+	@Override
+	public JComponent initialize() {
 		return this.panel;
 	}
 	
