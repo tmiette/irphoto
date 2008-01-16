@@ -3,7 +3,7 @@ package fr.umlv.IRPhoto.gui.panel.albumlist;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
+import fr.umlv.IRPhoto.gui.ContainerFactory;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 
 public class PhotoListContainer implements ContainerInitializer {
@@ -20,13 +21,13 @@ public class PhotoListContainer implements ContainerInitializer {
   // General panel
   private final JPanel mainPanel;
 
-  private final ArrayList<PhotoMiniatureContainer> photoPreviews;
+  private final HashMap<Photo, PhotoMiniatureContainer> photoMiniatures;
 
   public PhotoListContainer(Album album) {
-    this.photoPreviews = new ArrayList<PhotoMiniatureContainer>();
+    this.photoMiniatures = new HashMap<Photo, PhotoMiniatureContainer>();
 
     this.photoListPanel = createPhotoListPanel();
-    for(Photo photo:album.getSortedPhotos(Photo.NAME_ORDER)){
+    for (Photo photo : album.getSortedPhotos(Photo.NAME_ORDER)) {
       this.addPhoto(photo);
     }
 
@@ -34,7 +35,7 @@ public class PhotoListContainer implements ContainerInitializer {
     this.mainPanel.add(createTopPanel(), BorderLayout.NORTH);
     this.mainPanel.add(this.photoListPanel, BorderLayout.CENTER);
   }
-  
+
   private JPanel createTopPanel() {
     final JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 3));
 
@@ -75,11 +76,16 @@ public class PhotoListContainer implements ContainerInitializer {
     final JButton b = new JButton("alpha");
     return b;
   }
-  
+
   public void addPhoto(Photo photo) {
-    final PhotoMiniatureContainer pp = new PhotoMiniatureContainer(photo);
-    this.photoListPanel.add(pp.getComponent());
-    this.photoPreviews.add(pp);
+    PhotoMiniatureContainer c = this.photoMiniatures.get(photo);
+    if (c == null) {
+      c = ContainerFactory.createPhotoMiniatureContainer(photo);
+      this.photoListPanel.add(c.getComponent());
+      this.photoMiniatures.put(photo, c);
+    } else {
+      this.photoListPanel.add(c.getComponent());
+    }
     this.photoListPanel.validate();
   }
 

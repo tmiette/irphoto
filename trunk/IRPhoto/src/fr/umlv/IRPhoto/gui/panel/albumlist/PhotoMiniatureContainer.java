@@ -1,10 +1,13 @@
 package fr.umlv.IRPhoto.gui.panel.albumlist;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
@@ -16,42 +19,64 @@ import javax.swing.JPanel;
 
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
 
 public class PhotoMiniatureContainer implements ContainerInitializer {
 
+  private final PhotoSelectionModel model;
   private final Photo photo;
-  private final JPanel panel;
-  private final JLabel name;
+  private final JPanel mainPanel;
 
   // Miniature default dimension
   public static final Dimension DEFAULT_MINIATURE_DIMENSION = new Dimension(96,
       96);
 
-  public PhotoMiniatureContainer(Photo photo) {
+  public PhotoMiniatureContainer(Photo photo, PhotoSelectionModel model) {
+
+    this.model = model;
     this.photo = photo;
 
-    this.name = new JLabel(photo.getName());
-    this.name.setAlignmentX(Component.CENTER_ALIGNMENT);
+    final JLabel name = new JLabel(photo.getName());
+    name.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-    this.panel = new JPanel();
-    this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.Y_AXIS));
-    this.panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    this.mainPanel = new JPanel(null);
+    this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
+    this.mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    this.mainPanel.setBackground(Color.WHITE);
 
     // TODO url pas valide
-    ImageIcon icon = new ImageIcon(this.photo.getPath());
+    final ImageIcon icon = new ImageIcon(photo.getPath());
     double ratio = icon.getIconWidth() / DEFAULT_MINIATURE_DIMENSION.getWidth();
     int w = (int) (icon.getIconWidth() / ratio);
     int h = (int) (icon.getIconHeight() / ratio);
-    ImageIcon thumbnailIcon = new ImageIcon(getScaledImage(icon.getImage(), w,
-        h));
+    final ImageIcon thumbnailIcon = new ImageIcon(getScaledImage(icon
+        .getImage(), w, h));
 
-    JLabel p = new JLabel();
-    p.setMaximumSize(DEFAULT_MINIATURE_DIMENSION);
-    p.setIcon(thumbnailIcon);
-    p.setAlignmentX(Component.CENTER_ALIGNMENT);
+    final JLabel miniature = new JLabel();
+    miniature.setMaximumSize(DEFAULT_MINIATURE_DIMENSION);
+    miniature.setIcon(thumbnailIcon);
+    miniature.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-    this.panel.add(p);
-    this.panel.add(this.name);
+    this.mainPanel.add(miniature);
+    this.mainPanel.add(name);
+
+    this.mainPanel.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        PhotoMiniatureContainer.this.model
+            .selectPhoto(PhotoMiniatureContainer.this.photo);
+      }
+
+      @Override
+      public void mouseEntered(MouseEvent e) {
+        mainPanel.setBackground(Color.BLUE);
+      }
+
+      @Override
+      public void mouseExited(MouseEvent e) {
+        mainPanel.setBackground(Color.WHITE);
+      }
+    });
   }
 
   /**
@@ -65,7 +90,7 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
    *            desired height
    * @return - the new resized image
    */
-  private Image getScaledImage(Image srcImg, int w, int h) {
+  private static Image getScaledImage(Image srcImg, int w, int h) {
     BufferedImage resizedImg = new BufferedImage(
         DEFAULT_MINIATURE_DIMENSION.width, DEFAULT_MINIATURE_DIMENSION.height,
         BufferedImage.TYPE_INT_RGB);
@@ -81,6 +106,6 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
 
   @Override
   public JComponent getComponent() {
-    return this.panel;
+    return this.mainPanel;
   }
 }

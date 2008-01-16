@@ -80,6 +80,9 @@ public class AlbumModelImpl implements AlbumModel {
 
   @Override
   public void linkAlbum(Album album, File albumFile) {
+    if(album.hasDefaultName()){
+      this.nameAlbum(album, albumFile.getName());
+    }
     album.setDirectory(albumFile);
     this.crawle(albumFile, album);
   }

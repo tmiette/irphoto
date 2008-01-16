@@ -14,7 +14,6 @@ import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.panel.album.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.album.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
 
 public class AlbumListContainer implements ContainerInitializer {
 
@@ -24,8 +23,7 @@ public class AlbumListContainer implements ContainerInitializer {
   private final HashMap<Album, AlbumDetailContainer> albumsDetailContainers;
   private final JPanel endPanel;
 
-  public AlbumListContainer(AlbumModel albumModel,
-      PhotoSelectionModel selectionModel) {
+  public AlbumListContainer(AlbumModel albumModel) {
     this.albumsDetailContainers = new HashMap<Album, AlbumDetailContainer>();
     this.model = albumModel;
     this.model.addAlbumListener(new AlbumListener() {
