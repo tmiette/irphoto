@@ -73,7 +73,7 @@ public class Photo {
 
   @Override
   public int hashCode() {
-    return this.getPath().hashCode() * this.getName().hashCode();
+    return this.getPath().hashCode();
   }
 
   @Override
