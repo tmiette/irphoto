@@ -2,9 +2,12 @@ package fr.umlv.IRPhoto.gui.panel.albumlist;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.HashMap;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -38,7 +41,9 @@ public class PhotoListContainer implements ContainerInitializer {
 
   private JPanel createTopPanel() {
     final JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 3));
+   // panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
+    panel.add(Box.createHorizontalGlue());
     final JTextField textField = new JTextField(2);
     textField.setHorizontalAlignment(JTextField.LEADING);
     textField.setColumns(20);

@@ -1,12 +1,15 @@
 package fr.umlv.IRPhoto.gui.panel.albumlist;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -33,6 +36,16 @@ public class AlbumDetailContainer implements ContainerInitializer {
     this.mainPanel.add(createTitlePanel(album.getName()));
     this.mainPanel.add(this.photoListView.getComponent());
     this.mainPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+
+    this.mainPanel.addComponentListener(new ComponentAdapter() {
+      @Override
+      public void componentResized(ComponentEvent e) {
+        System.err.println(mainPanel.getSize().getWidth());
+        photoListView.getComponent().setPreferredSize(
+            new Dimension((int) mainPanel.getSize().getWidth(), 2000));
+      }
+    });
+
   }
 
   public void renameAlbum(Album album, String newName) {
@@ -51,14 +64,16 @@ public class AlbumDetailContainer implements ContainerInitializer {
   }
 
   private JPanel createTitlePanel(String title) {
-    final JPanel jp = new JPanel(new BorderLayout());
+    final JPanel jp = new JPanel(null);
+    jp.setLayout(new BoxLayout(jp, BoxLayout.X_AXIS));
     jp.setAlignmentX(Component.LEFT_ALIGNMENT);
 
     this.albumTitle = new JLabel(title);
-    jp.add(this.albumTitle, BorderLayout.WEST);
-
     final JButton showPhotoList = createShowPhotoListButton();
-    jp.add(showPhotoList, BorderLayout.EAST);
+
+    jp.add(this.albumTitle);
+    jp.add(Box.createHorizontalGlue());
+    jp.add(showPhotoList);
 
     return jp;
   }
@@ -68,8 +83,10 @@ public class AlbumDetailContainer implements ContainerInitializer {
     b.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        AlbumDetailContainer.this.photoListView.getComponent().setVisible(
-            !AlbumDetailContainer.this.photoListView.getComponent().isVisible());
+        AlbumDetailContainer.this.photoListView.getComponent()
+            .setVisible(
+                !AlbumDetailContainer.this.photoListView.getComponent()
+                    .isVisible());
       }
     });
     return b;
