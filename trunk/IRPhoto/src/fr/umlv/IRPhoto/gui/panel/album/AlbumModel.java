@@ -1,4 +1,4 @@
-package fr.umlv.IRPhoto.gui.panel.albumtree;
+package fr.umlv.IRPhoto.gui.panel.album;
 
 import java.io.File;
 import java.util.Comparator;

@@ -9,7 +9,7 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 public class MainContainer implements ContainerInitializer {
 
   @Override
-  public JComponent initialize() {
+  public JComponent getComponent() {
     final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
         true, ContainerFactory.createAlbumTreeContainer(),
         initializeRightContainer());

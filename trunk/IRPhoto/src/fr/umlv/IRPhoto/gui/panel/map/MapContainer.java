@@ -9,7 +9,7 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 public class MapContainer implements ContainerInitializer {
 
   @Override
-  public JComponent initialize() {
+  public JComponent getComponent() {
     final JPanel mapPanel = new JPanel();
     mapPanel.add(new JButton("TEST"));
     return mapPanel;

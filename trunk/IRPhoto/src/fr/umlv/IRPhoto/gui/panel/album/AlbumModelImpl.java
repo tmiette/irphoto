@@ -1,4 +1,4 @@
-package fr.umlv.IRPhoto.gui.panel.albumtree;
+package fr.umlv.IRPhoto.gui.panel.album;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -66,9 +66,9 @@ public class AlbumModelImpl implements AlbumModel {
     }
   }
 
-  protected void fireAlbumUpdated(Album album) {
+  protected void fireAlbumRenamed(Album album, String newName) {
     for (AlbumListener listener : this.listeners) {
-      listener.albumUpdated(album);
+      listener.albumRenamed(album, newName);
     }
   }
 
@@ -82,14 +82,13 @@ public class AlbumModelImpl implements AlbumModel {
   public void linkAlbum(Album album, File albumFile) {
     album.setDirectory(albumFile);
     this.crawle(albumFile, album);
-    //this.fireAlbumUpdated(album);
   }
 
   @Override
   public void nameAlbum(Album album, String name) {
     if (name == null || name.length() > 0) {
       album.setName(name);
-      this.fireAlbumUpdated(album);
+      this.fireAlbumRenamed(album, name);
     }
   }
 

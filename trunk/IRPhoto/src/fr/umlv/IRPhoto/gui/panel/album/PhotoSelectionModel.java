@@ -1,4 +1,4 @@
-package fr.umlv.IRPhoto.gui.panel.features;
+package fr.umlv.IRPhoto.gui.panel.album;
 
 import fr.umlv.IRPhoto.album.Photo;
 

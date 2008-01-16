@@ -10,6 +10,8 @@ import javax.swing.tree.TreePath;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
+import fr.umlv.IRPhoto.gui.panel.album.AlbumListener;
+import fr.umlv.IRPhoto.gui.panel.album.AlbumModel;
 
 public class AlbumTreeModel extends DefaultTreeModel {
 
@@ -34,10 +36,10 @@ public class AlbumTreeModel extends DefaultTreeModel {
       }
 
       @Override
-      public void albumUpdated(Album album) {
-        getRootTreeNode().update(album);
+      public void albumRenamed(Album album, String newName) {
+        getRootTreeNode().rename(album, newName);
       }
-      
+
       @Override
       public void photoAdded(Album album, Photo photo) {
         // do nothing
@@ -85,13 +87,13 @@ public class AlbumTreeModel extends DefaultTreeModel {
         if (child.album.equals(album)) {
           this.children.remove(i);
           nodesWereRemoved(this, new int[] { i }, new AlbumTreeNode[] { child });
-          break;
+          return;
         }
         i++;
       }
     }
 
-    public void update(Album album) {
+    public void rename(Album album, String newName) {
       for (AlbumTreeNode child : this.children) {
         if (child.album.equals(album)) {
           nodeChanged(child);

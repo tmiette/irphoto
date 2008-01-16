@@ -27,6 +27,7 @@ import javax.swing.tree.TreePath;
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
+import fr.umlv.IRPhoto.gui.panel.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumTreeModel.AlbumTreeNode;
 
 public class AlbumTreeContainer implements ContainerInitializer {
@@ -54,7 +55,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
   }
 
   @Override
-  public JComponent initialize() {
+  public JComponent getComponent() {
     final JPanel panel = new JPanel(new BorderLayout());
     panel.add(this.initializeButtonsPanel(), BorderLayout.NORTH);
     final JScrollPane scrollPane = new JScrollPane(this.tree,

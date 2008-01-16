@@ -19,7 +19,7 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 public class TabbedPaneContainer implements ContainerInitializer {
 
   @Override
-  public JComponent initialize() {
+  public JComponent getComponent() {
     // main panel
     final JPanel mainPanel = new JPanel(new BorderLayout());
 

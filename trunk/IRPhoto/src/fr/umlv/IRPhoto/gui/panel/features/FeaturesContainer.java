@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
+import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionListener;
+import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
 
 public class FeaturesContainer implements ContainerInitializer {
 
@@ -29,7 +31,7 @@ public class FeaturesContainer implements ContainerInitializer {
 
       @Override
       public void photoSelected(Photo photo) {
-        BufferedImage image;
+        BufferedImage image = null;
         try {
           image = ImageIO.read(new File(photo.getPath()));
         } catch (IOException e) {
@@ -39,7 +41,7 @@ public class FeaturesContainer implements ContainerInitializer {
 
         nameLabel.setText(photo.getName());
         nameLabel.repaint();
-        formatLabel.setText("JPEG");
+        formatLabel.setText(image.getType() + "");
         formatLabel.repaint();
       }
 
@@ -47,7 +49,7 @@ public class FeaturesContainer implements ContainerInitializer {
   }
 
   @Override
-  public JComponent initialize() {
+  public JComponent getComponent() {
     final JPanel mainPanel = new JPanel(new BorderLayout());
 
     final JPanel featuresPanel = new JPanel(null);
@@ -58,7 +60,7 @@ public class FeaturesContainer implements ContainerInitializer {
     mainPanel.add(new JLabel(IconFactory.getIcon("logo.gif")),
         BorderLayout.WEST);
     mainPanel.add(featuresPanel, BorderLayout.CENTER);
-
+    
     return mainPanel;
   }
 

@@ -4,13 +4,13 @@ import javax.swing.JComponent;
 
 import fr.umlv.IRPhoto.gui.panel.MainContainer;
 import fr.umlv.IRPhoto.gui.panel.TabbedPaneContainer;
-import fr.umlv.IRPhoto.gui.panel.album.AlbumListView;
-import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumModelImpl;
+import fr.umlv.IRPhoto.gui.panel.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.album.AlbumModelImpl;
+import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
+import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModelImpl;
+import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumListContainer;
 import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumTreeContainer;
 import fr.umlv.IRPhoto.gui.panel.features.FeaturesContainer;
-import fr.umlv.IRPhoto.gui.panel.features.PhotoSelectionModel;
-import fr.umlv.IRPhoto.gui.panel.features.PhotoSelectionModelImpl;
 import fr.umlv.IRPhoto.gui.panel.map.MapContainer;
 
 public class ContainerFactory {
@@ -19,27 +19,28 @@ public class ContainerFactory {
   private static final PhotoSelectionModel photoSelectionModel = new PhotoSelectionModelImpl();
 
   public static JComponent createMainContainer() {
-    return new MainContainer().initialize();
+    return new MainContainer().getComponent();
   }
 
   public static JComponent createAlbumTreeContainer() {
-    return new AlbumTreeContainer(ContainerFactory.albumModel).initialize();
+    return new AlbumTreeContainer(ContainerFactory.albumModel).getComponent();
   }
 
   public static JComponent createFeaturesContainer() {
-    return new FeaturesContainer(photoSelectionModel).initialize();
+    return new FeaturesContainer(photoSelectionModel).getComponent();
   }
 
   public static JComponent createTabbedContainer() {
-    return new TabbedPaneContainer().initialize();
+    return new TabbedPaneContainer().getComponent();
   }
 
   public static JComponent createMapContainer() {
-    return new MapContainer().initialize();
+    return new MapContainer().getComponent();
   }
 
   public static JComponent createAlbumListContainer() {
-    return new AlbumListView(albumModel, photoSelectionModel).initialize();
+    return new AlbumListContainer(albumModel, photoSelectionModel).getComponent();
   }
 
+  
 }
