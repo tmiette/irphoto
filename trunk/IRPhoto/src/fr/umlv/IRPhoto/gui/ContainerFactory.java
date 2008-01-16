@@ -2,6 +2,7 @@ package fr.umlv.IRPhoto.gui;
 
 import javax.swing.JComponent;
 
+import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.panel.MainContainer;
 import fr.umlv.IRPhoto.gui.panel.TabbedPaneContainer;
 import fr.umlv.IRPhoto.gui.panel.album.AlbumModel;
@@ -9,6 +10,7 @@ import fr.umlv.IRPhoto.gui.panel.album.AlbumModelImpl;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModelImpl;
 import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumListContainer;
+import fr.umlv.IRPhoto.gui.panel.albumlist.PhotoMiniatureContainer;
 import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumTreeContainer;
 import fr.umlv.IRPhoto.gui.panel.features.FeaturesContainer;
 import fr.umlv.IRPhoto.gui.panel.map.MapContainer;
@@ -39,8 +41,12 @@ public class ContainerFactory {
   }
 
   public static JComponent createAlbumListContainer() {
-    return new AlbumListContainer(albumModel, photoSelectionModel).getComponent();
+    return new AlbumListContainer(albumModel).getComponent();
   }
 
-  
+  public static PhotoMiniatureContainer createPhotoMiniatureContainer(
+      Photo photo) {
+    return new PhotoMiniatureContainer(photo, photoSelectionModel);
+  }
+
 }
