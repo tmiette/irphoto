@@ -1,6 +1,7 @@
 package fr.umlv.IRPhoto.gui.panel.album;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -80,7 +81,7 @@ public class AlbumModelImpl implements AlbumModel {
 
   @Override
   public void linkAlbum(Album album, File albumFile) {
-    if(album.hasDefaultName()){
+    if (album.hasDefaultName()) {
       this.nameAlbum(album, albumFile.getName());
     }
     album.setDirectory(albumFile);
@@ -118,9 +119,15 @@ public class AlbumModelImpl implements AlbumModel {
         String mimeType = mimeTypesFileTypeMap.getContentType(f);
         for (final String mime : ImageIO.getReaderMIMETypes()) {
           if (mimeType.equals(mime)) {
-            Photo photo = new Photo(f);
-            album.addPhoto(photo);
-            this.firePhotoAdded(album, photo);
+            try {
+              Photo photo = new Photo(f);
+              photo.setType(mimeType);
+              album.addPhoto(photo);
+              this.firePhotoAdded(album, photo);
+            } catch (FileNotFoundException e) {
+              System.err.println(e.getMessage());
+            }
+
           }
         }
       }

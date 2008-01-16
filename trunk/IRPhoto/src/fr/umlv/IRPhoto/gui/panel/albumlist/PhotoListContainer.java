@@ -27,7 +27,7 @@ public class PhotoListContainer implements ContainerInitializer {
     this.photoMiniatures = new HashMap<Photo, PhotoMiniatureContainer>();
 
     this.photoListPanel = createPhotoListPanel();
-    for (Photo photo : album.getSortedPhotos(Photo.NAME_ORDER)) {
+    for (Photo photo : album.getSortedPhotos(Photo.PHOTO_NAME_COMPARATOR)) {
       this.addPhoto(photo);
     }
 
@@ -86,7 +86,7 @@ public class PhotoListContainer implements ContainerInitializer {
     } else {
       this.photoListPanel.add(c.getComponent());
     }
-    this.photoListPanel.validate();
+    this.photoListPanel.revalidate();
   }
 
   @Override

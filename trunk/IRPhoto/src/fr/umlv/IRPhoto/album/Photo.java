@@ -1,17 +1,22 @@
 package fr.umlv.IRPhoto.album;
 
+import java.awt.Dimension;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Comparator;
+
+import javax.swing.ImageIcon;
 
 public class Photo {
 
+  private final File file;
+  private String type;
+  private ImageIcon icon;
   private double latitude;
   private double longitude;
-  private File file;
-  private String type;
-  // TODO date de modif
+  private Dimension dimension;
 
-  public static final Comparator<Photo> DATE_ORDER = new Comparator<Photo>() {
+  public static final Comparator<Photo> PHOTO_LAST_MODIFIED_DATE_COMPARATOR = new Comparator<Photo>() {
 
     @Override
     public int compare(Photo o1, Photo o2) {
@@ -21,7 +26,7 @@ public class Photo {
 
   };
 
-  public static final Comparator<Photo> NAME_ORDER = new Comparator<Photo>() {
+  public static final Comparator<Photo> PHOTO_NAME_COMPARATOR = new Comparator<Photo>() {
 
     @Override
     public int compare(Photo o1, Photo o2) {
@@ -30,7 +35,7 @@ public class Photo {
 
   };
 
-  public static final Comparator<Photo> TYPE_ORDER = new Comparator<Photo>() {
+  public static final Comparator<Photo> PHOTO_TYPE_COMPARATOR = new Comparator<Photo>() {
 
     @Override
     public int compare(Photo o1, Photo o2) {
@@ -39,8 +44,14 @@ public class Photo {
 
   };
 
-  public Photo(File file) {
+  public Photo(File file) throws FileNotFoundException {
+    if (!file.exists() || !file.canRead()) {
+      throw new FileNotFoundException("The file " + file.getAbsolutePath()
+          + " does not exist.");
+    }
     this.file = file;
+    // TODO appel bloquant
+    this.icon = new ImageIcon(this.getPath());
   }
 
   public double getLatitude() {
@@ -69,6 +80,22 @@ public class Photo {
 
   public String getType() {
     return this.type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public ImageIcon getImageIcon() {
+    return this.icon;
+  }
+
+  public Dimension getDimension() {
+    if (this.dimension == null) {
+      this.dimension = new Dimension(this.icon.getIconWidth(), this.icon
+          .getIconHeight());
+    }
+    return this.dimension;
   }
 
   @Override

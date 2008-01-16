@@ -30,6 +30,7 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
   // Miniature default dimension
   public static final Dimension DEFAULT_MINIATURE_DIMENSION = new Dimension(96,
       96);
+  private static final int MAX_CHAR_NAME_LENGTH = 15;
 
   public PhotoMiniatureContainer(Photo photo, PhotoSelectionModel model) {
 
@@ -37,15 +38,18 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
     this.photo = photo;
 
     final JLabel name = new JLabel(photo.getName());
+    if (photo.getName().length() > MAX_CHAR_NAME_LENGTH) {
+      name.setText(photo.getName().substring(0, MAX_CHAR_NAME_LENGTH) + "...");
+    }
     name.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     this.mainPanel = new JPanel(null);
     this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
     this.mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     this.mainPanel.setBackground(Color.WHITE);
+    this.mainPanel.setToolTipText(photo.getName());
 
-    // TODO url pas valide
-    final ImageIcon icon = new ImageIcon(photo.getPath());
+    ImageIcon icon = photo.getImageIcon();
     double ratio = icon.getIconWidth() / DEFAULT_MINIATURE_DIMENSION.getWidth();
     int w = (int) (icon.getIconWidth() / ratio);
     int h = (int) (icon.getIconHeight() / ratio);
