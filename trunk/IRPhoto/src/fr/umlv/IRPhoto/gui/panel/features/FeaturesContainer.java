@@ -2,8 +2,11 @@ package fr.umlv.IRPhoto.gui.panel.features;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -13,7 +16,6 @@ import javax.swing.JTextField;
 
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
-import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
 
@@ -85,7 +87,6 @@ public class FeaturesContainer implements ContainerInitializer {
   private static JTextField createTextField() {
     final JTextField field = new JTextField();
     field.setPreferredSize(new Dimension(100, 20));
-
     return field;
   }
 
@@ -93,24 +94,38 @@ public class FeaturesContainer implements ContainerInitializer {
   public JComponent getComponent() {
     final JPanel mainPanel = new JPanel(new BorderLayout());
 
+    final JLabel iconLabel = new JLabel();
+
     final JPanel featuresPanel = new JPanel(null);
     featuresPanel.setLayout(new BoxLayout(featuresPanel, BoxLayout.Y_AXIS));
     featuresPanel.add(this.nameLabel);
     featuresPanel.add(this.formatLabel);
     featuresPanel.add(this.dimensionsLabel);
 
-    final JPanel coordinatesPanel = new JPanel(null);
-    coordinatesPanel
-        .setLayout(new BoxLayout(coordinatesPanel, BoxLayout.Y_AXIS));
+    final JPanel coordinatesPanel = new JPanel(new GridLayout(4, 1));
     coordinatesPanel.add(new JLabel("Latitude"));
     coordinatesPanel.add(this.latitudeField);
     coordinatesPanel.add(new JLabel("Longitude"));
     coordinatesPanel.add(this.longitudeField);
 
-    mainPanel.add(new JLabel(IconFactory.getIcon("logo.gif")),
-        BorderLayout.WEST);
+    mainPanel.add(iconLabel, BorderLayout.WEST);
     mainPanel.add(featuresPanel, BorderLayout.CENTER);
     mainPanel.add(coordinatesPanel, BorderLayout.EAST);
+
+    mainPanel.addComponentListener(new ComponentAdapter() {
+      @Override
+      public void componentResized(ComponentEvent e) {
+        // TODO resize icon
+      }
+      /*
+       * ImageIcon icon = photo.getImageIcon(); double ratioHeight =
+       * icon.getIconHeight() / mainPanel.getHeight(); int w = (int)
+       * (icon.getIconWidth() / ratioHeight); int h = (int)
+       * (icon.getIconHeight() / ratioHeight); iconLabel.setIcon(new
+       * ImageIcon(icon.getImage().getScaledInstance(w, h,
+       * Image.SCALE_DEFAULT))); }
+       */
+    });
 
     return mainPanel;
   }
