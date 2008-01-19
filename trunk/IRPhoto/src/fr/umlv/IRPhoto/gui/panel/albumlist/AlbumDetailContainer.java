@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -25,8 +27,13 @@ public class AlbumDetailContainer implements ContainerInitializer {
   private final JPanel mainPanel;
   private final PhotoListContainer photoListView;
   private JLabel albumTitle;
+  private final Album album;
+  private final AlbumSelectionModel albumSelectionModel;
 
-  public AlbumDetailContainer(Album album) {
+  public AlbumDetailContainer(Album album,
+      AlbumSelectionModel albumSelectionModel) {
+    this.album = album;
+    this.albumSelectionModel = albumSelectionModel;
 
     // Contains panel with photos and search & sort buttons
     this.photoListView = createPhotoListPanel(album);
@@ -43,6 +50,17 @@ public class AlbumDetailContainer implements ContainerInitializer {
         System.err.println(mainPanel.getSize().getWidth());
         photoListView.getComponent().setPreferredSize(
             new Dimension((int) mainPanel.getSize().getWidth(), 2000));
+      }
+    });
+
+    this.mainPanel.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 1) {
+          AlbumDetailContainer.this.albumSelectionModel
+              .selectAlbum(AlbumDetailContainer.this.album);
+        }
+
       }
     });
 
@@ -69,6 +87,7 @@ public class AlbumDetailContainer implements ContainerInitializer {
     jp.setAlignmentX(Component.LEFT_ALIGNMENT);
 
     this.albumTitle = new JLabel(title);
+
     final JButton showPhotoList = createShowPhotoListButton();
 
     jp.add(this.albumTitle);

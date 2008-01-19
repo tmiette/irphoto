@@ -22,8 +22,10 @@ public class AlbumListContainer implements ContainerInitializer {
   private final GridBagConstraints constraints;
   private final HashMap<Album, AlbumDetailContainer> albumsDetailContainers;
   private final JPanel endPanel;
+  private final AlbumSelectionModel albumSelectionModel;
 
-  public AlbumListContainer(AlbumModel albumModel) {
+  public AlbumListContainer(AlbumModel albumModel, AlbumSelectionModel albumSelectionModel) {
+    this.albumSelectionModel = albumSelectionModel;
     this.albumsDetailContainers = new HashMap<Album, AlbumDetailContainer>();
     this.model = albumModel;
     this.model.addAlbumListener(new AlbumListener() {
@@ -81,7 +83,7 @@ public class AlbumListContainer implements ContainerInitializer {
   private void addAlbum(Album album) {
     this.constraints.gridy++;
 
-    final AlbumDetailContainer ta = new AlbumDetailContainer(album);
+    final AlbumDetailContainer ta = new AlbumDetailContainer(album, albumSelectionModel);
     this.albumsDetailContainers.put(album, ta);
     this.mainPanel.add(ta.getComponent(), this.constraints);
     this.addEndPanel();
