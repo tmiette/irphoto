@@ -37,7 +37,7 @@ public class ContainerFactory {
   }
 
   public static JComponent createMapContainer() {
-    return new MapContainer().getComponent();
+    return new MapContainer(albumModel).getComponent();
   }
 
   public static JComponent createAlbumListContainer() {
