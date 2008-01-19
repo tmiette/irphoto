@@ -3,7 +3,10 @@ package fr.umlv.IRPhoto.album;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Comparator;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 
@@ -15,13 +18,13 @@ public class Photo {
   private double latitude;
   private double longitude;
   private Dimension dimension;
+  private Date date;
 
   public static final Comparator<Photo> PHOTO_LAST_MODIFIED_DATE_COMPARATOR = new Comparator<Photo>() {
 
     @Override
     public int compare(Photo o1, Photo o2) {
-      // TODO Auto-generated method stub
-      return 0;
+      return (o1.date.compareTo(o2.date));
     }
 
   };
@@ -50,6 +53,8 @@ public class Photo {
           + " does not exist.");
     }
     this.file = file;
+    this.type = URLConnection.guessContentTypeFromName(this.file.getName());
+    this.date = new Date(this.file.lastModified());
     // TODO appel bloquant
     this.icon = new ImageIcon(this.getPath());
   }
