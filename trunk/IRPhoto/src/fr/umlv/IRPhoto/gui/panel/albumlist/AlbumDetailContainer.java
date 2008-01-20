@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.panel.album.PhotoSortModel;
 
 public class AlbumDetailContainer implements ContainerInitializer {
 
@@ -28,15 +29,14 @@ public class AlbumDetailContainer implements ContainerInitializer {
   private final PhotoListContainer photoListView;
   private JLabel albumTitle;
   private final Album album;
-  private final AlbumSelectionModel albumSelectionModel;
 
   public AlbumDetailContainer(Album album,
-      AlbumSelectionModel albumSelectionModel) {
+      final AlbumSelectionModel albumSelectionModel,
+      PhotoSortModel photoSortModel) {
     this.album = album;
-    this.albumSelectionModel = albumSelectionModel;
 
     // Contains panel with photos and search & sort buttons
-    this.photoListView = createPhotoListPanel(album);
+    this.photoListView = createPhotoListPanel(album, photoSortModel);
 
     this.mainPanel = new JPanel(null);
     this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
@@ -57,8 +57,7 @@ public class AlbumDetailContainer implements ContainerInitializer {
       @Override
       public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
-          AlbumDetailContainer.this.albumSelectionModel
-              .selectAlbum(AlbumDetailContainer.this.album);
+          albumSelectionModel.selectAlbum(AlbumDetailContainer.this.album);
         }
 
       }
@@ -74,8 +73,10 @@ public class AlbumDetailContainer implements ContainerInitializer {
     this.photoListView.addPhoto(photo);
   }
 
-  private PhotoListContainer createPhotoListPanel(Album album) {
-    final PhotoListContainer view = new PhotoListContainer(album);
+  private PhotoListContainer createPhotoListPanel(Album album,
+      PhotoSortModel photoSortModel) {
+    final PhotoListContainer view = new PhotoListContainer(album,
+        photoSortModel);
     view.getComponent().setVisible(false);
     view.getComponent().setAlignmentX(Component.LEFT_ALIGNMENT);
     return view;
