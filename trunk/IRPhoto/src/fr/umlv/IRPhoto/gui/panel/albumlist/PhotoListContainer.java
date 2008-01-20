@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
@@ -19,6 +20,7 @@ import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerFactory;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSortListener;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSortModel;
 
@@ -69,6 +71,8 @@ public class PhotoListContainer implements ContainerInitializer {
     // panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
     panel.add(Box.createHorizontalGlue());
 
+    panel.add(new JLabel(IconFactory.getIcon("find-32x32.png")));
+
     // Text field used to search photo
     final JTextField textField = new JTextField(2);
     // textField.setHorizontalAlignment(JTextField.LEADING);
@@ -101,7 +105,8 @@ public class PhotoListContainer implements ContainerInitializer {
   }
 
   private JButton createDateSortButton() {
-    final JButton b = new JButton("date");
+    final JButton b = new JButton(IconFactory.getIcon("calendar-32x32.png"));
+    b.setToolTipText("Sort photos by last modification date.");
     b.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -113,7 +118,8 @@ public class PhotoListContainer implements ContainerInitializer {
   }
 
   private JButton createTypeSortButton() {
-    final JButton b = new JButton("type");
+    final JButton b = new JButton(IconFactory.getIcon("calendar-32x32.png"));
+    b.setToolTipText("Sort photos by type.");
     b.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -124,7 +130,8 @@ public class PhotoListContainer implements ContainerInitializer {
   }
 
   private JButton createAlphaSortButton() {
-    final JButton b = new JButton("alpha");
+    final JButton b = new JButton(IconFactory.getIcon("calendar-32x32.png"));
+    b.setToolTipText("Sort photos by last name.");
     b.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {

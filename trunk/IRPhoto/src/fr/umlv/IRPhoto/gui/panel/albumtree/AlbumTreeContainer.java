@@ -43,7 +43,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
 
     // create icons
     this.rootIcon = IconFactory.getIcon("album-24x24.png");
-    this.leafIcon = IconFactory.getIcon("album2-24x24.png");
+    this.leafIcon = IconFactory.getIcon("album3-24x24.png");
 
     // initialize tree model
     this.albumModel = model;
