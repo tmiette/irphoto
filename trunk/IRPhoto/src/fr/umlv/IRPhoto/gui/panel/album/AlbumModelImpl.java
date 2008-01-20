@@ -102,7 +102,7 @@ public class AlbumModelImpl implements AlbumModel {
     return Collections.unmodifiableList(this.albums);
   }
 
-  public void crawle(File directory, final Album album) {
+  private void crawle(File directory, final Album album) {
 
     ExecutorService executor = Executors.newFixedThreadPool(10);
 
