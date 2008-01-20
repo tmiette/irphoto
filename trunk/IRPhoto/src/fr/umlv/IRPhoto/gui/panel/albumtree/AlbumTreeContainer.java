@@ -42,8 +42,8 @@ public class AlbumTreeContainer implements ContainerInitializer {
   public AlbumTreeContainer(AlbumModel model) {
 
     // create icons
-    this.rootIcon = IconFactory.getIcon("picture12x12.gif");
-    this.leafIcon = IconFactory.getIcon("arrow12x12.gif");
+    this.rootIcon = IconFactory.getIcon("album-24x24.png");
+    this.leafIcon = IconFactory.getIcon("album2-24x24.png");
 
     // initialize tree model
     this.albumModel = model;
@@ -57,6 +57,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
   @Override
   public JComponent getComponent() {
     final JPanel panel = new JPanel(new BorderLayout());
+    panel.setBackground(Color.WHITE);
     panel.add(this.initializeButtonsPanel(), BorderLayout.NORTH);
     final JScrollPane scrollPane = new JScrollPane(this.tree,
         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -71,7 +72,6 @@ public class AlbumTreeContainer implements ContainerInitializer {
 
     // initialize jtree
     final JTree tree = new JTree(model);
-    tree.setBackground(new Color(238, 238, 238));
     tree.setEditable(true);
     tree.setScrollsOnExpand(true);
     tree.setSelectionRow(0);
@@ -98,7 +98,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
         }
       }
     });
-    
+
     return tree;
   }
 
@@ -133,16 +133,16 @@ public class AlbumTreeContainer implements ContainerInitializer {
     renderer.setLeafIcon(this.rootIcon);
     renderer.setOpenIcon(this.rootIcon);
     renderer.setClosedIcon(this.rootIcon);
-    renderer.setBackgroundNonSelectionColor(new Color(238, 238, 238));
     return renderer;
   }
 
   private JPanel initializeButtonsPanel() {
 
     final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    panel.setBackground(Color.WHITE);
 
     // create the add button
-    final JButton addButton = new JButton("+");
+    final JButton addButton = new JButton(IconFactory.getIcon("add-32x32.png"));
     addButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -152,9 +152,11 @@ public class AlbumTreeContainer implements ContainerInitializer {
         renderer.setLeafIcon(leafIcon);
       }
     });
+    addButton.setToolTipText("Add a new album.");
 
     // create the remove button
-    final JButton removeButton = new JButton("X");
+    final JButton removeButton = new JButton(IconFactory
+        .getIcon("remove-32x32.png"));
     removeButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -175,6 +177,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
         }
       }
     });
+    removeButton.setToolTipText("Remove all selected albums.");
 
     // add buttons
     panel.add(addButton);
@@ -184,7 +187,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
   }
 
   private JLabel intializeLogo() {
-    final JLabel l = new JLabel(IconFactory.getIcon("logo.gif"));
+    final JLabel l = new JLabel(IconFactory.getIcon("logo.png"));
     return l;
   }
 
