@@ -7,44 +7,42 @@ import javax.swing.JPanel;
 
 class ImageScaledToPanel extends JPanel {
 
-   /**
-    * 
-    */
-   private static final long serialVersionUID = 2334026507944839069L;
-   Image image;
+  private static final long serialVersionUID = 2334026507944839069L;
+  
+  Image image;
 
-   public ImageScaledToPanel(Image image) {
+  public ImageScaledToPanel(Image image) {
 
-      this.image = image;
+    this.image = image;
 
-   }
+  }
 
-   public void setImage(Image image) {
+  public void setImage(Image image) {
 
-      this.image = image;
+    this.image = image;
 
-   }
+  }
 
-   public Image getImage(Image image) {
+  public Image getImage(Image image) {
 
-      return this.image;
+    return this.image;
 
-   }
+  }
 
-   public void paintComponent(Graphics g) {
+  public void paintComponent(Graphics g) {
 
-      super.paintComponent(g);
+    super.paintComponent(g);
 
-      if (image != null) {
+    if (image != null) {
 
-         int height = this.getSize().height;
+      int height = this.getSize().height;
 
-         int width = this.getSize().width;
+      int width = this.getSize().width;
 
-         g.drawImage(image, 0, 0, width, height, this);
+      g.drawImage(image, 0, 0, width, height, this);
 
-      }
+    }
 
-   }
+  }
 
 }
