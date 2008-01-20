@@ -56,9 +56,7 @@ public class AlbumDetailContainer implements ContainerInitializer {
     this.mainPanel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 1) {
           albumSelectionModel.selectAlbum(AlbumDetailContainer.this.album);
-        }
 
       }
     });
