@@ -12,6 +12,8 @@ public interface AlbumModel {
 
   public List<? extends Album> getSortedAlbums(Comparator<Album> comparator);
 
+  public void addSavedAlbum(Album album);
+  
   public void addAlbum();
 
   public void removeAlbum(List<Album> albums);

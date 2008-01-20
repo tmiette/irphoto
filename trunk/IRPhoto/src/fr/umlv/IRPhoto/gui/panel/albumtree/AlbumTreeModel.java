@@ -46,6 +46,11 @@ public class AlbumTreeModel extends DefaultTreeModel {
       }
 
     });
+
+    for (Album album : model.getAlbums()) {
+      this.getRootTreeNode().add(album);
+    }
+
   }
 
   public AlbumTreeNode getRootTreeNode() {

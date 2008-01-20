@@ -1,13 +1,16 @@
 package fr.umlv.IRPhoto.album;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class Album {
+public class Album implements Serializable {
 
+  private static final long serialVersionUID = -8637058736078893180L;
+  
   private static int albumsCreated;
   private final int id;
   private final ArrayList<Photo> photos;

@@ -27,6 +27,11 @@ public class AlbumModelImpl implements AlbumModel {
     this.albums = new ArrayList<Album>();
     this.listeners = new ArrayList<AlbumListener>();
   }
+  
+  @Override
+  public void addSavedAlbum(Album album) {
+    this.albums.add(album);
+  }
 
   @Override
   public void addAlbum() {

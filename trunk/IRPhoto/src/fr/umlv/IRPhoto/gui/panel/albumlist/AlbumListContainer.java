@@ -65,16 +65,16 @@ public class AlbumListContainer implements ContainerInitializer {
 
     this.endPanel = new JPanel(null);
     this.mainPanel = createAlbumListPanel();
+    
+    for (Album album : this.model.getAlbums()) {
+      this.addAlbum(album);
+    }
+    
   }
 
   private JPanel createAlbumListPanel() {
     final JPanel panel = new JPanel(new GridBagLayout());
     panel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.MAGENTA));
-
-    for (Album album : this.model.getAlbums()) {
-      this.addAlbum(album);
-    }
-
     return panel;
   }
 

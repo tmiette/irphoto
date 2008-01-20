@@ -3,18 +3,20 @@ package fr.umlv.IRPhoto.album;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URL;
+import java.io.Serializable;
 import java.net.URLConnection;
 import java.util.Comparator;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
 
-public class Photo {
+public class Photo implements Serializable {
 
+  private static final long serialVersionUID = -7367951897048766147L;
+  
   private final File file;
   private String type;
-  private ImageIcon icon;
+  private transient ImageIcon icon;
   private double latitude;
   private double longitude;
   private Dimension dimension;
@@ -92,6 +94,9 @@ public class Photo {
   }
 
   public ImageIcon getImageIcon() {
+    if(this.icon == null){
+      this.icon = new ImageIcon(this.getPath());
+    }
     return this.icon;
   }
 
