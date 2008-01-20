@@ -44,14 +44,12 @@ class ImageScaledToPanel extends JPanel {
       double ratioI = (double)image.getWidth(null) / (double)image.getHeight(null);
       double ratioC = (double)width / (double)height;
       
-      System.out.println("height=" + height + " width=" + width);
       
       if (ratioC <= 1) {
         height = (int)(width / ratioI);
       } else {
         width = (int)(height * ratioI);
       }
-      System.out.println("new    " + "height=" + height + " width=" + width);
       g.drawImage(image, 0, 0, width , height, this);
 
     }
