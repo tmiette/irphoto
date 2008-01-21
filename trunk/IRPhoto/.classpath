@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Users/sebastienmouret/Documents/workspace/IRPhoto/lib/swingx-2007_11_11.jar"/>
-	<classpathentry kind="lib" path="/Users/sebastienmouret/Documents/workspace/IRPhoto/lib/swingx-ws-2007_11_11.jar"/>
+	<classpathentry kind="lib" path="lib/swingx-2007_11_11.jar"/>
+	<classpathentry kind="lib" path="lib/swingx-ws-2007_11_11.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
