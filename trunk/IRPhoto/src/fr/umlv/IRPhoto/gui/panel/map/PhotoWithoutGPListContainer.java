@@ -119,10 +119,10 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
         .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     this.scrollPane
         .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    Dimension dim = new Dimension(DEFAULT_WIDTH,
-        DEFAULT_THUMBNAIL_SIZE.height * DEFAULT_THUMBNAIL_NB);
+    Dimension dim = new Dimension(DEFAULT_WIDTH, DEFAULT_THUMBNAIL_SIZE.height
+        * DEFAULT_THUMBNAIL_NB);
     this.scrollPane.setPreferredSize(dim);
-    this.scrollPane.setMinimumSize(new Dimension(0,0));
+    this.scrollPane.setMinimumSize(new Dimension(0, 0));
 
     this.panel = new JPanel(new BorderLayout());
     this.panel.add(scrollPane, BorderLayout.CENTER);
@@ -156,11 +156,9 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
           double longitude = Double.parseDouble(longitudeField.getText());
           if (photoSelected.getGeoPosition() == null) {
             photoSelected.setGeoPosition(new GeoPosition(latitude, longitude));
-          }
-          else {
-          photoSelected.getGeoPosition()
-              .setLatitude(latitude);
-          photoSelected.getGeoPosition().setLongitude(longitude);
+          } else {
+            photoSelected.getGeoPosition().setLatitude(latitude);
+            photoSelected.getGeoPosition().setLongitude(longitude);
           }
           photoUpdatedModel.geopositionUpdated(photoSelected);
         }
@@ -196,8 +194,8 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
    * @param photos photos to add
    */
   private void addPhotos(List<Photo> photos) {
+    logger.info("adding photos to list panel");
     for (Photo photo : photos) {
-      logger.info("ajout photo " + photo);
       this.addPhoto(photo);
     }
   }

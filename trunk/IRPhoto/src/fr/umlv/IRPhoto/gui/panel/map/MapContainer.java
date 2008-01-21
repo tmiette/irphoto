@@ -53,6 +53,9 @@ public class MapContainer implements ContainerInitializer {
 
   public MapContainer(AlbumSelectionModel albumSelectionModel,
       PhotoUpdatedModel photoUpdatedModel) {
+    MyJXMapKit kit = new MyJXMapKit();
+    this.map = kit.getMainMap();
+    
     this.photoUpdatedModel = photoUpdatedModel;
     this.photoUpdatedModel.addPhotoUpdatedListener(new PhotoUpdatedListener() {
 
@@ -80,6 +83,7 @@ public class MapContainer implements ContainerInitializer {
           public void albumSelected(Album album) {
             logger.info("Album selected");
             if (currentAlbum != null && !currentAlbum.equals(album)) {
+              logger.info("Album differ from current album");
               currentPainter.setVisible(false);
               currentAlbum = null;
               currentPainter = null;
@@ -88,16 +92,6 @@ public class MapContainer implements ContainerInitializer {
             map.repaint();
           }
         });
-
-    MyJXMapKit kit = new MyJXMapKit();
-    this.map = kit.getMainMap();
-
-//    final JPanel leftPanel = new JPanel(new BorderLayout());
-//    leftPanel.add(createCollapseButton(), BorderLayout.WEST);
-    this.photoListContainer = ContainerFactory
-        .createPhotoWithoutGPListContainer();
-//    leftPanel.add(this.photoListContainer, BorderLayout.CENTER);
-//    this.photoPanel.add(leftPanel, BorderLayout.WEST);
 
     final JLabel hoverLabel = new JLabel("Java");
     hoverLabel.setVisible(false);
@@ -126,9 +120,14 @@ public class MapContainer implements ContainerInitializer {
       }
     });
     
+    this.map.setAddressLocation(this.currentPosition);
+    
     JPanel panel = new JPanel(new BorderLayout());
     panel.setOpaque(false);
     panel.add(createCollapseButton(), BorderLayout.WEST);
+    this.photoListContainer = ContainerFactory
+    .createPhotoWithoutGPListContainer();
+    this.photoListContainer.setVisible(false);
     panel.add(this.photoListContainer, BorderLayout.CENTER);
     
     JPanel leftPanel = new JPanel(new BorderLayout());
@@ -180,8 +179,10 @@ public class MapContainer implements ContainerInitializer {
   public void addAlbum(Album album) {
     if (this.currentAlbum != null && this.currentAlbum.equals(album)) {
       // displaying waypoints on map
+      logger.info("Album already created" + album.getId());
       currentPainter.setVisible(true);
     } else {
+      logger.info("Album created");
       // create a Set of Waypoints
       Set<Waypoint> waypoints = new HashSet<Waypoint>();
 

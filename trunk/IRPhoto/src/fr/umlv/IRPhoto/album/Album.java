@@ -22,6 +22,13 @@ public class Album implements Serializable {
     this.name = "Album" + this.id;
     this.photos = new ArrayList<Photo>();
   }
+  
+  /**
+   * @return the id
+   */
+  public int getId() {
+    return this.id;
+  }
 
   public String getName() {
     return this.name;

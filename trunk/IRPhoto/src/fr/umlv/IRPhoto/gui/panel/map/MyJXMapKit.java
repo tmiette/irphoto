@@ -32,19 +32,26 @@ public class MyJXMapKit {
   private JSlider zoomSlider;
   private boolean zoomChanging = false;
   private final boolean sliderReversed = false;
-  public static final int MAP_THREAD_NB = 5;
+  public static final int MAP_THREAD_NB = 8;
 
-  private enum MyDefaultMaps {
+  public static enum MyDefaultMaps {
     OpenStreetMap
   };
 
   /**
    * 
    */
+  /**
+   * 
+   */
   public MyJXMapKit() {
+    this(MyDefaultMaps.OpenStreetMap);
+  }
+  
+  public MyJXMapKit(MyDefaultMaps myDefaultMaps) {
     initComponents();
     zoomSlider.setOpaque(false);
-    setDefaultMap(MyDefaultMaps.OpenStreetMap);
+    setDefaultMap(myDefaultMaps);
 
     mainMap.setCenterPosition(new GeoPosition(0, 0));
     mainMap.setRestrictOutsidePanning(true);
@@ -162,11 +169,6 @@ public class MyJXMapKit {
     gridBagConstraints.insets = new java.awt.Insets(4, 12, 4, 4);
     mainMap.add(jPanel1, gridBagConstraints);
 
-    // gridBagConstraints = new java.awt.GridBagConstraints();
-    // gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    // gridBagConstraints.weightx = 1.0;
-    // gridBagConstraints.weighty = 1.0;
-    // this.mainPanel.add(mainMap, gridBagConstraints);
   }
 
   /**
