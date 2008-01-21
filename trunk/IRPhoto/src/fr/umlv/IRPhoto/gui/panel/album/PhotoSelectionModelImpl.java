@@ -6,6 +6,7 @@ import fr.umlv.IRPhoto.album.Photo;
 
 public class PhotoSelectionModelImpl implements PhotoSelectionModel {
 
+  private Photo selectedPhoto;
   private final ArrayList<PhotoSelectionListener> listeners;
 
   public PhotoSelectionModelImpl() {
@@ -18,7 +19,13 @@ public class PhotoSelectionModelImpl implements PhotoSelectionModel {
   }
 
   @Override
+  public Photo getSelectedPhoto(){
+    return this.selectedPhoto;
+  }
+  
+  @Override
   public void selectPhoto(Photo photo) {
+    this.selectedPhoto = photo;
     this.firePhotoSelected(photo);
   }
 
