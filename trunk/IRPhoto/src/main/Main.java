@@ -23,6 +23,7 @@ public class Main {
     frame.addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {
+        // save
         AlbumLoader.save(model);
       }
     });
@@ -33,7 +34,7 @@ public class Main {
 
     // model
     final AlbumModel model = new AlbumModelImpl();
-    
+
     // load
     AlbumLoader.load(model);
 
