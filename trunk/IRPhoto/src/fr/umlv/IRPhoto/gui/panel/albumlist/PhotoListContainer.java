@@ -87,7 +87,7 @@ public class PhotoListContainer implements ContainerInitializer {
     panel.add(new JLabel(IconFactory.getIcon("find-32x32.png")));
 
     // Text field used to filter photo
-    final JTextField textField = new JTextField(5);
+    final JTextField textField = new JTextField(15);
     panel.add(textField);
 
     textField.addCaretListener(new CaretListener() {

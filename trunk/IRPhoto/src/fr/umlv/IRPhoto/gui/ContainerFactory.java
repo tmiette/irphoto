@@ -33,7 +33,7 @@ public class ContainerFactory {
   }
 
   public static JComponent createAlbumTreeContainer() {
-    return new AlbumTreeContainer(ContainerFactory.albumModel).getComponent();
+    return new AlbumTreeContainer(albumModel, albumSelectionModel).getComponent();
   }
 
   public static JComponent createFeaturesContainer() {
