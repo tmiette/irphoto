@@ -127,7 +127,11 @@ public class Photo implements Serializable {
     return sb.toString();
   }
   
-  public static class GeoPosition {
+  public static class GeoPosition implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1103404436818445389L;
     private double latitude;
     private double longitude;
     
