@@ -27,7 +27,7 @@ public class AlbumModelImpl implements AlbumModel {
     this.albums = new ArrayList<Album>();
     this.listeners = new ArrayList<AlbumListener>();
   }
-  
+
   @Override
   public void addSavedAlbum(Album album) {
     this.albums.add(album);
@@ -95,7 +95,7 @@ public class AlbumModelImpl implements AlbumModel {
 
   @Override
   public void nameAlbum(Album album, String name) {
-    if (name == null || name.length() > 0) {
+    if (album != null && (name == null || name.length() > 0)) {
       album.setName(name);
       this.fireAlbumRenamed(album, name);
     }

@@ -106,10 +106,11 @@ public class PhotoListContainer implements ContainerInitializer {
   }
 
   private JPanel createPhotoListPanel() {
-    final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+    final JPanel panel = new JPanel(null);
     panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
     panel.setBackground(Color.WHITE);
 
+    
     panel.setLayout(new LayoutManager() {
 
       private static final int CHILD_WIDTH = 116;

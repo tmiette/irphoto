@@ -64,6 +64,8 @@ public class AlbumListContainer implements ContainerInitializer {
     this.constraints.gridx = 0;
 
     this.endPanel = new JPanel(null);
+    this.endPanel.setBackground(Color.RED);
+    this.endPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 10));
     this.mainPanel = createAlbumListPanel();
     
     for (Album album : this.model.getAlbums()) {
