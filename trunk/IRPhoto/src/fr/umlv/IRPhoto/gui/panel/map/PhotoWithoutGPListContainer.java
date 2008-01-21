@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -29,6 +30,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+
+import main.Main;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
@@ -47,6 +50,7 @@ import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionModel;
  */
 public class PhotoWithoutGPListContainer implements ContainerInitializer {
 
+  private static final Logger logger = Logger.getLogger(Main.loggerName);
   private final AlbumSelectionModel albumSelectionModel;
   private final PhotoSelectionModel photoSelectionModel;
   private final PhotoUpdatedModel photoUpdatedModel;
@@ -193,7 +197,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
    */
   private void addPhotos(List<Photo> photos) {
     for (Photo photo : photos) {
-      System.out.println("ajout photo " + photo);
+      logger.info("ajout photo " + photo);
       this.addPhoto(photo);
     }
   }

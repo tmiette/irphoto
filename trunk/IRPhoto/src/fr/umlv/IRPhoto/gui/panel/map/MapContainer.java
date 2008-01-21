@@ -1,10 +1,9 @@
 package fr.umlv.IRPhoto.gui.panel.map;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.LayoutManager;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -14,17 +13,17 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
+import main.Main;
+
 import org.jdesktop.swingx.JXMapViewer;
-import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
-import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
 
@@ -40,8 +39,9 @@ import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionModel;
 
 public class MapContainer implements ContainerInitializer {
 
+  private final JPanel mainPanel;
+  private static final Logger logger = Logger.getLogger(Main.loggerName);
   private final JXMapViewer map;
-  private final JLayeredPane panel;
   private final JPanel photoPanel;
   private GeoPosition currentPosition;
   private final AlbumSelectionModel albumSelectionModel;
@@ -57,23 +57,21 @@ public class MapContainer implements ContainerInitializer {
 
       @Override
       public void geoppositionUpdated(Photo photo) {
+        logger.info("Photo updated : new geoposition coordinate");
         addPhoto(photo);
         map.repaint();
       }
 
       @Override
       public void nameUpdated(Photo photo) {
-        // TODO Auto-generated method stub
+        // nothing
 
       }
 
     });
 
-    this.panel = new JLayeredPane();
-    this.panel.setLayout(createLayoutManger());
-
     this.photoPanel = new JPanel(new BorderLayout());
-    this.photoPanel.setOpaque(false);
+//    this.photoPanel.setOpaque(false);
 
     this.currentPosition = new GeoPosition(43.604503, 1.444026);
 
@@ -82,6 +80,7 @@ public class MapContainer implements ContainerInitializer {
         .addAlbumSelectionListener(new AlbumSelectionListener() {
           @Override
           public void albumSelected(Album album) {
+            logger.info("Album selected");
             if (currentAlbum != null && !currentAlbum.equals(album)) {
               currentPainter.setVisible(false);
               currentAlbum = null;
@@ -92,31 +91,15 @@ public class MapContainer implements ContainerInitializer {
           }
         });
 
-    final int max = 17;
-    TileFactoryInfo info = new TileFactoryInfo(0, max, max, 256, true, true,
-        "http://tile.openstreetmap.org",// 5/15/10.png",
-        "x", "y", "z") {
-      public String getTileUrl(int x, int y, int zoom) {
-        zoom = max - zoom;
-        String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
-        return url;
-      }
-    };
-    this.map = new JXMapViewer();
-    this.map.setTileFactory(new DefaultTileFactory(info));
-    this.map.setZoom(6);
-    this.map.setAddressLocation(this.currentPosition);
+    MyJXMapKit kit = new MyJXMapKit();
+    this.map = kit.getMainMap();
 
-    // TEST
-    // this.addAlbum(null);
-
-    final JPanel leftPanel = new JPanel(new BorderLayout());
-    leftPanel.add(createCollapseButton(), BorderLayout.WEST);
+//    final JPanel leftPanel = new JPanel(new BorderLayout());
+//    leftPanel.add(createCollapseButton(), BorderLayout.WEST);
     this.photoListContainer = ContainerFactory
         .createPhotoWithoutGPListContainer();
-    this.photoListContainer.setVisible(false);
-    leftPanel.add(this.photoListContainer, BorderLayout.CENTER);
-    this.photoPanel.add(leftPanel, BorderLayout.WEST);
+//    leftPanel.add(this.photoListContainer, BorderLayout.CENTER);
+//    this.photoPanel.add(leftPanel, BorderLayout.WEST);
 
     final JLabel hoverLabel = new JLabel("Java");
     hoverLabel.setVisible(false);
@@ -144,18 +127,49 @@ public class MapContainer implements ContainerInitializer {
         }
       }
     });
+    
+    // ///////////
+     JPanel jp = new JPanel(new GridBagLayout());
+     JButton b = new JButton(">");
+     b.setPreferredSize(new Dimension(10, 50));
+    
+     GridBagConstraints gridBagConstraints = new GridBagConstraints();
+     gridBagConstraints.gridx = 0;
+     gridBagConstraints.gridy = 0;
+     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+     // gridBagConstraints.weightx = 1.0;
+     // gridBagConstraints.weighty = 1.0;
+     // gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+     this.map.add(b, gridBagConstraints);
+    
+     gridBagConstraints = new java.awt.GridBagConstraints();
+     gridBagConstraints.gridx = 0;
+     gridBagConstraints.gridy = 0;
+     gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+     gridBagConstraints.weightx = 1.0;
+     gridBagConstraints.weighty = 1.0;
+     gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+     this.map.add(jp, gridBagConstraints);
+     
+     gridBagConstraints = new java.awt.GridBagConstraints();
+     gridBagConstraints.gridx = 0;
+     gridBagConstraints.gridy = 0;
+//     gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+     gridBagConstraints.weightx = 1.0;
+     gridBagConstraints.weighty = 1.0;
+     gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+     this.map.add(this.photoListContainer, gridBagConstraints);
 
-    this.map.setBounds(0, 0, this.panel.getWidth(), this.panel.getHeight());
-    this.photoPanel.setBounds(0, 0, this.panel.getWidth(), this.panel
-        .getHeight());
+    // ////////
 
-    this.panel.add(this.photoPanel, Integer.valueOf(2));
-    this.panel.add(this.map, Integer.valueOf(1));
-
+    this.mainPanel = new JPanel(new BorderLayout());
+    this.mainPanel.add(this.map, BorderLayout.CENTER);
   }
 
   /**
-   * @return
+   * Creates a button which sets visible or not the photos list on map.
+   * 
+   * @return button
    */
   private JComponent createCollapseButton() {
     final JButton b = new JButton();
@@ -183,8 +197,14 @@ public class MapContainer implements ContainerInitializer {
     return b;
   }
 
+  /**
+   * Adds photos belonging to album on map.
+   * 
+   * @param album album containing photos to add on map
+   */
   public void addAlbum(Album album) {
     if (this.currentAlbum != null && this.currentAlbum.equals(album)) {
+      // displaying waypoints on map
       currentPainter.setVisible(true);
     } else {
       // create a Set of Waypoints
@@ -193,24 +213,34 @@ public class MapContainer implements ContainerInitializer {
       // adding photo waypoint
       for (Photo photo : album.getPhotos()) {
         if (photo.getGeoPosition() != null) {
+          // Adding valid geoposition corrdinates
           waypoints.add(new Waypoint(photo.getGeoPosition().getLatitude(),
               photo.getGeoPosition().getLongitude()));
         }
 
       }
 
-      // TEST
-      // waypoints.add(new Waypoint(currentPosition));
-
       // create a WaypointPainter to draw the points
       WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
       painter.setWaypoints(waypoints);
+
+      // Save current album to future display
       this.currentAlbum = album;
+
+      // Save current painter to future waypoints display
       this.currentPainter = painter;
+
+      // Display waypoints
       this.map.setOverlayPainter(painter);
     }
   }
 
+  /**
+   * Adds photo geoposition coordinates to current painter to display the new
+   * photo on the map.
+   * 
+   * @param photo photo to add on map
+   */
   public void addPhoto(Photo photo) {
     for (Photo ph : this.currentAlbum.getPhotos()) {
       if (photo.equals(ph) && photo.getGeoPosition() != null) {
@@ -224,56 +254,8 @@ public class MapContainer implements ContainerInitializer {
 
   @Override
   public JComponent getComponent() {
-    return this.panel;
-  }
-
-  public static LayoutManager createLayoutManger() {
-    return new LayoutManager() {
-      @Override
-      public void addLayoutComponent(String name, Component parent) {
-        // nothing
-      }
-
-      @Override
-      public void removeLayoutComponent(Component parent) {
-        // nothing
-      }
-
-      @Override
-      public void layoutContainer(Container parent) {
-        int count = parent.getComponentCount();
-        for (int i = 0; i < count; i++) {
-          Component component = parent.getComponent(i);
-          component.setBounds(0, 0, parent.getWidth(), parent.getHeight());
-        }
-      }
-
-      @Override
-      public Dimension minimumLayoutSize(Container parent) {
-        return preferredLayoutSize(parent);
-      }
-
-      @Override
-      public Dimension preferredLayoutSize(Container parent) {
-        int width = 0;
-        int height = 0;
-        int count = parent.getComponentCount();
-        for (int i = 0; i < count; i++) {
-          Component c = parent.getComponent(i);
-          Dimension preferred = c.getPreferredSize();
-
-          if (preferred.width > width) {
-            width = preferred.width;
-          }
-          if (preferred.height > height) {
-            height = preferred.height;
-          }
-
-        }
-        return new Dimension(width, height);
-      }
-
-    };
+    // return this.panel;
+    return this.mainPanel;
   }
 
 }
