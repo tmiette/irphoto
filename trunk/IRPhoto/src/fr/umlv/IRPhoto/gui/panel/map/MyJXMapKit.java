@@ -5,6 +5,8 @@ package fr.umlv.IRPhoto.gui.panel.map;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -46,6 +48,12 @@ public class MyJXMapKit {
 
     mainMap.setCenterPosition(new GeoPosition(0, 0));
     mainMap.setRestrictOutsidePanning(true);
+
+    mainMap.addPropertyChangeListener("zoom", new PropertyChangeListener() {
+      public void propertyChange(PropertyChangeEvent evt) {
+        zoomSlider.setValue(mainMap.getZoom());
+      }
+    });
 
     ((DefaultTileFactory) this.mainMap.getTileFactory())
         .setThreadPoolSize(MAP_THREAD_NB);
@@ -145,38 +153,13 @@ public class MyJXMapKit {
     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
     jPanel1.add(zoomSlider, gridBagConstraints);
 
-    // ///////////
-    // JPanel jp = new JPanel(new GridBagLayout());
-    // JButton b = new JButton(">");
-    // b.setPreferredSize(new Dimension(10, 50));
-    //
-    // gridBagConstraints = new java.awt.GridBagConstraints();
-    // gridBagConstraints.gridx = 0;
-    // gridBagConstraints.gridy = 0;
-    // gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    // // gridBagConstraints.weightx = 1.0;
-    // // gridBagConstraints.weighty = 1.0;
-    // // gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-    // mainMap.add(b, gridBagConstraints);
-    //
-    // gridBagConstraints = new java.awt.GridBagConstraints();
-    // gridBagConstraints.gridx = 0;
-    // gridBagConstraints.gridy = 0;
-    // gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
-    // gridBagConstraints.weightx = 1.0;
-    // gridBagConstraints.weighty = 1.0;
-    // gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-    // mainMap.add(jp, gridBagConstraints);
-
-    // ////////
-
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
+    gridBagConstraints.gridx = 10;
+    gridBagConstraints.gridy = 10;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
     gridBagConstraints.weightx = 1.0;
     gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.insets = new java.awt.Insets(4, 12, 4, 4);
     mainMap.add(jPanel1, gridBagConstraints);
 
     // gridBagConstraints = new java.awt.GridBagConstraints();

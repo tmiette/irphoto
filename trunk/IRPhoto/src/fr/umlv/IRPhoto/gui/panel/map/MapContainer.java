@@ -1,9 +1,10 @@
 package fr.umlv.IRPhoto.gui.panel.map;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import main.Main;
@@ -39,10 +41,9 @@ import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionModel;
 
 public class MapContainer implements ContainerInitializer {
 
-  private final JPanel mainPanel;
+  private final JLayeredPane mainPanel;
   private static final Logger logger = Logger.getLogger(Main.loggerName);
   private final JXMapViewer map;
-  private final JPanel photoPanel;
   private GeoPosition currentPosition;
   private final AlbumSelectionModel albumSelectionModel;
   private final PhotoUpdatedModel photoUpdatedModel;
@@ -69,9 +70,6 @@ public class MapContainer implements ContainerInitializer {
       }
 
     });
-
-    this.photoPanel = new JPanel(new BorderLayout());
-//    this.photoPanel.setOpaque(false);
 
     this.currentPosition = new GeoPosition(43.604503, 1.444026);
 
@@ -128,42 +126,19 @@ public class MapContainer implements ContainerInitializer {
       }
     });
     
-    // ///////////
-     JPanel jp = new JPanel(new GridBagLayout());
-     JButton b = new JButton(">");
-     b.setPreferredSize(new Dimension(10, 50));
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.setOpaque(false);
+    panel.add(createCollapseButton(), BorderLayout.WEST);
+    panel.add(this.photoListContainer, BorderLayout.CENTER);
     
-     GridBagConstraints gridBagConstraints = new GridBagConstraints();
-     gridBagConstraints.gridx = 0;
-     gridBagConstraints.gridy = 0;
-     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-     // gridBagConstraints.weightx = 1.0;
-     // gridBagConstraints.weighty = 1.0;
-     // gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-     this.map.add(b, gridBagConstraints);
+    JPanel leftPanel = new JPanel(new BorderLayout());
+    leftPanel.setOpaque(false);
+    leftPanel.add(panel, BorderLayout.WEST);
     
-     gridBagConstraints = new java.awt.GridBagConstraints();
-     gridBagConstraints.gridx = 0;
-     gridBagConstraints.gridy = 0;
-     gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
-     gridBagConstraints.weightx = 1.0;
-     gridBagConstraints.weighty = 1.0;
-     gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-     this.map.add(jp, gridBagConstraints);
-     
-     gridBagConstraints = new java.awt.GridBagConstraints();
-     gridBagConstraints.gridx = 0;
-     gridBagConstraints.gridy = 0;
-//     gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
-     gridBagConstraints.weightx = 1.0;
-     gridBagConstraints.weighty = 1.0;
-     gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-     this.map.add(this.photoListContainer, gridBagConstraints);
-
-    // ////////
-
-    this.mainPanel = new JPanel(new BorderLayout());
-    this.mainPanel.add(this.map, BorderLayout.CENTER);
+    this.mainPanel = new JLayeredPane();
+    this.mainPanel.setLayout(createLayoutManager());
+    this.mainPanel.add(leftPanel, new Integer(1));
+    this.mainPanel.add(this.map, new Integer(0));
   }
 
   /**
@@ -257,5 +232,56 @@ public class MapContainer implements ContainerInitializer {
     // return this.panel;
     return this.mainPanel;
   }
+  
+  public static LayoutManager createLayoutManager() {
+    return new LayoutManager() {
+      @Override
+      public void addLayoutComponent(String name, Component parent) {
+        // nothing
+      }
+
+      @Override
+      public void removeLayoutComponent(Component parent) {
+        // nothing
+      }
+
+      @Override
+      public void layoutContainer(Container parent) {
+        int count = parent.getComponentCount();
+        for (int i = 0; i < count; i++) {
+          Component component = parent.getComponent(i);
+          component.setBounds(0, 0, parent.getWidth(), parent
+              .getHeight());
+        }
+      }
+
+      @Override
+      public Dimension minimumLayoutSize(Container parent) {
+        return preferredLayoutSize(parent);
+      }
+
+      @Override
+      public Dimension preferredLayoutSize(Container parent) {
+        int width = 0;
+        int height = 0;
+        int count = parent.getComponentCount();
+        for (int i = 0; i < count; i++) {
+          Component c = parent.getComponent(i);
+          Dimension preferred = c.getPreferredSize();
+
+          if (preferred.width > width) {
+            width = preferred.width;
+          }
+          if (preferred.height > height) {
+            height = preferred.height;
+          }
+
+        }
+        return new Dimension(width, height);
+      }
+
+    };
+  }
+
 
 }
