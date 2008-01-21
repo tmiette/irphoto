@@ -117,19 +117,10 @@ public class FeaturesContainer implements ContainerInitializer {
     mainPanel.addComponentListener(new ComponentAdapter() {
       @Override
       public void componentResized(ComponentEvent e) {
-        image.setPreferredSize(new Dimension(mainPanel.getSize().width / 3,
-            mainPanel.getSize().height));
+        image.setPreferredSize(new Dimension((int) (mainPanel.getSize()
+            .getWidth() / 3), (int) mainPanel.getSize().getHeight()));
       }
-      /*
-       * ImageIcon icon = photo.getImageIcon(); double ratioHeight =
-       * icon.getIconHeight() / mainPanel.getHeight(); int w = (int)
-       * (icon.getIconWidth() / ratioHeight); int h = (int)
-       * (icon.getIconHeight() / ratioHeight); iconLabel.setIcon(new
-       * ImageIcon(icon.getImage().getScaledInstance(w, h,
-       * Image.SCALE_DEFAULT))); }
-       */
     });
-
 
     return mainPanel;
   }
