@@ -2,6 +2,8 @@ package fr.umlv.IRPhoto.gui.panel.features;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
@@ -26,6 +29,7 @@ import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
 
 public class FeaturesContainer implements ContainerInitializer {
 
+  private static final Font boldFont = new Font(null, Font.BOLD, 12);
   private final JTextField latitudeField;
   private final JTextField longitudeField;
   private final JButton submit;
@@ -65,9 +69,9 @@ public class FeaturesContainer implements ContainerInitializer {
       }
     });
 
-    this.nameLabel = new JLabel();
-    this.formatLabel = new JLabel();
-    this.dimensionsLabel = new JLabel();
+    this.nameLabel = createInfosLabel(null);
+    this.formatLabel = createInfosLabel(null);
+    this.dimensionsLabel = createInfosLabel(null);
     this.image = new ImageScaledToPanel(null);
 
     this.model = model;
@@ -108,16 +112,43 @@ public class FeaturesContainer implements ContainerInitializer {
     return field;
   }
 
+  private static JLabel createInfosLabel(String text) {
+    final JLabel label = new JLabel(text);
+    label.setFont(boldFont);
+    return label;
+  }
+
   @Override
   public JComponent getComponent() {
     final JPanel mainPanel = new JPanel(new BorderLayout());
+
+    final JPanel featuresNamesPanel = new JPanel(null);
+    featuresNamesPanel.setMinimumSize(new Dimension(0, 0));
+    featuresNamesPanel.setLayout(new BoxLayout(featuresNamesPanel,
+        BoxLayout.Y_AXIS));
+    featuresNamesPanel.add(createInfosLabel("Name :"));
+    featuresNamesPanel.add(Box.createVerticalStrut(5));
+    featuresNamesPanel.add(createInfosLabel("Type :"));
+    featuresNamesPanel.add(Box.createVerticalStrut(5));
+    featuresNamesPanel.add(createInfosLabel("Dimensions :"));
 
     final JPanel featuresPanel = new JPanel(null);
     featuresPanel.setMinimumSize(new Dimension(0, 0));
     featuresPanel.setLayout(new BoxLayout(featuresPanel, BoxLayout.Y_AXIS));
     featuresPanel.add(this.nameLabel);
+    featuresPanel.add(Box.createVerticalStrut(5));
     featuresPanel.add(this.formatLabel);
+    featuresPanel.add(Box.createVerticalStrut(5));
     featuresPanel.add(this.dimensionsLabel);
+
+    final JPanel gridPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    gridPanel.add(featuresNamesPanel);
+    gridPanel.add(featuresPanel);
+
+    final JScrollPane scrollGridPane = new JScrollPane(gridPanel,
+        JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scrollGridPane.setBorder(null);
 
     final JPanel coordinatesPanel = new JPanel(new GridLayout(5, 1));
     coordinatesPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
@@ -131,7 +162,7 @@ public class FeaturesContainer implements ContainerInitializer {
     northCoordinates.add(coordinatesPanel, BorderLayout.NORTH);
 
     mainPanel.add(this.image, BorderLayout.WEST);
-    mainPanel.add(featuresPanel, BorderLayout.CENTER);
+    mainPanel.add(scrollGridPane, BorderLayout.CENTER);
     mainPanel.add(northCoordinates, BorderLayout.EAST);
 
     mainPanel.addComponentListener(new ComponentAdapter() {
