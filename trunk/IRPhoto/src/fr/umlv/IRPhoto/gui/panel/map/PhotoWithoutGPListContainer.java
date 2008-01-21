@@ -32,6 +32,7 @@ import javax.swing.border.Border;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
+import fr.umlv.IRPhoto.album.Photo.GeoPosition;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedListener;
@@ -66,22 +67,23 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
    * 
    */
   public PhotoWithoutGPListContainer(AlbumSelectionModel albumSelectionModel,
-      PhotoSelectionModel photoSelectionModel, PhotoUpdatedModel photoUpdatedModel) {
+      PhotoSelectionModel photoSelectionModel,
+      PhotoUpdatedModel photoUpdatedModel) {
     this.photoUpdatedModel = photoUpdatedModel;
     this.photoUpdatedModel.addPhotoUpdatedListener(new PhotoUpdatedListener() {
 
       @Override
       public void geoppositionUpdated(Photo photo) {
-       removePhoto(photo);
-       scrollPane.validate();
+        removePhoto(photo);
+        scrollPane.validate();
       }
 
       @Override
       public void nameUpdated(Photo photo) {
         // TODO Auto-generated method stub
-        
+
       }
-      
+
     });
     this.photoSelectionModel = photoSelectionModel;
     this.albumSelectionModel = albumSelectionModel;
@@ -108,8 +110,10 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     final JPanel textFieldPanel = this.createTextFieldPanel();
 
     this.scrollPane = new JScrollPane(this.photoListPanel);
-    this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    this.scrollPane
+        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    this.scrollPane
+        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     Dimension dim = new Dimension(DEFAULT_THUMBNAIL_SIZE.width,
         DEFAULT_THUMBNAIL_SIZE.height * DEFAULT_THUMBNAIL_NB);
     this.scrollPane.setPreferredSize(dim);
@@ -142,10 +146,16 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
             && longitudeField != null
             && isValidCoordinate(latitudeField.getText())
             && isValidCoordinate(longitudeField.getText())) {
-          photoSelected
-              .setLatitude(Double.parseDouble(latitudeField.getText()));
-          photoSelected.setLongitude(Double
-              .parseDouble(longitudeField.getText()));
+          double latitude = Double.parseDouble(latitudeField.getText());
+          double longitude = Double.parseDouble(longitudeField.getText());
+          if (photoSelected.getGeoPosition() == null) {
+            photoSelected.setGeoPosition(new GeoPosition(latitude, longitude));
+          }
+          else {
+          photoSelected.getGeoPosition()
+              .setLatitude(latitude);
+          photoSelected.getGeoPosition().setLongitude(longitude);
+          }
           photoUpdatedModel.geopositionUpdated(photoSelected);
         }
       }
@@ -197,7 +207,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     int w = (int) (icon.getIconWidth() / ratio);
     int h = (int) (icon.getIconHeight() / ratio);
     final JLabel label = new JLabel();
-//    label.setPreferredSize(DEFAULT_THUMBNAIL_SIZE);
+    // label.setPreferredSize(DEFAULT_THUMBNAIL_SIZE);
     icon = new ImageIcon(getScaledImage(icon.getImage(), w, h));
     label.setIcon(icon);
     label.addMouseListener(new MouseAdapter() {
@@ -248,7 +258,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   private List<Photo> getPhotosWhitoutGP(List<Photo> photos) {
     ArrayList<Photo> photosWithoutGP = new ArrayList<Photo>();
     for (Photo photo : photos) {
-      if (photo.getLatitude() == 0 && photo.getLongitude() == 0) {
+      if (photo.getGeoPosition() == null) {
         photosWithoutGP.add(photo);
       }
     }

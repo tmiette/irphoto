@@ -15,7 +15,6 @@ import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -113,10 +112,10 @@ public class MapContainer implements ContainerInitializer {
 
     final JPanel leftPanel = new JPanel(new BorderLayout());
     leftPanel.add(createCollapseButton(), BorderLayout.WEST);
-    this.photoListContainer = ContainerFactory.createPhotoWithoutGPListContainer();
+    this.photoListContainer = ContainerFactory
+        .createPhotoWithoutGPListContainer();
     this.photoListContainer.setVisible(false);
-    leftPanel.add(this.photoListContainer,
-        BorderLayout.CENTER);
+    leftPanel.add(this.photoListContainer, BorderLayout.CENTER);
     this.photoPanel.add(leftPanel, BorderLayout.WEST);
 
     final JLabel hoverLabel = new JLabel("Java");
@@ -162,9 +161,11 @@ public class MapContainer implements ContainerInitializer {
     final JButton b = new JButton();
     b.setIcon(IconFactory.getIcon("arrow-right-12x12.gif"));
     b.setPreferredSize(new Dimension(12, 0));
-    
+
     b.addActionListener(new ActionListener() {
-      /* (non-Javadoc)
+      /*
+       * (non-Javadoc)
+       * 
        * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
        */
       @Override
@@ -191,7 +192,11 @@ public class MapContainer implements ContainerInitializer {
 
       // adding photo waypoint
       for (Photo photo : album.getPhotos()) {
-        waypoints.add(new Waypoint(photo.getLatitude(), photo.getLongitude()));
+        if (photo.getGeoPosition() != null) {
+          waypoints.add(new Waypoint(photo.getGeoPosition().getLatitude(),
+              photo.getGeoPosition().getLongitude()));
+        }
+
       }
 
       // TEST
@@ -208,9 +213,10 @@ public class MapContainer implements ContainerInitializer {
 
   public void addPhoto(Photo photo) {
     for (Photo ph : this.currentAlbum.getPhotos()) {
-      if (photo.equals(ph)) {
+      if (photo.equals(ph) && photo.getGeoPosition() != null) {
         this.currentPainter.getWaypoints().add(
-            new Waypoint(photo.getLatitude(), photo.getLongitude()));
+            new Waypoint(photo.getGeoPosition().getLatitude(), photo
+                .getGeoPosition().getLongitude()));
         return;
       }
     }

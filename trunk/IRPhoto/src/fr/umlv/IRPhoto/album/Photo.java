@@ -17,8 +17,7 @@ public class Photo implements Serializable {
   private final File file;
   private String type;
   private transient ImageIcon icon;
-  private double latitude;
-  private double longitude;
+ private GeoPosition geoPosition;
   private Dimension dimension;
   private Date date;
 
@@ -60,21 +59,19 @@ public class Photo implements Serializable {
     // TODO appel bloquant
     this.icon = new ImageIcon(this.getPath());
   }
-
-  public double getLatitude() {
-    return this.latitude;
+  
+  /**
+   * @return the geoPosition
+   */
+  public GeoPosition getGeoPosition() {
+    return this.geoPosition;
   }
-
-  public void setLatitude(double latitude) {
-    this.latitude = latitude;
-  }
-
-  public double getLongitude() {
-    return this.longitude;
-  }
-
-  public void setLongitude(double longitude) {
-    this.longitude = longitude;
+  
+  /**
+   * @param geoPosition the geoPosition to set
+   */
+  public void setGeoPosition(GeoPosition geoPosition) {
+    this.geoPosition = geoPosition;
   }
 
   public String getName() {
@@ -126,10 +123,50 @@ public class Photo implements Serializable {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("Photo ").append("(name=").append(this.getName()).append(") ")
-        .append("(latidude=").append(this.latitude).append(", longitude=")
-        .append(this.longitude).append(")");
+    sb.append("Photo ").append("(name=").append(this.getName()).append(") ");
     return sb.toString();
+  }
+  
+  public static class GeoPosition {
+    private double latitude;
+    private double longitude;
+    
+    /**
+     * 
+     */
+    public GeoPosition(double latitude, double longitude) {
+      this.latitude = latitude;
+      this.longitude = longitude;
+    }
+
+    /**
+     * @return the longitude
+     */
+    public double getLongitude() {
+      return this.longitude;
+    }
+    
+    /**
+     * @return the latitude
+     */
+    public double getLatitude() {
+      return this.latitude;
+    }
+    
+    /**
+     * @param latitude the latitude to set
+     */
+    public void setLatitude(double latitude) {
+      this.latitude = latitude;
+    }
+    
+    /**
+     * @param longitude the longitude to set
+     */
+    public void setLongitude(double longitude) {
+      this.longitude = longitude;
+    }
+
   }
 
 }
