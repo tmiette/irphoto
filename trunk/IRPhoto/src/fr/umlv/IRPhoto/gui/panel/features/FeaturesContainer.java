@@ -8,11 +8,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
@@ -23,6 +26,7 @@ public class FeaturesContainer implements ContainerInitializer {
 
   private final JTextField latitudeField;
   private final JTextField longitudeField;
+  private final JButton submit;
   private final JLabel nameLabel;
   private final JLabel formatLabel;
   private final JLabel dimensionsLabel;
@@ -56,6 +60,25 @@ public class FeaturesContainer implements ContainerInitializer {
         }
       }
     });
+    this.submit = new JButton("OK");
+    this.submit.setToolTipText("Validate the new coordinates.");
+    this.submit.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        final Photo photo = getPhoto();
+        try {
+          photo.setLongitude(Double.parseDouble(longitudeField.getText()));
+        } catch (NumberFormatException e1) {
+          longitudeField.setText(photo.getLatitude() + "");
+        }
+        try {
+          photo.setLatitude(Double.parseDouble(latitudeField.getText()));
+        } catch (NumberFormatException e1) {
+          latitudeField.setText(photo.getLatitude() + "");
+        }
+      }
+    });
+
     this.nameLabel = new JLabel();
     this.formatLabel = new JLabel();
     this.dimensionsLabel = new JLabel();
@@ -104,11 +127,15 @@ public class FeaturesContainer implements ContainerInitializer {
     featuresPanel.add(this.formatLabel);
     featuresPanel.add(this.dimensionsLabel);
 
-    final JPanel coordinatesPanel = new JPanel(new GridLayout(4, 1));
+    final JPanel coordinatesPanel = new JPanel(null);
+    coordinatesPanel.setLayout(new BoxLayout(coordinatesPanel, BoxLayout.Y_AXIS));
+    coordinatesPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
+        .createEtchedBorder(EtchedBorder.LOWERED), "Coordinates :"));
     coordinatesPanel.add(new JLabel("Latitude"));
     coordinatesPanel.add(this.latitudeField);
     coordinatesPanel.add(new JLabel("Longitude"));
     coordinatesPanel.add(this.longitudeField);
+    coordinatesPanel.add(this.submit);
 
     mainPanel.add(this.image, BorderLayout.WEST);
     mainPanel.add(featuresPanel, BorderLayout.CENTER);
