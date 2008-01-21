@@ -10,12 +10,14 @@ import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModelImpl;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSortModel;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSortModelImpl;
+import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedModelImpl;
 import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumListContainer;
 import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionModelImpl;
 import fr.umlv.IRPhoto.gui.panel.albumlist.PhotoMiniatureContainer;
 import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumTreeContainer;
 import fr.umlv.IRPhoto.gui.panel.features.FeaturesContainer;
 import fr.umlv.IRPhoto.gui.panel.map.MapContainer;
+import fr.umlv.IRPhoto.gui.panel.map.PhotoWithoutGPListContainer;
 
 public class ContainerFactory {
 
@@ -23,6 +25,7 @@ public class ContainerFactory {
   private static final PhotoSelectionModel photoSelectionModel = new PhotoSelectionModelImpl();
   private static final PhotoSortModel photoSortModel = new PhotoSortModelImpl();
   private static final AlbumSelectionModelImpl albumSelectionModel = new AlbumSelectionModelImpl();
+  private static final PhotoUpdatedModelImpl photoUpdatedModel = new PhotoUpdatedModelImpl();
 
   public static JComponent createMainContainer(AlbumModel model) {
     albumModel = model;
@@ -42,12 +45,17 @@ public class ContainerFactory {
   }
 
   public static JComponent createMapContainer() {
-    return new MapContainer(albumSelectionModel).getComponent();
+    return new MapContainer(albumSelectionModel, photoUpdatedModel).getComponent();
   }
 
   public static JComponent createAlbumListContainer() {
     return new AlbumListContainer(albumModel, albumSelectionModel,
         photoSortModel).getComponent();
+  }
+
+  public static JComponent createPhotoWithoutGPListContainer() {
+    return new PhotoWithoutGPListContainer(albumSelectionModel,
+        photoSelectionModel, photoUpdatedModel).getComponent();
   }
 
   public static PhotoMiniatureContainer createPhotoMiniatureContainer(
