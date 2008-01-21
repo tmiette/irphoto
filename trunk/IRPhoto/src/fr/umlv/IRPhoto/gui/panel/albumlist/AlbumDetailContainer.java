@@ -2,11 +2,8 @@ package fr.umlv.IRPhoto.gui.panel.albumlist;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -40,23 +37,16 @@ public class AlbumDetailContainer implements ContainerInitializer {
 
     this.mainPanel = new JPanel(null);
     this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
-    this.mainPanel.add(createTitlePanel(album.getName()));
+    final JPanel title = createTitlePanel(album.getName());
+    this.mainPanel.add(title);
     this.mainPanel.add(this.photoListView.getComponent());
-    this.mainPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-
-    this.mainPanel.addComponentListener(new ComponentAdapter() {
-      @Override
-      public void componentResized(ComponentEvent e) {
-        System.err.println(mainPanel.getSize().getWidth());
-        photoListView.getComponent().setPreferredSize(
-            new Dimension((int) mainPanel.getSize().getWidth(), 2000));
-      }
-    });
-
+    this.mainPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     this.mainPanel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 1) {
           albumSelectionModel.selectAlbum(AlbumDetailContainer.this.album);
+        }
 
       }
     });
@@ -86,12 +76,9 @@ public class AlbumDetailContainer implements ContainerInitializer {
     jp.setAlignmentX(Component.LEFT_ALIGNMENT);
 
     this.albumTitle = new JLabel(title);
-
-    final JButton showPhotoList = createShowPhotoListButton();
-
     jp.add(this.albumTitle);
     jp.add(Box.createHorizontalGlue());
-    jp.add(showPhotoList);
+    jp.add(createShowPhotoListButton());
 
     return jp;
   }
