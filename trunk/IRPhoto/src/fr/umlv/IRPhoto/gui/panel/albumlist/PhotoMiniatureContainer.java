@@ -30,7 +30,7 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
   // Miniature default dimension
   public static final Dimension DEFAULT_MINIATURE_DIMENSION = new Dimension(96,
       96);
-  private static final int MAX_CHAR_NAME_LENGTH = 15;
+  private static final int MAX_CHAR_NAME_LENGTH = 12;
 
   public PhotoMiniatureContainer(Photo photo, PhotoSelectionModel model) {
 
@@ -73,7 +73,8 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
 
       @Override
       public void mouseEntered(MouseEvent e) {
-        mainPanel.setBackground(Color.BLUE);
+        mainPanel.setBackground(new Color(0, 0, 205, 70));
+
       }
 
       @Override
@@ -81,6 +82,7 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
         mainPanel.setBackground(Color.WHITE);
       }
     });
+ 
   }
 
   /**

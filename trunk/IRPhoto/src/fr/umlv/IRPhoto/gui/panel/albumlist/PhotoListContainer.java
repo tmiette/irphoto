@@ -2,13 +2,19 @@ package fr.umlv.IRPhoto.gui.panel.albumlist;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.Box;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,7 +36,7 @@ public class PhotoListContainer implements ContainerInitializer {
   private JPanel photoListPanel;
   // General panel
   private final JPanel mainPanel;
-
+  private final JPanel topPanel;
   private final HashMap<Photo, PhotoMiniatureContainer> photoMiniatures;
 
   private final Album album;
@@ -49,14 +55,23 @@ public class PhotoListContainer implements ContainerInitializer {
 
     this.photoMiniatures = new HashMap<Photo, PhotoMiniatureContainer>();
 
+    this.topPanel = createTopPanel();
     this.photoListPanel = createPhotoListPanel();
     for (Photo photo : album.getPhotos()) {
       this.addPhoto(photo);
     }
 
     this.mainPanel = new JPanel(new BorderLayout());
-    this.mainPanel.add(createTopPanel(), BorderLayout.NORTH);
+    this.mainPanel.add(this.topPanel, BorderLayout.NORTH);
     this.mainPanel.add(this.photoListPanel, BorderLayout.CENTER);
+
+    this.mainPanel.addComponentListener(new ComponentAdapter() {
+      @Override
+      public void componentResized(ComponentEvent e) {
+        photoListPanel.revalidate();
+      }
+    });
+
   }
 
   /**
@@ -68,15 +83,11 @@ public class PhotoListContainer implements ContainerInitializer {
    */
   private JPanel createTopPanel() {
     final JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 3));
-    // panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-    panel.add(Box.createHorizontalGlue());
 
     panel.add(new JLabel(IconFactory.getIcon("find-32x32.png")));
 
-    // Text field used to search photo
-    final JTextField textField = new JTextField(2);
-    // textField.setHorizontalAlignment(JTextField.LEADING);
-    textField.setColumns(20);
+    // Text field used to filter photo
+    final JTextField textField = new JTextField(5);
     panel.add(textField);
 
     textField.addCaretListener(new CaretListener() {
@@ -86,21 +97,82 @@ public class PhotoListContainer implements ContainerInitializer {
       }
     });
 
-    final JButton alphaSortButton = createAlphaSortButton();
-    panel.add(alphaSortButton);
-
-    final JButton typeSortButton = createTypeSortButton();
-    panel.add(typeSortButton);
-
-    final JButton dateSortButton = createDateSortButton();
-    panel.add(dateSortButton);
+    // Sorts buttons
+    panel.add(createAlphaSortButton());
+    panel.add(createTypeSortButton());
+    panel.add(createDateSortButton());
 
     return panel;
   }
 
   private JPanel createPhotoListPanel() {
-    final JPanel panel = new JPanel();
-    panel.setBackground(Color.red);
+    final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+    panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+    panel.setBackground(Color.WHITE);
+
+    panel.setLayout(new LayoutManager() {
+
+      private static final int CHILD_WIDTH = 116;
+      private static final int CHILD_HEIGHT = 131;
+      private static final int WIDTH_SEPARATION = 2;
+      private static final int HEIGHT_SEPARATION = 2;
+
+      @Override
+      public void addLayoutComponent(String name, Component parent) {
+        // nothing
+      }
+
+      @Override
+      public void removeLayoutComponent(Component parent) {
+        // nothing
+      }
+
+      @Override
+      public void layoutContainer(Container parent) {
+        int count = parent.getComponentCount();
+        int line = ((int) mainPanel.getSize().getWidth() - WIDTH_SEPARATION)
+            / (CHILD_WIDTH + WIDTH_SEPARATION);
+        int counter = 0;
+        int x = WIDTH_SEPARATION;
+        int y = HEIGHT_SEPARATION;
+        for (int i = 0; i < count; i++) {
+          counter++;
+          Component component = parent.getComponent(i);
+          Dimension d = component.getPreferredSize();
+          component.setBounds(x, y, (int) d.getWidth(), (int) d.getHeight());
+          x += (int) d.getWidth() + WIDTH_SEPARATION;
+          if (counter == line) {
+            counter = 0;
+            x = WIDTH_SEPARATION;
+            y += (int) d.getHeight() + HEIGHT_SEPARATION;
+          }
+        }
+      }
+
+      @Override
+      public Dimension minimumLayoutSize(Container parent) {
+        return preferredLayoutSize(parent);
+      }
+
+      @Override
+      public Dimension preferredLayoutSize(Container parent) {
+
+        int height = 0;
+        int width = 0;
+        if (parent.getComponentCount() > 0) {
+          int line = ((int) mainPanel.getWidth() - WIDTH_SEPARATION)
+              / (CHILD_WIDTH + WIDTH_SEPARATION);
+          if (line == 0) {
+            line = 2;
+          }
+          height = ((parent.getComponentCount() / line) + 1)
+              * (CHILD_HEIGHT + HEIGHT_SEPARATION) + HEIGHT_SEPARATION;
+        }
+        return new Dimension(width, height);
+      }
+
+    });
+
     return panel;
   }
 
@@ -157,6 +229,7 @@ public class PhotoListContainer implements ContainerInitializer {
       }
     }
     photoListPanel.revalidate();
+    photoListPanel.repaint();
   }
 
   public void addPhoto(Photo photo) {
