@@ -2,7 +2,6 @@ package fr.umlv.IRPhoto.gui.panel.features;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -18,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
 import fr.umlv.IRPhoto.album.Photo;
+import fr.umlv.IRPhoto.album.Photo.GeoPosition;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
@@ -37,44 +37,28 @@ public class FeaturesContainer implements ContainerInitializer {
   public FeaturesContainer(PhotoSelectionModel model) {
 
     this.latitudeField = createTextField();
-    this.latitudeField.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        final Photo photo = getPhoto();
-        try {
-          photo.setLatitude(Double.parseDouble(latitudeField.getText()));
-        } catch (NumberFormatException e1) {
-          latitudeField.setText(photo.getLatitude() + "");
-        }
-      }
-    });
     this.longitudeField = createTextField();
-    this.longitudeField.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        final Photo photo = getPhoto();
-        try {
-          photo.setLongitude(Double.parseDouble(longitudeField.getText()));
-        } catch (NumberFormatException e1) {
-          longitudeField.setText(photo.getLatitude() + "");
-        }
-      }
-    });
     this.submit = new JButton("OK");
     this.submit.setToolTipText("Validate the new coordinates.");
     this.submit.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        final Photo photo = getPhoto();
+        Photo photo = getPhoto();
+        GeoPosition geo = photo.getGeoPosition();
+        double latitude;
+        double longitude;
         try {
-          photo.setLongitude(Double.parseDouble(longitudeField.getText()));
+          longitude = Double.parseDouble(longitudeField.getText());
+          latitude = Double.parseDouble(latitudeField.getText());
+          if (geo == null) {
+            photo.setGeoPosition(new GeoPosition(latitude, longitude));
+          } else {
+            photo.getGeoPosition().setLatitude(latitude);
+            photo.getGeoPosition().setLongitude(longitude);
+          }
         } catch (NumberFormatException e1) {
-          longitudeField.setText(photo.getLatitude() + "");
-        }
-        try {
-          photo.setLatitude(Double.parseDouble(latitudeField.getText()));
-        } catch (NumberFormatException e1) {
-          latitudeField.setText(photo.getLatitude() + "");
+          longitudeField.setText("");
+          latitudeField.setText("");
         }
       }
     });
@@ -90,8 +74,10 @@ public class FeaturesContainer implements ContainerInitializer {
       @Override
       public void photoSelected(Photo photo) {
         setPhoto(photo);
-        latitudeField.setText(photo.getLatitude() + "");
-        longitudeField.setText(photo.getLongitude() + "");
+        if (photo.getGeoPosition() != null) {
+          latitudeField.setText(photo.getGeoPosition().getLatitude() + "");
+          longitudeField.setText(photo.getGeoPosition().getLongitude() + "");
+        }
         nameLabel.setText(photo.getName());
         formatLabel.setText(photo.getType());
         dimensionsLabel.setText(photo.getDimension().getWidth() + "px * "
@@ -128,7 +114,8 @@ public class FeaturesContainer implements ContainerInitializer {
     featuresPanel.add(this.dimensionsLabel);
 
     final JPanel coordinatesPanel = new JPanel(null);
-    coordinatesPanel.setLayout(new BoxLayout(coordinatesPanel, BoxLayout.Y_AXIS));
+    coordinatesPanel
+        .setLayout(new BoxLayout(coordinatesPanel, BoxLayout.Y_AXIS));
     coordinatesPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
         .createEtchedBorder(EtchedBorder.LOWERED), "Coordinates :"));
     coordinatesPanel.add(new JLabel("Latitude"));
