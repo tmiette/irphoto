@@ -2,12 +2,14 @@ package fr.umlv.IRPhoto.gui.panel.features;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -77,6 +79,9 @@ public class FeaturesContainer implements ContainerInitializer {
         if (photo.getGeoPosition() != null) {
           latitudeField.setText(photo.getGeoPosition().getLatitude() + "");
           longitudeField.setText(photo.getGeoPosition().getLongitude() + "");
+        } else {
+          longitudeField.setText("");
+          latitudeField.setText("");
         }
         nameLabel.setText(photo.getName());
         formatLabel.setText(photo.getType());
@@ -108,14 +113,13 @@ public class FeaturesContainer implements ContainerInitializer {
     final JPanel mainPanel = new JPanel(new BorderLayout());
 
     final JPanel featuresPanel = new JPanel(null);
+    featuresPanel.setMinimumSize(new Dimension(0, 0));
     featuresPanel.setLayout(new BoxLayout(featuresPanel, BoxLayout.Y_AXIS));
     featuresPanel.add(this.nameLabel);
     featuresPanel.add(this.formatLabel);
     featuresPanel.add(this.dimensionsLabel);
 
-    final JPanel coordinatesPanel = new JPanel(null);
-    coordinatesPanel
-        .setLayout(new BoxLayout(coordinatesPanel, BoxLayout.Y_AXIS));
+    final JPanel coordinatesPanel = new JPanel(new GridLayout(5, 1));
     coordinatesPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
         .createEtchedBorder(EtchedBorder.LOWERED), "Coordinates :"));
     coordinatesPanel.add(new JLabel("Latitude"));
@@ -123,10 +127,12 @@ public class FeaturesContainer implements ContainerInitializer {
     coordinatesPanel.add(new JLabel("Longitude"));
     coordinatesPanel.add(this.longitudeField);
     coordinatesPanel.add(this.submit);
+    final JPanel northCoordinates = new JPanel(new BorderLayout());
+    northCoordinates.add(coordinatesPanel, BorderLayout.NORTH);
 
     mainPanel.add(this.image, BorderLayout.WEST);
     mainPanel.add(featuresPanel, BorderLayout.CENTER);
-    mainPanel.add(coordinatesPanel, BorderLayout.EAST);
+    mainPanel.add(northCoordinates, BorderLayout.EAST);
 
     mainPanel.addComponentListener(new ComponentAdapter() {
       @Override
