@@ -51,8 +51,8 @@ class ImageScaledToPanel extends JPanel {
        * this);
        */
 
-      int maxX = (int) this.getParent().getSize().getWidth();
-      int maxY = (int) this.getParent().getSize().getHeight();
+      int maxX = (int) this.getSize().getWidth();
+      int maxY = (int) this.getSize().getHeight();
       float x = image.getWidth(null);
       float y = image.getHeight(null);
       float facteur = 1.0f;
