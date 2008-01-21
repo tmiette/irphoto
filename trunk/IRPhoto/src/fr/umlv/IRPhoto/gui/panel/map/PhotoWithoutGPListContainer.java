@@ -56,6 +56,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   private final HashMap<Photo, JLabel> photos;
   private Photo photoSelected;
   private JButton button;
+  private final JScrollPane scrollPane;
   public static final Dimension DEFAULT_THUMBNAIL_SIZE = new Dimension(100, 100);
   public static final int DEFAULT_THUMBNAIL_NB = 3;
   public static final Border DEFAULT_THUMBNAIL_SELECTED_BORDER = BorderFactory
@@ -72,7 +73,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
       @Override
       public void geoppositionUpdated(Photo photo) {
        removePhoto(photo);
-        photoListPanel.repaint();
+       scrollPane.validate();
       }
 
       @Override
@@ -95,7 +96,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
           public void albumSelected(Album album) {
             photoListPanel.removeAll();
             addPhotos(getPhotosWhitoutGP(album.getPhotos()));
-            photoListPanel.validate();
+            scrollPane.validate();
           }
 
         });
@@ -106,8 +107,12 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
         .getPhotosWhitoutGP(Collections.<Photo> emptyList()));
     final JPanel textFieldPanel = this.createTextFieldPanel();
 
-    JScrollPane scrollPane = new JScrollPane(this.photoListPanel);
-    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    this.scrollPane = new JScrollPane(this.photoListPanel);
+    this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    Dimension dim = new Dimension(DEFAULT_THUMBNAIL_SIZE.width,
+        DEFAULT_THUMBNAIL_SIZE.height * DEFAULT_THUMBNAIL_NB);
+    this.scrollPane.setPreferredSize(dim);
 
     this.panel = new JPanel(new BorderLayout());
     this.panel.add(scrollPane, BorderLayout.CENTER);
@@ -166,9 +171,6 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     jp.setLayout(new BoxLayout(jp, BoxLayout.Y_AXIS));
 
     this.addPhotos(photos);
-    Dimension dim = new Dimension(DEFAULT_THUMBNAIL_SIZE.width,
-        DEFAULT_THUMBNAIL_SIZE.height * DEFAULT_THUMBNAIL_NB);
-    jp.setPreferredSize(dim);
     return jp;
   }
 
@@ -195,7 +197,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     int w = (int) (icon.getIconWidth() / ratio);
     int h = (int) (icon.getIconHeight() / ratio);
     final JLabel label = new JLabel();
-    label.setPreferredSize(DEFAULT_THUMBNAIL_SIZE);
+//    label.setPreferredSize(DEFAULT_THUMBNAIL_SIZE);
     icon = new ImageIcon(getScaledImage(icon.getImage(), w, h));
     label.setIcon(icon);
     label.addMouseListener(new MouseAdapter() {

@@ -1,22 +1,21 @@
 package fr.umlv.IRPhoto.gui.panel.map;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Map.Entry;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -26,16 +25,15 @@ import javax.swing.JPanel;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
-import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
-import org.jdesktop.swingx.painter.Painter;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerFactory;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedListener;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedModel;
 import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionListener;
@@ -49,8 +47,9 @@ public class MapContainer implements ContainerInitializer {
   private GeoPosition currentPosition;
   private final AlbumSelectionModel albumSelectionModel;
   private final PhotoUpdatedModel photoUpdatedModel;
-  private final HashMap<Album, WaypointPainter<JXMapViewer>> albums;
   private Album currentAlbum;
+  private WaypointPainter<JXMapViewer> currentPainter;
+  private final JComponent photoListContainer;
 
   public MapContainer(AlbumSelectionModel albumSelectionModel,
       PhotoUpdatedModel photoUpdatedModel) {
@@ -60,6 +59,7 @@ public class MapContainer implements ContainerInitializer {
       @Override
       public void geoppositionUpdated(Photo photo) {
         addPhoto(photo);
+        map.repaint();
       }
 
       @Override
@@ -70,14 +70,11 @@ public class MapContainer implements ContainerInitializer {
 
     });
 
-    this.albums = new HashMap<Album, WaypointPainter<JXMapViewer>>();
-
     this.panel = new JLayeredPane();
     this.panel.setLayout(createLayoutManger());
 
     this.photoPanel = new JPanel(new BorderLayout());
     this.photoPanel.setOpaque(false);
-    this.photoPanel.add(new JButton("+"), BorderLayout.WEST);
 
     this.currentPosition = new GeoPosition(43.604503, 1.444026);
 
@@ -86,7 +83,13 @@ public class MapContainer implements ContainerInitializer {
         .addAlbumSelectionListener(new AlbumSelectionListener() {
           @Override
           public void albumSelected(Album album) {
+            if (currentAlbum != null && !currentAlbum.equals(album)) {
+              currentPainter.setVisible(false);
+              currentAlbum = null;
+              currentPainter = null;
+            }
             addAlbum(album);
+            map.repaint();
           }
         });
 
@@ -106,11 +109,15 @@ public class MapContainer implements ContainerInitializer {
     this.map.setAddressLocation(this.currentPosition);
 
     // TEST
-//    this.addAlbum(null);
+    // this.addAlbum(null);
 
-    final JPanel panel = (JPanel) ContainerFactory
-        .createPhotoWithoutGPListContainer();
-    this.photoPanel.add(panel, BorderLayout.WEST);
+    final JPanel leftPanel = new JPanel(new BorderLayout());
+    leftPanel.add(createCollapseButton(), BorderLayout.WEST);
+    this.photoListContainer = ContainerFactory.createPhotoWithoutGPListContainer();
+    this.photoListContainer.setVisible(false);
+    leftPanel.add(this.photoListContainer,
+        BorderLayout.CENTER);
+    this.photoPanel.add(leftPanel, BorderLayout.WEST);
 
     final JLabel hoverLabel = new JLabel("Java");
     hoverLabel.setVisible(false);
@@ -148,47 +155,63 @@ public class MapContainer implements ContainerInitializer {
 
   }
 
-  public void addAlbum(Album album) {
-    WaypointPainter<JXMapViewer> waypointPainter = this.albums.get(album);
-    if (waypointPainter != null) {
-      if (this.currentAlbum != null) {
-        this.albums.get(this.currentAlbum).setVisible(false);
+  /**
+   * @return
+   */
+  private JComponent createCollapseButton() {
+    final JButton b = new JButton();
+    b.setIcon(IconFactory.getIcon("arrow-right-12x12.gif"));
+    b.setPreferredSize(new Dimension(12, 0));
+    
+    b.addActionListener(new ActionListener() {
+      /* (non-Javadoc)
+       * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+       */
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        boolean bool = photoListContainer.isVisible();
+        if (bool) {
+          b.setIcon(IconFactory.getIcon("arrow-right-12x12.gif"));
+        } else {
+          b.setIcon(IconFactory.getIcon("arrow-left-12x12.gif"));
+        }
+        photoListContainer.setVisible(!bool);
       }
-      waypointPainter.setVisible(true);
+    });
+
+    return b;
+  }
+
+  public void addAlbum(Album album) {
+    if (this.currentAlbum != null && this.currentAlbum.equals(album)) {
+      currentPainter.setVisible(true);
     } else {
       // create a Set of Waypoints
       Set<Waypoint> waypoints = new HashSet<Waypoint>();
 
       // adding photo waypoint
-       for (Photo photo : album.getPhotos()) {
-       waypoints.add(new Waypoint(photo.getLatitude(), photo.getLongitude()));
-       }
+      for (Photo photo : album.getPhotos()) {
+        waypoints.add(new Waypoint(photo.getLatitude(), photo.getLongitude()));
+      }
 
       // TEST
-//      waypoints.add(new Waypoint(currentPosition));
+      // waypoints.add(new Waypoint(currentPosition));
 
       // create a WaypointPainter to draw the points
       WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
       painter.setWaypoints(waypoints);
-      this.albums.put(album, painter);
+      this.currentAlbum = album;
+      this.currentPainter = painter;
       this.map.setOverlayPainter(painter);
     }
-    this.currentAlbum = album;
   }
 
   public void addPhoto(Photo photo) {
-    for (Entry<Album, WaypointPainter<JXMapViewer>> albums : this.albums
-        .entrySet()) {
-      Album album = albums.getKey();
-      for (Photo ph : album.getPhotos()) {
-        if (photo.equals(ph)) {
-          albums.getValue().getWaypoints().add(
-              new Waypoint(photo.getLatitude(), photo.getLongitude()));
-          if (this.currentAlbum.equals(album)) {
-            albums.getValue().setVisible(true);
-          }
-          return;
-        }
+    for (Photo ph : this.currentAlbum.getPhotos()) {
+      if (photo.equals(ph)) {
+        this.currentPainter.getWaypoints().add(
+            new Waypoint(photo.getLatitude(), photo.getLongitude()));
+        return;
       }
     }
   }
