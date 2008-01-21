@@ -59,6 +59,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   private JButton button;
   private final JScrollPane scrollPane;
   public static final Dimension DEFAULT_THUMBNAIL_SIZE = new Dimension(100, 100);
+  public static final int DEFAULT_WIDTH = DEFAULT_THUMBNAIL_SIZE.width + 4;
   public static final int DEFAULT_THUMBNAIL_NB = 3;
   public static final Border DEFAULT_THUMBNAIL_SELECTED_BORDER = BorderFactory
       .createLineBorder(Color.BLACK);
@@ -114,7 +115,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
         .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     this.scrollPane
         .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    Dimension dim = new Dimension(DEFAULT_THUMBNAIL_SIZE.width,
+    Dimension dim = new Dimension(DEFAULT_WIDTH,
         DEFAULT_THUMBNAIL_SIZE.height * DEFAULT_THUMBNAIL_NB);
     this.scrollPane.setPreferredSize(dim);
 
