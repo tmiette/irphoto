@@ -104,7 +104,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
         }
       }
     });
-
+    
     if (tree.getRowCount() > 1) {
       renderer.setLeafIcon(leafIcon);
     }
