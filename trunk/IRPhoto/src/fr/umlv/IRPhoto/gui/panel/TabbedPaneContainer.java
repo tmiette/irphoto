@@ -7,16 +7,23 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 import fr.umlv.IRPhoto.gui.ContainerFactory;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.GraphicalConstants;
+import fr.umlv.IRPhoto.gui.IconFactory;
 
 public class TabbedPaneContainer implements ContainerInitializer {
+
+  private final ArrayList<JLabel> tabs = new ArrayList<JLabel>();
+  private JLabel currentTab;
 
   @Override
   public JComponent getComponent() {
@@ -29,8 +36,7 @@ public class TabbedPaneContainer implements ContainerInitializer {
 
     // scroll pane for the albums details panel
     final JScrollPane scroll = new JScrollPane(ContainerFactory
-        .createAlbumListContainer(),
-        JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+        .createAlbumListContainer(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     // buttons panel to imitate tabbed pane
@@ -39,6 +45,7 @@ public class TabbedPaneContainer implements ContainerInitializer {
 
     final JLabel album = createTabLabel("Albums");
     final JLabel map = createTabLabel("Map");
+    setCurrentTab(album);
 
     // place and add tabs labels
     gbc.anchor = GridBagConstraints.EAST;
@@ -76,13 +83,44 @@ public class TabbedPaneContainer implements ContainerInitializer {
     cardPanel.add(ContainerFactory.createMapContainer(), "Map");
     mainPanel.add(cardPanel, BorderLayout.CENTER);
     mainPanel.add(bouttonsPanel, BorderLayout.SOUTH);
-    
+
     return mainPanel;
   }
 
-  private static JLabel createTabLabel(String label) {
-    final JLabel l = new JLabel(label);
-    return l;
+  private void setCurrentTab(JLabel label) {
+    for (JLabel l : tabs) {
+      l.setIcon(IconFactory.getIcon("tab.png"));
+    }
+    label.setIcon(IconFactory.getIcon("tab-blue.png"));
+    currentTab = label;
   }
 
+  private JLabel createTabLabel(String label) {
+    final JLabel l = new JLabel(label, IconFactory.getIcon("tab.png"),
+        SwingConstants.CENTER);
+    l.setBackground(GraphicalConstants.BLUE);
+    l.setVerticalTextPosition(JLabel.CENTER);
+    l.setHorizontalTextPosition(JLabel.CENTER);
+    l.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseEntered(MouseEvent e) {
+        l.setIcon(IconFactory.getIcon("tab-blue.png"));
+      }
+
+      @Override
+      public void mouseExited(MouseEvent e) {
+        if (!l.equals(currentTab)) {
+          l.setIcon(IconFactory.getIcon("tab.png"));
+        }
+      }
+
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        setCurrentTab(l);
+      }
+
+    });
+    tabs.add(l);
+    return l;
+  }
 }
