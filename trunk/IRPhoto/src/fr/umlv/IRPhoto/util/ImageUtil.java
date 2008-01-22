@@ -16,26 +16,25 @@ import java.awt.image.BufferedImage;
 public class ImageUtil {
 
   /**
-   * Gets an image with specific width and height at center in container with
-   * giver width and height.
+   * Gets an image scaled to container dimension and puts it at center of this container.
    * 
    * @param srcImg image to scale
-   * @param width image width requested
-   * @param height image height requested
    * @param containerWidth container width containing scaled image
    * @param containerHeight container height containing scaled image
    * @return image scaled
    */
-  public static Image getScaledImage(Image srcImg, int width, int height,
-      int containerWidth, int containerHeight) {
+  public static Image getScaledImage(Image srcImg, int containerWidth, int containerHeight) {
     BufferedImage resizedImg = new BufferedImage(containerWidth,
         containerHeight, BufferedImage.TYPE_INT_RGB);
     Graphics2D g2 = resizedImg.createGraphics();
     g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
         RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-    int x = containerWidth - width;
-    int y = containerHeight - height;
-    g2.drawImage(srcImg, x / 2, y / 2, width, height, null);
+    double ratio = srcImg.getWidth(null) / containerWidth;
+    int w = (int) (srcImg.getWidth(null) / ratio);
+    int h = (int) (srcImg.getHeight(null) / ratio);
+    int x = containerWidth - w;
+    int y = containerHeight - h;
+    g2.drawImage(srcImg, x / 2, y / 2, w, h, null);
     g2.dispose();
     return resizedImg;
   }
