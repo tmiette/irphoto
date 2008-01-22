@@ -4,15 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -104,7 +102,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
         }
       }
     });
-    
+
     if (tree.getRowCount() > 1) {
       renderer.setLeafIcon(leafIcon);
     }
@@ -151,25 +149,37 @@ public class AlbumTreeContainer implements ContainerInitializer {
     panel.setBackground(Color.WHITE);
 
     // create the add button
-    final JButton addButton = new JButton(IconFactory.getIcon("add-32x32.png"));
-    addButton.addActionListener(new ActionListener() {
+    final JLabel addButton = new JLabel(IconFactory.getIcon("add-32x32.png"));
+    addButton.setToolTipText("Add a new album.");
+    addButton.setBorder(BorderFactory.createRaisedBevelBorder());
+    addButton.addMouseListener(new MouseAdapter() {
       @Override
-      public void actionPerformed(ActionEvent e) {
+      public void mouseClicked(MouseEvent e) {
         // add a new album
         albumModel.addAlbum();
         tree.expandRow(0);
         renderer.setLeafIcon(leafIcon);
       }
+
+      @Override
+      public void mousePressed(MouseEvent e) {
+        addButton.setBorder(BorderFactory.createLoweredBevelBorder());
+      }
+
+      @Override
+      public void mouseReleased(MouseEvent e) {
+        addButton.setBorder(BorderFactory.createRaisedBevelBorder());
+      }
     });
-    addButton.setToolTipText("Add a new album.");
 
     // create the remove button
-    final JButton removeButton = new JButton(IconFactory
+    final JLabel removeButton = new JLabel(IconFactory
         .getIcon("remove-32x32.png"));
-    removeButton.addActionListener(new ActionListener() {
+    removeButton.setToolTipText("Remove all selected albums.");
+    removeButton.setBorder(BorderFactory.createRaisedBevelBorder());
+    removeButton.addMouseListener(new MouseAdapter() {
       @Override
-      public void actionPerformed(ActionEvent e) {
-
+      public void mouseClicked(MouseEvent e) {
         // remove albums associated to clicked nodes
         ArrayList<Album> list = new ArrayList<Album>();
         for (TreePath path : tree.getSelectionPaths()) {
@@ -185,8 +195,17 @@ public class AlbumTreeContainer implements ContainerInitializer {
           }
         }
       }
+
+      @Override
+      public void mousePressed(MouseEvent e) {
+        removeButton.setBorder(BorderFactory.createLoweredBevelBorder());
+      }
+
+      @Override
+      public void mouseReleased(MouseEvent e) {
+        removeButton.setBorder(BorderFactory.createRaisedBevelBorder());
+      }
     });
-    removeButton.setToolTipText("Remove all selected albums.");
 
     // add buttons
     panel.add(addButton);
