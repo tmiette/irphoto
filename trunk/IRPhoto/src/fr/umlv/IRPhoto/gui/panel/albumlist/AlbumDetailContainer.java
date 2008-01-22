@@ -1,15 +1,12 @@
 package fr.umlv.IRPhoto.gui.panel.albumlist;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,6 +16,7 @@ import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
+import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSortModel;
 
 public class AlbumDetailContainer implements ContainerInitializer {
@@ -41,7 +39,8 @@ public class AlbumDetailContainer implements ContainerInitializer {
     final JPanel title = createTitlePanel(album.getName());
     this.mainPanel.add(title);
     this.mainPanel.add(this.photoListView.getComponent());
-    this.mainPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+    this.mainPanel.setBorder(BorderFactory
+        .createEtchedBorder(EtchedBorder.RAISED));
     this.mainPanel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -86,18 +85,24 @@ public class AlbumDetailContainer implements ContainerInitializer {
     return jp;
   }
 
-  private JButton createShowPhotoListButton() {
-    final JButton b = new JButton("->");
-    b.addActionListener(new ActionListener() {
+  private JLabel createShowPhotoListButton() {
+    final JLabel l = new JLabel(IconFactory.getIcon("next-20x20.png"));
+    l.setToolTipText("Show/hide photos of this album.");
+    l.addMouseListener(new MouseAdapter() {
       @Override
-      public void actionPerformed(ActionEvent e) {
+      public void mouseClicked(MouseEvent e) {
         AlbumDetailContainer.this.photoListView.getComponent()
             .setVisible(
                 !AlbumDetailContainer.this.photoListView.getComponent()
                     .isVisible());
+        if (l.getIcon() == IconFactory.getIcon("down-20x20.png")) {
+          l.setIcon(IconFactory.getIcon("next-20x20.png"));
+        } else {
+          l.setIcon(IconFactory.getIcon("down-20x20.png"));
+        }
       }
     });
-    return b;
+    return l;
   }
 
   @Override
