@@ -204,11 +204,8 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
    */
   private void addPhoto(final Photo photo) {
     ImageIcon icon = photo.getImageIcon();
-    double ratio = icon.getIconWidth() / DEFAULT_THUMBNAIL_SIZE.getWidth();
-    int w = (int) (icon.getIconWidth() / ratio);
-    int h = (int) (icon.getIconHeight() / ratio);
     final JLabel label = new JLabel();
-    icon = new ImageIcon(ImageUtil.getScaledImage(icon.getImage(), w, h,
+    icon = new ImageIcon(ImageUtil.getScaledImage(icon.getImage(),
         DEFAULT_THUMBNAIL_SIZE.width, DEFAULT_THUMBNAIL_SIZE.height));
     label.setIcon(icon);
     label.addMouseListener(new MouseAdapter() {

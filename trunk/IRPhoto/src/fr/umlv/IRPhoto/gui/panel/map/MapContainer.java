@@ -12,10 +12,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -38,6 +45,7 @@ import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedListener;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedModel;
 import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionModel;
+import fr.umlv.IRPhoto.util.ImageUtil;
 
 public class MapContainer implements ContainerInitializer {
 
@@ -47,17 +55,16 @@ public class MapContainer implements ContainerInitializer {
   private GeoPosition currentPosition;
   private final AlbumSelectionModel albumSelectionModel;
   private final PhotoUpdatedModel photoUpdatedModel;
-  private Album currentAlbum;
-  private WaypointPainter<JXMapViewer> currentPainter;
   private final JComponent photoListContainer;
-  
-  
+  private Album currentAlbum;
+  private HashMap<Waypoint, Photo> waypoints;
+  private final JLabel thumbnail;
 
   public MapContainer(AlbumSelectionModel albumSelectionModel,
       PhotoUpdatedModel photoUpdatedModel) {
     MyJXMapKit kit = new MyJXMapKit();
     this.map = kit.getMainMap();
-
+    
     this.photoUpdatedModel = photoUpdatedModel;
     this.photoUpdatedModel.addPhotoUpdatedListener(new PhotoUpdatedListener() {
 
@@ -75,7 +82,12 @@ public class MapContainer implements ContainerInitializer {
       }
 
     });
-
+    
+    this.waypoints = new HashMap<Waypoint, Photo>();
+    this.thumbnail = new JLabel();
+    this.thumbnail.setVisible(false);
+    this.map.add(this.thumbnail);
+    
     this.currentPosition = new GeoPosition(43.604503, 1.444026);
 
     this.albumSelectionModel = albumSelectionModel;
@@ -84,12 +96,6 @@ public class MapContainer implements ContainerInitializer {
           @Override
           public void albumSelected(Album album) {
             logger.info("Album selected");
-            if (currentAlbum != null && !currentAlbum.equals(album)) {
-              logger.info("Album differ from current album");
-              currentPainter.setVisible(false);
-              currentAlbum = null;
-              currentPainter = null;
-            }
             addAlbum(album);
             map.repaint();
           }
@@ -104,25 +110,59 @@ public class MapContainer implements ContainerInitializer {
       }
 
       public void mouseMoved(MouseEvent e) {
+        
+//        // location of Java
+//        GeoPosition gp = currentPosition;
+//        // convert to world bitmap
+//        Point2D gp_pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
+//        // convert to screen
+//        Rectangle rect = map.getViewportBounds();
+//        Point converted_gp_pt = new Point((int) gp_pt.getX() - rect.x,
+//            (int) gp_pt.getY() - rect.y);
+//        System.out.println(new Point((int) gp_pt.getX() - map.getViewportBounds().x,
+//            (int) gp_pt.getY() - map.getViewportBounds().y));
+//        // check if near the mouse
+        Point currentPoint;
+        for (Entry<Waypoint, Photo> wp : waypoints.entrySet()) {
+          if (convertGP2Point(wp.getKey().getPosition()).distance(currentPoint = e.getPoint()) < 10) {
+//            hoverLabel.setLocation(converted_gp_pt);
+            thumbnail.setIcon(getImageFromWP(wp.getKey()));
+            thumbnail.setLocation(e.getPoint());
+            thumbnail.setVisible(true);
+          } else {
+//            thumbnail.setVisible(false);
+          }
+        }
+//        if (converted_gp_pt.distance(e.getPoint()) < 10) {
+//          hoverLabel.setLocation(converted_gp_pt);
+//          hoverLabel.setVisible(true);
+//        } else {
+//          hoverLabel.setVisible(false);
+//        }
+      }
+
+      private Icon getImageFromWP(Waypoint wp) {
+        return new ImageIcon(ImageUtil.getScaledImage(waypoints.get(wp).getImageIcon().getImage(), 50, 50));
+      }
+
+      private Point2D convertGP2Point(GeoPosition position) {
         // location of Java
-        GeoPosition gp = currentPosition;
+        GeoPosition gp = position;
         // convert to world bitmap
         Point2D gp_pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
         // convert to screen
         Rectangle rect = map.getViewportBounds();
         Point converted_gp_pt = new Point((int) gp_pt.getX() - rect.x,
             (int) gp_pt.getY() - rect.y);
+        System.out.println(new Point((int) gp_pt.getX() - map.getViewportBounds().x,
+            (int) gp_pt.getY() - map.getViewportBounds().y));
         // check if near the mouse
-        if (converted_gp_pt.distance(e.getPoint()) < 10) {
-          hoverLabel.setLocation(converted_gp_pt);
-          hoverLabel.setVisible(true);
-        } else {
-          hoverLabel.setVisible(false);
-        }
+        return converted_gp_pt;
       }
     });
 
     this.map.setAddressLocation(this.currentPosition);
+    
 
     JPanel panel = new JPanel(new BorderLayout());
     panel.setOpaque(false);
@@ -141,6 +181,7 @@ public class MapContainer implements ContainerInitializer {
     this.mainPanel.add(leftPanel, new Integer(1));
     this.mainPanel.add(this.map, new Integer(0));
   }
+  
 
   /**
    * Creates a button which sets visible or not the photos list on map.
@@ -179,21 +220,16 @@ public class MapContainer implements ContainerInitializer {
    * @param album album containing photos to add on map
    */
   public void addAlbum(Album album) {
-    if (this.currentAlbum != null && this.currentAlbum.equals(album)) {
-      // displaying waypoints on map
-      logger.info("Album already created" + album.getId());
-      currentPainter.setVisible(true);
-    } else {
-      logger.info("Album created");
-      // create a Set of Waypoints
-      Set<Waypoint> waypoints = new HashSet<Waypoint>();
+    Set<Waypoint> waypoints = new HashSet<Waypoint>();
 
+    Waypoint wp;
       // adding photo waypoint
       for (Photo photo : album.getPhotos()) {
         if (photo.getGeoPosition() != null) {
           // Adding valid geoposition corrdinates
-          waypoints.add(new Waypoint(photo.getGeoPosition().getLatitude(),
+          waypoints.add(wp = new Waypoint(photo.getGeoPosition().getLatitude(),
               photo.getGeoPosition().getLongitude()));
+          this.waypoints.put(wp, photo);
         }
 
       }
@@ -205,29 +241,18 @@ public class MapContainer implements ContainerInitializer {
       // Save current album to future display
       this.currentAlbum = album;
 
-      // Save current painter to future waypoints display
-      this.currentPainter = painter;
-
       // Display waypoints
       this.map.setOverlayPainter(painter);
-    }
+      
   }
 
   /**
-   * Adds photo geoposition coordinates to current painter to display the new
-   * photo on the map.
    * 
    * @param photo photo to add on map
    */
   public void addPhoto(Photo photo) {
 
-    if (currentAlbum != null && currentAlbum.equals(photo.getAlbum())
-        && this.currentPainter != null) {
-      logger.info("new photo added to painter map");
-      this.currentPainter.getWaypoints().add(
-          new Waypoint(photo.getGeoPosition().getLatitude(), photo
-              .getGeoPosition().getLongitude()));
-    }
+    
 
   }
 
@@ -285,5 +310,6 @@ public class MapContainer implements ContainerInitializer {
 
     };
   }
+
 
 }
