@@ -3,6 +3,7 @@ package fr.umlv.IRPhoto.gui.panel.albumlist;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -62,11 +63,13 @@ public class AlbumListContainer implements ContainerInitializer {
     this.constraints.gridy = 0;
     this.constraints.weightx = 0.5;
     this.constraints.gridx = 0;
+    this.constraints.insets = new Insets(5,5,5,5);
 
     this.endPanel = new JPanel(null);
     this.endPanel.setBackground(Color.RED);
     this.endPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 10));
     this.mainPanel = createAlbumListPanel();
+    this.mainPanel.setBackground(Color.WHITE);
     
     for (Album album : this.model.getAlbums()) {
       this.addAlbum(album);
@@ -76,7 +79,6 @@ public class AlbumListContainer implements ContainerInitializer {
 
   private JPanel createAlbumListPanel() {
     final JPanel panel = new JPanel(new GridBagLayout());
-    panel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.MAGENTA));
     return panel;
   }
 

@@ -125,7 +125,7 @@ public class AlbumModelImpl implements AlbumModel {
         for (final String mime : ImageIO.getReaderMIMETypes()) {
           if (mimeType.equals(mime)) {
             try {
-              Photo photo = new Photo(f);
+              Photo photo = new Photo(f, album);
               photo.setType(mimeType);
               album.addPhoto(photo);
               this.firePhotoAdded(album, photo);

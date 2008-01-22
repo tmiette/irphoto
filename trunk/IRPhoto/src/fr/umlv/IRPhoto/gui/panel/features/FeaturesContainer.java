@@ -27,6 +27,7 @@ import fr.umlv.IRPhoto.album.Photo.GeoPosition;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
+import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedModel;
 
 public class FeaturesContainer implements ContainerInitializer {
 
@@ -38,11 +39,13 @@ public class FeaturesContainer implements ContainerInitializer {
   private final JLabel formatLabel;
   private final JLabel dimensionsLabel;
   private final PhotoSelectionModel model;
+  private final PhotoUpdatedModel photoUpdatedModel;
   private Photo photo;
   private ImageScaledToPanel image;
 
-  public FeaturesContainer(PhotoSelectionModel model) {
+  public FeaturesContainer(PhotoSelectionModel model, PhotoUpdatedModel photoUpdatedModel) {
 
+    this.photoUpdatedModel = photoUpdatedModel;
     this.latitudeField = createTextField();
     this.longitudeField = createTextField();
     this.submit = new JButton("OK");
@@ -59,9 +62,11 @@ public class FeaturesContainer implements ContainerInitializer {
           latitude = Double.parseDouble(latitudeField.getText());
           if (geo == null) {
             photo.setGeoPosition(new GeoPosition(latitude, longitude));
+            FeaturesContainer.this.photoUpdatedModel.geopositionUpdated(photo);
           } else {
             photo.getGeoPosition().setLatitude(latitude);
             photo.getGeoPosition().setLongitude(longitude);
+            FeaturesContainer.this.photoUpdatedModel.geopositionUpdated(photo);
           }
         } catch (NumberFormatException e1) {
           longitudeField.setText("");

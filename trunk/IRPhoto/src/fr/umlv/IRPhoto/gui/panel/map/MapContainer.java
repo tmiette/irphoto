@@ -50,12 +50,14 @@ public class MapContainer implements ContainerInitializer {
   private Album currentAlbum;
   private WaypointPainter<JXMapViewer> currentPainter;
   private final JComponent photoListContainer;
+  
+  
 
   public MapContainer(AlbumSelectionModel albumSelectionModel,
       PhotoUpdatedModel photoUpdatedModel) {
     MyJXMapKit kit = new MyJXMapKit();
     this.map = kit.getMainMap();
-    
+
     this.photoUpdatedModel = photoUpdatedModel;
     this.photoUpdatedModel.addPhotoUpdatedListener(new PhotoUpdatedListener() {
 
@@ -119,21 +121,21 @@ public class MapContainer implements ContainerInitializer {
         }
       }
     });
-    
+
     this.map.setAddressLocation(this.currentPosition);
-    
+
     JPanel panel = new JPanel(new BorderLayout());
     panel.setOpaque(false);
     panel.add(createCollapseButton(), BorderLayout.WEST);
     this.photoListContainer = ContainerFactory
-    .createPhotoWithoutGPListContainer();
+        .createPhotoWithoutGPListContainer();
     this.photoListContainer.setVisible(false);
     panel.add(this.photoListContainer, BorderLayout.CENTER);
-    
+
     JPanel leftPanel = new JPanel(new BorderLayout());
     leftPanel.setOpaque(false);
     leftPanel.add(panel, BorderLayout.WEST);
-    
+
     this.mainPanel = new JLayeredPane();
     this.mainPanel.setLayout(createLayoutManager());
     this.mainPanel.add(leftPanel, new Integer(1));
@@ -218,14 +220,15 @@ public class MapContainer implements ContainerInitializer {
    * @param photo photo to add on map
    */
   public void addPhoto(Photo photo) {
-    for (Photo ph : this.currentAlbum.getPhotos()) {
-      if (photo.equals(ph) && photo.getGeoPosition() != null) {
-        this.currentPainter.getWaypoints().add(
-            new Waypoint(photo.getGeoPosition().getLatitude(), photo
-                .getGeoPosition().getLongitude()));
-        return;
-      }
+
+    if (currentAlbum != null && currentAlbum.equals(photo.getAlbum())
+        && this.currentPainter != null) {
+      logger.info("new photo added to painter map");
+      this.currentPainter.getWaypoints().add(
+          new Waypoint(photo.getGeoPosition().getLatitude(), photo
+              .getGeoPosition().getLongitude()));
     }
+
   }
 
   @Override
@@ -233,7 +236,7 @@ public class MapContainer implements ContainerInitializer {
     // return this.panel;
     return this.mainPanel;
   }
-  
+
   public static LayoutManager createLayoutManager() {
     return new LayoutManager() {
       @Override
@@ -251,8 +254,7 @@ public class MapContainer implements ContainerInitializer {
         int count = parent.getComponentCount();
         for (int i = 0; i < count; i++) {
           Component component = parent.getComponent(i);
-          component.setBounds(0, 0, parent.getWidth(), parent
-              .getHeight());
+          component.setBounds(0, 0, parent.getWidth(), parent.getHeight());
         }
       }
 
@@ -283,6 +285,5 @@ public class MapContainer implements ContainerInitializer {
 
     };
   }
-
 
 }

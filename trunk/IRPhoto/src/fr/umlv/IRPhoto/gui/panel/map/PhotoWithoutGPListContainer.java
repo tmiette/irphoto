@@ -6,14 +6,10 @@ package fr.umlv.IRPhoto.gui.panel.map;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +28,6 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 import main.Main;
-
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.album.Photo.GeoPosition;
@@ -42,6 +37,7 @@ import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedListener;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedModel;
 import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionModel;
+import fr.umlv.IRPhoto.util.ImageUtil;
 
 /**
  * @author MIETTE Tom
@@ -74,6 +70,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   public PhotoWithoutGPListContainer(AlbumSelectionModel albumSelectionModel,
       PhotoSelectionModel photoSelectionModel,
       PhotoUpdatedModel photoUpdatedModel) {
+
     this.photoUpdatedModel = photoUpdatedModel;
     this.photoUpdatedModel.addPhotoUpdatedListener(new PhotoUpdatedListener() {
 
@@ -211,8 +208,8 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     int w = (int) (icon.getIconWidth() / ratio);
     int h = (int) (icon.getIconHeight() / ratio);
     final JLabel label = new JLabel();
-    // label.setPreferredSize(DEFAULT_THUMBNAIL_SIZE);
-    icon = new ImageIcon(getScaledImage(icon.getImage(), w, h));
+    icon = new ImageIcon(ImageUtil.getScaledImage(icon.getImage(), w, h,
+        DEFAULT_THUMBNAIL_SIZE.width, DEFAULT_THUMBNAIL_SIZE.height));
     label.setIcon(icon);
     label.addMouseListener(new MouseAdapter() {
       /*
@@ -278,19 +275,6 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   @Override
   public JComponent getComponent() {
     return this.panel;
-  }
-
-  private static Image getScaledImage(Image srcImg, int w, int h) {
-    BufferedImage resizedImg = new BufferedImage(DEFAULT_THUMBNAIL_SIZE.width,
-        DEFAULT_THUMBNAIL_SIZE.height, BufferedImage.TYPE_INT_RGB);
-    Graphics2D g2 = resizedImg.createGraphics();
-    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-        RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-    int x = DEFAULT_THUMBNAIL_SIZE.width - w;
-    int y = DEFAULT_THUMBNAIL_SIZE.height - h;
-    g2.drawImage(srcImg, x / 2, y / 2, w, h, null);
-    g2.dispose();
-    return resizedImg;
   }
 
 }

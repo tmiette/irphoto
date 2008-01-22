@@ -1,6 +1,5 @@
 package fr.umlv.IRPhoto.gui.panel.albumlist;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,10 +13,12 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSortModel;
 
 public class AlbumDetailContainer implements ContainerInitializer {
@@ -40,7 +41,7 @@ public class AlbumDetailContainer implements ContainerInitializer {
     final JPanel title = createTitlePanel(album.getName());
     this.mainPanel.add(title);
     this.mainPanel.add(this.photoListView.getComponent());
-    this.mainPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    this.mainPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
     this.mainPanel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -74,8 +75,10 @@ public class AlbumDetailContainer implements ContainerInitializer {
     final JPanel jp = new JPanel(null);
     jp.setLayout(new BoxLayout(jp, BoxLayout.X_AXIS));
     jp.setAlignmentX(Component.LEFT_ALIGNMENT);
+    jp.setBackground(GraphicalConstants.BLUE);
 
     this.albumTitle = new JLabel(title);
+    jp.add(Box.createHorizontalStrut(10));
     jp.add(this.albumTitle);
     jp.add(Box.createHorizontalGlue());
     jp.add(createShowPhotoListButton());

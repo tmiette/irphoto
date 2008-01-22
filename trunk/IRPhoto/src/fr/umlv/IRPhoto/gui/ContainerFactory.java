@@ -37,7 +37,7 @@ public class ContainerFactory {
   }
 
   public static JComponent createFeaturesContainer() {
-    return new FeaturesContainer(photoSelectionModel).getComponent();
+    return new FeaturesContainer(photoSelectionModel, photoUpdatedModel).getComponent();
   }
 
   public static JComponent createTabbedContainer() {

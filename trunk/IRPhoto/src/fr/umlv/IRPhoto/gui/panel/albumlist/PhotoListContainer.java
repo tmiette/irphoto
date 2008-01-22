@@ -14,7 +14,6 @@ import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,6 +25,7 @@ import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerFactory;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSortListener;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSortModel;
@@ -83,6 +83,7 @@ public class PhotoListContainer implements ContainerInitializer {
    */
   private JPanel createTopPanel() {
     final JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 3));
+    panel.setBackground(GraphicalConstants.BLUE);
 
     panel.add(new JLabel(IconFactory.getIcon("find-32x32.png")));
 
@@ -107,7 +108,6 @@ public class PhotoListContainer implements ContainerInitializer {
 
   private JPanel createPhotoListPanel() {
     final JPanel panel = new JPanel(null);
-    panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
     panel.setBackground(Color.WHITE);
 
     
@@ -191,7 +191,7 @@ public class PhotoListContainer implements ContainerInitializer {
   }
 
   private JButton createTypeSortButton() {
-    final JButton b = new JButton(IconFactory.getIcon("calendar-32x32.png"));
+    final JButton b = new JButton(IconFactory.getIcon("type-2-2-32x32.png"));
     b.setToolTipText("Sort photos by type.");
     b.addActionListener(new ActionListener() {
       @Override
@@ -203,7 +203,7 @@ public class PhotoListContainer implements ContainerInitializer {
   }
 
   private JButton createAlphaSortButton() {
-    final JButton b = new JButton(IconFactory.getIcon("calendar-32x32.png"));
+    final JButton b = new JButton(IconFactory.getIcon("name-32x32.png"));
     b.setToolTipText("Sort photos by last name.");
     b.addActionListener(new ActionListener() {
       @Override

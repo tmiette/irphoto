@@ -20,6 +20,7 @@ public class Photo implements Serializable {
  private GeoPosition geoPosition;
   private Dimension dimension;
   private Date date;
+  private final Album album;
 
   public static final Comparator<Photo> PHOTO_LAST_MODIFIED_DATE_COMPARATOR = new Comparator<Photo>() {
 
@@ -48,7 +49,7 @@ public class Photo implements Serializable {
 
   };
 
-  public Photo(File file) throws FileNotFoundException {
+  public Photo(File file, Album album) throws FileNotFoundException {
     if (!file.exists() || !file.canRead()) {
       throw new FileNotFoundException("The file " + file.getAbsolutePath()
           + " does not exist.");
@@ -58,6 +59,7 @@ public class Photo implements Serializable {
     this.date = new Date(this.file.lastModified());
     // TODO appel bloquant
     this.icon = new ImageIcon(this.getPath());
+    this.album = album;
   }
   
   /**
@@ -171,6 +173,13 @@ public class Photo implements Serializable {
       this.longitude = longitude;
     }
 
+  }
+
+  /**
+   * @return the album
+   */
+  public Album getAlbum() {
+    return this.album;
   }
 
 }
