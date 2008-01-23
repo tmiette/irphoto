@@ -131,7 +131,7 @@ public class FeaturesContainer implements ContainerInitializer {
   }
 
   @Override
-  public JComponent getComponent() {
+  public JComponent getContainer() {
     final JPanel mainPanel = new JPanel(new BorderLayout());
 
     final JPanel featuresNamesPanel = new JPanel(null);

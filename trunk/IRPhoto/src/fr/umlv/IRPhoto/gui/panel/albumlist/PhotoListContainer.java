@@ -23,10 +23,10 @@ import javax.swing.event.CaretListener;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
-import fr.umlv.IRPhoto.gui.ContainerFactory;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
 
@@ -41,10 +41,13 @@ public class PhotoListContainer implements ContainerInitializer {
 
   private final Album album;
 
+  private final PhotoModel photoModel;
   private final PhotoSortModel photoSortModel;
 
-  public PhotoListContainer(Album album, PhotoSortModel photoSortModel) {
+  public PhotoListContainer(Album album, PhotoModel photoModel,
+      PhotoSortModel photoSortModel) {
     this.album = album;
+    this.photoModel = photoModel;
     this.photoSortModel = photoSortModel;
     this.photoSortModel.addPhotoSortListener(new PhotoSortListener() {
       @Override
@@ -182,8 +185,8 @@ public class PhotoListContainer implements ContainerInitializer {
     b.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-          photoSortModel.sortPhoto(album,
-              Photo.PHOTO_LAST_MODIFIED_DATE_COMPARATOR);
+        photoSortModel.sortPhoto(album,
+            Photo.PHOTO_LAST_MODIFIED_DATE_COMPARATOR);
       }
     });
     return b;
@@ -225,7 +228,7 @@ public class PhotoListContainer implements ContainerInitializer {
     for (Photo photo : photos) {
       PhotoMiniatureContainer photoContainer = photoMiniatures.get(photo);
       if (photoContainer != null) {
-        photoListPanel.add(photoContainer.getComponent());
+        photoListPanel.add(photoContainer.getContainer());
       }
     }
     photoListPanel.revalidate();
@@ -235,17 +238,17 @@ public class PhotoListContainer implements ContainerInitializer {
   public void addPhoto(Photo photo) {
     PhotoMiniatureContainer c = this.photoMiniatures.get(photo);
     if (c == null) {
-      c = ContainerFactory.createPhotoMiniatureContainer(photo);
-      this.photoListPanel.add(c.getComponent());
+      c = new PhotoMiniatureContainer(photo, this.photoModel);
+      this.photoListPanel.add(c.getContainer());
       this.photoMiniatures.put(photo, c);
     } else {
-      this.photoListPanel.add(c.getComponent());
+      this.photoListPanel.add(c.getContainer());
     }
     this.photoListPanel.revalidate();
   }
 
   @Override
-  public JPanel getComponent() {
+  public JPanel getContainer() {
     return this.mainPanel;
   }
 

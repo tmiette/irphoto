@@ -35,7 +35,6 @@ import org.jdesktop.swingx.mapviewer.WaypointPainter;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
-import fr.umlv.IRPhoto.gui.ContainerFactory;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
@@ -56,11 +55,10 @@ public class MapContainer implements ContainerInitializer {
   private HashMap<Waypoint, Photo> waypoints;
   private final JLabel thumbnail;
 
-  public MapContainer(AlbumModel albumModel,
-      PhotoModel photoModel) {
+  public MapContainer(AlbumModel albumModel, PhotoModel photoModel) {
     MyJXMapKit kit = new MyJXMapKit();
     this.map = kit.getMainMap();
-    
+
     this.photoModel = photoModel;
     this.photoModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
 
@@ -78,16 +76,16 @@ public class MapContainer implements ContainerInitializer {
       }
 
     });
-    
+
     this.waypoints = new HashMap<Waypoint, Photo>();
     this.thumbnail = new JLabel();
     this.thumbnail.setVisible(false);
     this.map.add(this.thumbnail);
-    
+
     this.currentPosition = new GeoPosition(43.604503, 1.444026);
 
     this.albumModel = albumModel;
-    this.albumModel.addAlbumSelectionListener(new AlbumSelectionListener(){
+    this.albumModel.addAlbumSelectionListener(new AlbumSelectionListener() {
       @Override
       public void albumSelected(Album album) {
         logger.info("Album selected");
@@ -105,39 +103,42 @@ public class MapContainer implements ContainerInitializer {
       }
 
       public void mouseMoved(MouseEvent e) {
-        
-//        // location of Java
-//        GeoPosition gp = currentPosition;
-//        // convert to world bitmap
-//        Point2D gp_pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
-//        // convert to screen
-//        Rectangle rect = map.getViewportBounds();
-//        Point converted_gp_pt = new Point((int) gp_pt.getX() - rect.x,
-//            (int) gp_pt.getY() - rect.y);
-//        System.out.println(new Point((int) gp_pt.getX() - map.getViewportBounds().x,
-//            (int) gp_pt.getY() - map.getViewportBounds().y));
-//        // check if near the mouse
+
+        // // location of Java
+        // GeoPosition gp = currentPosition;
+        // // convert to world bitmap
+        // Point2D gp_pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
+        // // convert to screen
+        // Rectangle rect = map.getViewportBounds();
+        // Point converted_gp_pt = new Point((int) gp_pt.getX() - rect.x,
+        // (int) gp_pt.getY() - rect.y);
+        // System.out.println(new Point((int) gp_pt.getX() -
+        // map.getViewportBounds().x,
+        // (int) gp_pt.getY() - map.getViewportBounds().y));
+        // // check if near the mouse
         Point currentPoint;
         for (Entry<Waypoint, Photo> wp : waypoints.entrySet()) {
-          if (convertGP2Point(wp.getKey().getPosition()).distance(currentPoint = e.getPoint()) < 10) {
-//            hoverLabel.setLocation(converted_gp_pt);
+          if (convertGP2Point(wp.getKey().getPosition()).distance(
+              currentPoint = e.getPoint()) < 10) {
+            // hoverLabel.setLocation(converted_gp_pt);
             thumbnail.setIcon(getImageFromWP(wp.getKey()));
             thumbnail.setLocation(e.getPoint());
             thumbnail.setVisible(true);
           } else {
-//            thumbnail.setVisible(false);
+            // thumbnail.setVisible(false);
           }
         }
-//        if (converted_gp_pt.distance(e.getPoint()) < 10) {
-//          hoverLabel.setLocation(converted_gp_pt);
-//          hoverLabel.setVisible(true);
-//        } else {
-//          hoverLabel.setVisible(false);
-//        }
+        // if (converted_gp_pt.distance(e.getPoint()) < 10) {
+        // hoverLabel.setLocation(converted_gp_pt);
+        // hoverLabel.setVisible(true);
+        // } else {
+        // hoverLabel.setVisible(false);
+        // }
       }
 
       private Icon getImageFromWP(Waypoint wp) {
-        return new ImageIcon(ImageUtil.getScaledImage(waypoints.get(wp).getImageIcon().getImage(), 50, 50));
+        return new ImageIcon(ImageUtil.getScaledImage(waypoints.get(wp)
+            .getImageIcon().getImage(), 50, 50));
       }
 
       private Point2D convertGP2Point(GeoPosition position) {
@@ -149,21 +150,21 @@ public class MapContainer implements ContainerInitializer {
         Rectangle rect = map.getViewportBounds();
         Point converted_gp_pt = new Point((int) gp_pt.getX() - rect.x,
             (int) gp_pt.getY() - rect.y);
-        System.out.println(new Point((int) gp_pt.getX() - map.getViewportBounds().x,
-            (int) gp_pt.getY() - map.getViewportBounds().y));
+        System.out.println(new Point((int) gp_pt.getX()
+            - map.getViewportBounds().x, (int) gp_pt.getY()
+            - map.getViewportBounds().y));
         // check if near the mouse
         return converted_gp_pt;
       }
     });
 
     this.map.setAddressLocation(this.currentPosition);
-    
 
     JPanel panel = new JPanel(new BorderLayout());
     panel.setOpaque(false);
     panel.add(createCollapseButton(), BorderLayout.WEST);
-    this.photoListContainer = ContainerFactory
-        .createPhotoWithoutGPListContainer();
+    this.photoListContainer = new PhotoWithoutGPListContainer(albumModel,
+        photoModel).getContainer();
     this.photoListContainer.setVisible(false);
     panel.add(this.photoListContainer, BorderLayout.CENTER);
 
@@ -176,7 +177,6 @@ public class MapContainer implements ContainerInitializer {
     this.mainPanel.add(leftPanel, new Integer(1));
     this.mainPanel.add(this.map, new Integer(0));
   }
-  
 
   /**
    * Creates a button which sets visible or not the photos list on map.
@@ -212,44 +212,44 @@ public class MapContainer implements ContainerInitializer {
   /**
    * Adds photos belonging to album on map.
    * 
-   * @param album album containing photos to add on map
+   * @param album
+   *            album containing photos to add on map
    */
   public void addAlbum(Album album) {
     Set<Waypoint> waypoints = new HashSet<Waypoint>();
 
     Waypoint wp;
-      // adding photo waypoint
-      for (Photo photo : album.getPhotos()) {
-        if (photo.getGeoPosition() != null) {
-          // Adding valid geoposition corrdinates
-          waypoints.add(wp = new Waypoint(photo.getGeoPosition().getLatitude(),
-              photo.getGeoPosition().getLongitude()));
-          this.waypoints.put(wp, photo);
-        }
-
+    // adding photo waypoint
+    for (Photo photo : album.getPhotos()) {
+      if (photo.getGeoPosition() != null) {
+        // Adding valid geoposition corrdinates
+        waypoints.add(wp = new Waypoint(photo.getGeoPosition().getLatitude(),
+            photo.getGeoPosition().getLongitude()));
+        this.waypoints.put(wp, photo);
       }
 
-      // create a WaypointPainter to draw the points
-      WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
-      painter.setWaypoints(waypoints);
+    }
 
-      // Display waypoints
-      this.map.setOverlayPainter(painter);
-      
+    // create a WaypointPainter to draw the points
+    WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
+    painter.setWaypoints(waypoints);
+
+    // Display waypoints
+    this.map.setOverlayPainter(painter);
+
   }
 
   /**
    * 
-   * @param photo photo to add on map
+   * @param photo
+   *            photo to add on map
    */
   public void addPhoto(Photo photo) {
-
-    
 
   }
 
   @Override
-  public JComponent getComponent() {
+  public JComponent getContainer() {
     // return this.panel;
     return this.mainPanel;
   }
@@ -302,6 +302,5 @@ public class MapContainer implements ContainerInitializer {
 
     };
   }
-
 
 }

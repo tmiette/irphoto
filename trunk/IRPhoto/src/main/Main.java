@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import fr.umlv.IRPhoto.album.AlbumLoader;
-import fr.umlv.IRPhoto.gui.ContainerFactory;
+import fr.umlv.IRPhoto.gui.panel.MainContainer;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModelImpl;
 
@@ -45,7 +45,7 @@ public class Main {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(new Dimension(800, 600));
     frame.setLocationRelativeTo(null);
-    frame.setContentPane(ContainerFactory.createMainContainer(model));
+    frame.setContentPane(new MainContainer(model).getContainer());
     frame.addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {

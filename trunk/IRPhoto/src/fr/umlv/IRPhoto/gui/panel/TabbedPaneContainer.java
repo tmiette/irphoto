@@ -15,28 +15,31 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-import fr.umlv.IRPhoto.gui.ContainerFactory;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
+import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumListContainer;
+import fr.umlv.IRPhoto.gui.panel.map.MapContainer;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 
 public class TabbedPaneContainer implements ContainerInitializer {
 
+  private final JComponent container;
   private final ArrayList<JLabel> tabs = new ArrayList<JLabel>();
   private JLabel currentTab;
 
-  @Override
-  public JComponent getComponent() {
-    // main panel
-    final JPanel mainPanel = new JPanel(new BorderLayout());
+  public TabbedPaneContainer(AlbumModel albumModel, PhotoModel photoModel) {
+    this.container = new JPanel(new BorderLayout());
 
     // panel which imitate a tabbed pane
     final CardLayout cardLayout = new CardLayout();
     final JPanel cardPanel = new JPanel(cardLayout);
 
     // scroll pane for the albums details panel
-    final JScrollPane scroll = new JScrollPane(ContainerFactory
-        .createAlbumListContainer(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+    final JScrollPane scroll = new JScrollPane(new AlbumListContainer(
+        albumModel, photoModel).getContainer(),
+        JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     // buttons panel to imitate tabbed pane
@@ -80,11 +83,15 @@ public class TabbedPaneContainer implements ContainerInitializer {
 
     // adds different panels to main panel
     cardPanel.add(scroll, "Albums");
-    cardPanel.add(ContainerFactory.createMapContainer(), "Map");
-    mainPanel.add(cardPanel, BorderLayout.CENTER);
-    mainPanel.add(bouttonsPanel, BorderLayout.SOUTH);
+    cardPanel.add(new MapContainer(albumModel, photoModel).getContainer(),
+        "Map");
+    this.container.add(cardPanel, BorderLayout.CENTER);
+    this.container.add(bouttonsPanel, BorderLayout.SOUTH);
+  }
 
-    return mainPanel;
+  @Override
+  public JComponent getContainer() {
+    return this.container;
   }
 
   private void setCurrentTab(JLabel label) {

@@ -3,6 +3,7 @@ package fr.umlv.IRPhoto.gui.panel.albumtree;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -30,6 +31,7 @@ import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 
 public class AlbumTreeContainer implements ContainerInitializer {
 
+  private final JComponent container;
   private final JTree tree;
   private final AlbumModel albumModel;
   private final DefaultTreeCellRenderer renderer;
@@ -49,20 +51,21 @@ public class AlbumTreeContainer implements ContainerInitializer {
     // initialize jtree
     this.renderer = this.initializeRenderer();
     this.tree = this.initializeTree(new AlbumTreeModel(this.albumModel));
-  }
 
-  @Override
-  public JComponent getComponent() {
-    final JPanel panel = new JPanel(new BorderLayout());
-    panel.setBackground(Color.WHITE);
-    panel.add(this.initializeButtonsPanel(), BorderLayout.NORTH);
+    this.container = new JPanel(new BorderLayout());
+    this.container.setBackground(Color.WHITE);
+    this.container.add(this.initializeButtonsPanel(), BorderLayout.NORTH);
     final JScrollPane scrollPane = new JScrollPane(this.tree,
         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setBorder(null);
-    panel.add(scrollPane, BorderLayout.CENTER);
-    panel.add(this.intializeLogo(), BorderLayout.SOUTH);
-    return panel;
+    this.container.add(scrollPane, BorderLayout.CENTER);
+    this.container.add(this.intializeLogo(), BorderLayout.SOUTH);
+  }
+
+  @Override
+  public JComponent getContainer() {
+    return this.container;
   }
 
   private JTree initializeTree(TreeModel model) {
@@ -213,6 +216,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
 
   private JLabel intializeLogo() {
     final JLabel l = new JLabel(IconFactory.getIcon("logo.png"));
+    l.setMinimumSize(new Dimension(0, 0));
     return l;
   }
 

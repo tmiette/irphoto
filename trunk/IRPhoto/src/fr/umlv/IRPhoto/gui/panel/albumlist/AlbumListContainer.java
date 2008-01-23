@@ -16,18 +16,21 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumUpdateListener;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModelImpl;
 
 public class AlbumListContainer implements ContainerInitializer {
 
   private final JPanel mainPanel;
   private final AlbumModel albumModel;
+  private final PhotoModel photoModel;
   private final GridBagConstraints constraints;
   private final HashMap<Album, AlbumDetailContainer> albumsDetailContainers;
   private final JPanel endPanel;
 
-  public AlbumListContainer(AlbumModel albumModel) {
+  public AlbumListContainer(AlbumModel albumModel, PhotoModel photoModel) {
     this.albumsDetailContainers = new HashMap<Album, AlbumDetailContainer>();
+    this.photoModel = photoModel;
     this.albumModel = albumModel;
     this.albumModel.addAlbumListener(new AlbumListener() {
 
@@ -88,9 +91,9 @@ public class AlbumListContainer implements ContainerInitializer {
     this.constraints.gridy++;
 
     final AlbumDetailContainer ta = new AlbumDetailContainer(album,
-        this.albumModel, new PhotoSortModelImpl());
+        this.albumModel, this.photoModel, new PhotoSortModelImpl());
     this.albumsDetailContainers.put(album, ta);
-    this.mainPanel.add(ta.getComponent(), this.constraints);
+    this.mainPanel.add(ta.getContainer(), this.constraints);
     this.addEndPanel();
     this.mainPanel.revalidate();
   }
@@ -98,7 +101,7 @@ public class AlbumListContainer implements ContainerInitializer {
   private void removeAlbum(Album album) {
     AlbumDetailContainer c = this.albumsDetailContainers.remove(album);
     if (c != null) {
-      this.mainPanel.remove(c.getComponent());
+      this.mainPanel.remove(c.getContainer());
       this.addEndPanel();
       this.mainPanel.revalidate();
       this.mainPanel.repaint();
@@ -120,7 +123,7 @@ public class AlbumListContainer implements ContainerInitializer {
   }
 
   @Override
-  public JComponent getComponent() {
+  public JComponent getContainer() {
     return this.mainPanel;
   }
 

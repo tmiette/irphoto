@@ -4,6 +4,6 @@ import javax.swing.JComponent;
 
 public interface ContainerInitializer {
 
-  public JComponent getComponent();
+  public JComponent getContainer();
 
 }

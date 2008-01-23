@@ -111,7 +111,7 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
   }
 
   @Override
-  public JComponent getComponent() {
+  public JComponent getContainer() {
     return this.mainPanel;
   }
 }

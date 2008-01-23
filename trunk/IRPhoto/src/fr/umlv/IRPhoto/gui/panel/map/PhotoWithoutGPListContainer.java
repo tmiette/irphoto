@@ -262,7 +262,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
    * @see fr.umlv.IRPhoto.gui.ContainerInitializer#getComponent()
    */
   @Override
-  public JComponent getComponent() {
+  public JComponent getContainer() {
     return this.panel;
   }
 

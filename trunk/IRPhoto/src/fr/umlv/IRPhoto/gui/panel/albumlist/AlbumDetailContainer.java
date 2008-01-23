@@ -18,6 +18,7 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
 
 public class AlbumDetailContainer implements ContainerInitializer {
@@ -28,17 +29,17 @@ public class AlbumDetailContainer implements ContainerInitializer {
   private final Album album;
 
   public AlbumDetailContainer(Album album, final AlbumModel albumModel,
-      PhotoSortModel photoSortModel) {
+      PhotoModel photoModel, PhotoSortModel photoSortModel) {
     this.album = album;
 
     // Contains panel with photos and search & sort buttons
-    this.photoListView = createPhotoListPanel(album, photoSortModel);
+    this.photoListView = createPhotoListPanel(album, photoModel, photoSortModel);
 
     this.mainPanel = new JPanel(null);
     this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
     final JPanel titlePanel = createTitlePanel(album.getName());
     this.mainPanel.add(titlePanel);
-    this.mainPanel.add(this.photoListView.getComponent());
+    this.mainPanel.add(this.photoListView.getContainer());
     this.mainPanel.setBorder(BorderFactory
         .createEtchedBorder(EtchedBorder.RAISED));
     this.mainPanel.addMouseListener(new MouseAdapter() {
@@ -62,11 +63,11 @@ public class AlbumDetailContainer implements ContainerInitializer {
   }
 
   private PhotoListContainer createPhotoListPanel(Album album,
-      PhotoSortModel photoSortModel) {
-    final PhotoListContainer view = new PhotoListContainer(album,
+      PhotoModel photoModel, PhotoSortModel photoSortModel) {
+    final PhotoListContainer view = new PhotoListContainer(album, photoModel,
         photoSortModel);
-    view.getComponent().setVisible(false);
-    view.getComponent().setAlignmentX(Component.LEFT_ALIGNMENT);
+    view.getContainer().setVisible(false);
+    view.getContainer().setAlignmentX(Component.LEFT_ALIGNMENT);
     return view;
   }
 
@@ -91,9 +92,9 @@ public class AlbumDetailContainer implements ContainerInitializer {
     l.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        AlbumDetailContainer.this.photoListView.getComponent()
+        AlbumDetailContainer.this.photoListView.getContainer()
             .setVisible(
-                !AlbumDetailContainer.this.photoListView.getComponent()
+                !AlbumDetailContainer.this.photoListView.getContainer()
                     .isVisible());
         if (l.getIcon() == IconFactory.getIcon("down-20x20.png")) {
           l.setIcon(IconFactory.getIcon("next-20x20.png"));
@@ -106,7 +107,7 @@ public class AlbumDetailContainer implements ContainerInitializer {
   }
 
   @Override
-  public JComponent getComponent() {
+  public JComponent getContainer() {
     return this.mainPanel;
   }
 
