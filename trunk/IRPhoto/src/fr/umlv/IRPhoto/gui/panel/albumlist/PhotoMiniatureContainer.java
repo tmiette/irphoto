@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
+import fr.umlv.IRPhoto.gui.panel.model.PhotoSelectionModel;
 
 public class PhotoMiniatureContainer implements ContainerInitializer {
 

@@ -13,25 +13,22 @@ import javax.swing.JPanel;
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
-import fr.umlv.IRPhoto.gui.panel.album.AlbumListener;
-import fr.umlv.IRPhoto.gui.panel.album.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoSortModelImpl;
+import fr.umlv.IRPhoto.gui.panel.model.AlbumListener;
+import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.PhotoSortModelImpl;
 
 public class AlbumListContainer implements ContainerInitializer {
 
   private final JPanel mainPanel;
-  private final AlbumModel model;
+  private final AlbumModel albumModel;
   private final GridBagConstraints constraints;
   private final HashMap<Album, AlbumDetailContainer> albumsDetailContainers;
   private final JPanel endPanel;
-  private final AlbumSelectionModel albumSelectionModel;
 
-  public AlbumListContainer(AlbumModel albumModel,
-      AlbumSelectionModel albumSelectionModel) {
-    this.albumSelectionModel = albumSelectionModel;
+  public AlbumListContainer(AlbumModel albumModel) {
     this.albumsDetailContainers = new HashMap<Album, AlbumDetailContainer>();
-    this.model = albumModel;
-    this.model.addAlbumListener(new AlbumListener() {
+    this.albumModel = albumModel;
+    this.albumModel.addAlbumListener(new AlbumListener() {
 
       @Override
       public void albumAdded(Album album) {
@@ -53,6 +50,11 @@ public class AlbumListContainer implements ContainerInitializer {
         AlbumListContainer.this.addPhoto(album, photo);
       }
 
+      @Override
+      public void albumSelected(Album album) {
+        // do nothing
+      }
+
     });
 
     this.constraints = new GridBagConstraints();
@@ -61,18 +63,18 @@ public class AlbumListContainer implements ContainerInitializer {
     this.constraints.gridy = 0;
     this.constraints.weightx = 0.5;
     this.constraints.gridx = 0;
-    this.constraints.insets = new Insets(5,5,5,5);
+    this.constraints.insets = new Insets(5, 5, 5, 5);
 
     this.endPanel = new JPanel(null);
     this.endPanel.setBackground(Color.RED);
     this.endPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 10));
     this.mainPanel = createAlbumListPanel();
     this.mainPanel.setBackground(Color.WHITE);
-    
-    for (Album album : this.model.getAlbums()) {
+
+    for (Album album : this.albumModel.getAlbums()) {
       this.addAlbum(album);
     }
-    
+
   }
 
   private JPanel createAlbumListPanel() {
@@ -89,8 +91,8 @@ public class AlbumListContainer implements ContainerInitializer {
   private void addAlbum(Album album) {
     this.constraints.gridy++;
 
-    final AlbumDetailContainer ta = new AlbumDetailContainer(album,
-        this.albumSelectionModel,new PhotoSortModelImpl());
+    final AlbumDetailContainer ta = new AlbumDetailContainer(album, this.albumModel,
+        new PhotoSortModelImpl());
     this.albumsDetailContainers.put(album, ta);
     this.mainPanel.add(ta.getComponent(), this.constraints);
     this.addEndPanel();

@@ -1,4 +1,4 @@
-package fr.umlv.IRPhoto.gui.panel.album;
+package fr.umlv.IRPhoto.gui.panel.model;
 
 import java.io.File;
 import java.util.Comparator;
@@ -8,6 +8,8 @@ import fr.umlv.IRPhoto.album.Album;
 
 public interface AlbumModel {
 
+  public Album getCurrentAlbum();
+  
   public List<? extends Album> getAlbums();
 
   public List<? extends Album> getSortedAlbums(Comparator<Album> comparator);
@@ -23,4 +25,6 @@ public interface AlbumModel {
   public void nameAlbum(Album album, String name);
 
   public void addAlbumListener(AlbumListener listener);
+  
+  public void selectAlbum(Album album);
 }

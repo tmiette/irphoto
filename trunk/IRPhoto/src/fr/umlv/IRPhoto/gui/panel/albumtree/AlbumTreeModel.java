@@ -10,8 +10,8 @@ import javax.swing.tree.TreePath;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
-import fr.umlv.IRPhoto.gui.panel.album.AlbumListener;
-import fr.umlv.IRPhoto.gui.panel.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.AlbumListener;
+import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
 
 public class AlbumTreeModel extends DefaultTreeModel {
 
@@ -45,6 +45,11 @@ public class AlbumTreeModel extends DefaultTreeModel {
         // do nothing
       }
 
+      @Override
+      public void albumSelected(Album album) {
+        // do nothing
+      }
+      
     });
 
     for (Album album : model.getAlbums()) {

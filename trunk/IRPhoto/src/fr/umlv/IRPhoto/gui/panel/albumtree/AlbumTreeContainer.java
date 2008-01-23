@@ -25,21 +25,19 @@ import javax.swing.tree.TreePath;
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
-import fr.umlv.IRPhoto.gui.panel.album.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionModel;
 import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumTreeModel.AlbumTreeNode;
+import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
 
 public class AlbumTreeContainer implements ContainerInitializer {
 
   private final JTree tree;
   private final AlbumModel albumModel;
-  private final AlbumSelectionModel selectionModel;
   private final DefaultTreeCellRenderer renderer;
   private final Icon rootIcon;
   private final Icon leafIcon;
   private JFileChooser fileChooser;
 
-  public AlbumTreeContainer(AlbumModel model, AlbumSelectionModel selectionModel) {
+  public AlbumTreeContainer(AlbumModel model) {
 
     // create icons
     this.rootIcon = IconFactory.getIcon("album-24x24.png");
@@ -51,7 +49,6 @@ public class AlbumTreeContainer implements ContainerInitializer {
     // initialize jtree
     this.renderer = this.initializeRenderer();
     this.tree = this.initializeTree(new AlbumTreeModel(this.albumModel));
-    this.selectionModel = selectionModel;
   }
 
   @Override
@@ -90,7 +87,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
         // ignore root node
         if (tree.getModel().isLeaf(node) && tree.getRowCount() != 1) {
 
-          selectionModel.selectAlbum(node.getAlbum());
+          albumModel.selectAlbum(node.getAlbum());
 
           if (e.getClickCount() == 2) {
             // inform the model of changes

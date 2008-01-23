@@ -1,4 +1,4 @@
-package fr.umlv.IRPhoto.gui.panel.album;
+package fr.umlv.IRPhoto.gui.panel.model;
 
 import java.util.ArrayList;
 

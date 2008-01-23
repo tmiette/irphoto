@@ -12,9 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,10 +38,10 @@ import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerFactory;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedListener;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedModel;
-import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionListener;
-import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionModel;
+import fr.umlv.IRPhoto.gui.panel.model.AlbumListener;
+import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.PhotoUpdatedListener;
+import fr.umlv.IRPhoto.gui.panel.model.PhotoUpdatedModel;
 import fr.umlv.IRPhoto.util.ImageUtil;
 
 public class MapContainer implements ContainerInitializer {
@@ -53,14 +50,13 @@ public class MapContainer implements ContainerInitializer {
   private static final Logger logger = Logger.getLogger(Main.loggerName);
   private final JXMapViewer map;
   private GeoPosition currentPosition;
-  private final AlbumSelectionModel albumSelectionModel;
+  private final AlbumModel albumModel;
   private final PhotoUpdatedModel photoUpdatedModel;
   private final JComponent photoListContainer;
-  private Album currentAlbum;
   private HashMap<Waypoint, Photo> waypoints;
   private final JLabel thumbnail;
 
-  public MapContainer(AlbumSelectionModel albumSelectionModel,
+  public MapContainer(AlbumModel albumModel,
       PhotoUpdatedModel photoUpdatedModel) {
     MyJXMapKit kit = new MyJXMapKit();
     this.map = kit.getMainMap();
@@ -90,16 +86,35 @@ public class MapContainer implements ContainerInitializer {
     
     this.currentPosition = new GeoPosition(43.604503, 1.444026);
 
-    this.albumSelectionModel = albumSelectionModel;
-    this.albumSelectionModel
-        .addAlbumSelectionListener(new AlbumSelectionListener() {
-          @Override
-          public void albumSelected(Album album) {
-            logger.info("Album selected");
-            addAlbum(album);
-            map.repaint();
-          }
-        });
+    this.albumModel = albumModel;
+    this.albumModel.addAlbumListener(new AlbumListener(){
+      @Override
+      public void albumAdded(Album album) {
+        // do nothing
+      }
+
+      @Override
+      public void albumRemoved(Album album) {
+        // do nothing
+      }
+
+      @Override
+      public void albumRenamed(Album album, String newName) {
+        // do nothing
+      }
+
+      @Override
+      public void albumSelected(Album album) {
+        logger.info("Album selected");
+        addAlbum(album);
+        map.repaint();
+      }
+
+      @Override
+      public void photoAdded(Album album, Photo photo) {
+        // do nothing
+      }
+    });
 
     final JLabel hoverLabel = new JLabel("Java");
     hoverLabel.setVisible(false);
@@ -237,9 +252,6 @@ public class MapContainer implements ContainerInitializer {
       // create a WaypointPainter to draw the points
       WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
       painter.setWaypoints(waypoints);
-
-      // Save current album to future display
-      this.currentAlbum = album;
 
       // Display waypoints
       this.map.setOverlayPainter(painter);

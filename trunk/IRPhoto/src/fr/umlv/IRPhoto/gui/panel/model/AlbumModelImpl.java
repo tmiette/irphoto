@@ -1,4 +1,4 @@
-package fr.umlv.IRPhoto.gui.panel.album;
+package fr.umlv.IRPhoto.gui.panel.model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +19,8 @@ public class AlbumModelImpl implements AlbumModel {
 
   private final ArrayList<Album> albums;
 
+  private Album currentAlbum;
+
   private final ArrayList<AlbumListener> listeners;
 
   private static MimetypesFileTypeMap mimeTypesFileTypeMap = new MimetypesFileTypeMap();
@@ -26,6 +28,11 @@ public class AlbumModelImpl implements AlbumModel {
   public AlbumModelImpl() {
     this.albums = new ArrayList<Album>();
     this.listeners = new ArrayList<AlbumListener>();
+  }
+
+  @Override
+  public void addAlbumListener(AlbumListener listener) {
+    this.listeners.add(listener);
   }
 
   @Override
@@ -42,11 +49,6 @@ public class AlbumModelImpl implements AlbumModel {
   }
 
   @Override
-  public void addAlbumListener(AlbumListener listener) {
-    this.listeners.add(listener);
-  }
-
-  @Override
   public List<? extends Album> getAlbums() {
     return this.albums;
   }
@@ -58,6 +60,46 @@ public class AlbumModelImpl implements AlbumModel {
         this.albums.remove(album);
         this.fireAlbumRemoved(album);
       }
+    }
+  }
+
+  @Override
+  public void linkAlbum(Album album, File albumFile) {
+    if (album.hasDefaultName()) {
+      this.nameAlbum(album, albumFile.getName());
+    }
+    album.setDirectory(albumFile);
+    this.crawle(albumFile, album);
+  }
+
+  @Override
+  public void nameAlbum(Album album, String name) {
+    if (album != null && (name == null || name.length() > 0)) {
+      album.setName(name);
+      this.fireAlbumRenamed(album, name);
+    }
+  }
+
+  @Override
+  public List<? extends Album> getSortedAlbums(Comparator<Album> comparator) {
+    Collections.sort(this.albums, comparator);
+    return Collections.unmodifiableList(this.albums);
+  }
+
+  @Override
+  public Album getCurrentAlbum() {
+    return this.currentAlbum;
+  }
+
+  @Override
+  public void selectAlbum(Album album) {
+    this.currentAlbum = album;
+    this.fireAlbumSelected(album);
+  }
+
+  protected void fireAlbumSelected(Album album) {
+    for (AlbumListener listener : this.listeners) {
+      listener.albumSelected(album);
     }
   }
 
@@ -83,29 +125,6 @@ public class AlbumModelImpl implements AlbumModel {
     for (AlbumListener listener : this.listeners) {
       listener.photoAdded(album, photo);
     }
-  }
-
-  @Override
-  public void linkAlbum(Album album, File albumFile) {
-    if (album.hasDefaultName()) {
-      this.nameAlbum(album, albumFile.getName());
-    }
-    album.setDirectory(albumFile);
-    this.crawle(albumFile, album);
-  }
-
-  @Override
-  public void nameAlbum(Album album, String name) {
-    if (album != null && (name == null || name.length() > 0)) {
-      album.setName(name);
-      this.fireAlbumRenamed(album, name);
-    }
-  }
-
-  @Override
-  public List<? extends Album> getSortedAlbums(Comparator<Album> comparator) {
-    Collections.sort(this.albums, comparator);
-    return Collections.unmodifiableList(this.albums);
   }
 
   private void crawle(File directory, final Album album) {

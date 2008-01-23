@@ -27,8 +27,8 @@ import fr.umlv.IRPhoto.gui.ContainerFactory;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoSortListener;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoSortModel;
+import fr.umlv.IRPhoto.gui.panel.model.PhotoSortListener;
+import fr.umlv.IRPhoto.gui.panel.model.PhotoSortModel;
 
 public class PhotoListContainer implements ContainerInitializer {
 

@@ -32,11 +32,11 @@ import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.album.Photo.GeoPosition;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedListener;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedModel;
-import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionListener;
-import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionModel;
+import fr.umlv.IRPhoto.gui.panel.model.AlbumListener;
+import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.PhotoSelectionModel;
+import fr.umlv.IRPhoto.gui.panel.model.PhotoUpdatedListener;
+import fr.umlv.IRPhoto.gui.panel.model.PhotoUpdatedModel;
 import fr.umlv.IRPhoto.util.ImageUtil;
 
 /**
@@ -47,7 +47,7 @@ import fr.umlv.IRPhoto.util.ImageUtil;
 public class PhotoWithoutGPListContainer implements ContainerInitializer {
 
   private static final Logger logger = Logger.getLogger(Main.loggerName);
-  private final AlbumSelectionModel albumSelectionModel;
+  private final AlbumModel albumModel;
   private final PhotoSelectionModel photoSelectionModel;
   private final PhotoUpdatedModel photoUpdatedModel;
   private final JPanel panel;
@@ -67,7 +67,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   /**
    * 
    */
-  public PhotoWithoutGPListContainer(AlbumSelectionModel albumSelectionModel,
+  public PhotoWithoutGPListContainer(AlbumModel albumModel,
       PhotoSelectionModel photoSelectionModel,
       PhotoUpdatedModel photoUpdatedModel) {
 
@@ -88,22 +88,37 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
 
     });
     this.photoSelectionModel = photoSelectionModel;
-    this.albumSelectionModel = albumSelectionModel;
-    this.albumSelectionModel
-        .addAlbumSelectionListener(new AlbumSelectionListener() {
-          /*
-           * (non-Javadoc)
-           * 
-           * @see fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionListener#albumSelected(fr.umlv.IRPhoto.album.Album)
-           */
-          @Override
-          public void albumSelected(Album album) {
-            photoListPanel.removeAll();
-            addPhotos(getPhotosWhitoutGP(album.getPhotos()));
-            scrollPane.validate();
-          }
+    this.albumModel = albumModel;
+    this.albumModel.addAlbumListener(new AlbumListener() {
 
-        });
+      @Override
+      public void albumAdded(Album album) {
+        // do nothing
+      }
+
+      @Override
+      public void albumRemoved(Album album) {
+        // do nothing
+      }
+
+      @Override
+      public void albumRenamed(Album album, String newName) {
+        // do nothing
+      }
+
+      @Override
+      public void albumSelected(Album album) {
+        photoListPanel.removeAll();
+        addPhotos(getPhotosWhitoutGP(album.getPhotos()));
+        scrollPane.validate();
+      }
+
+      @Override
+      public void photoAdded(Album album, Photo photo) {
+        // do nothing
+      }
+
+    });
 
     this.photos = new HashMap<Photo, JLabel>();
 
@@ -188,7 +203,8 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   /**
    * Adds photos to photo list panel.
    * 
-   * @param photos photos to add
+   * @param photos
+   *            photos to add
    */
   private void addPhotos(List<Photo> photos) {
     logger.info("adding photos to list panel");
@@ -200,7 +216,8 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   /**
    * Adds a photo to photo list panel.
    * 
-   * @param photo photo to add
+   * @param photo
+   *            photo to add
    */
   private void addPhoto(final Photo photo) {
     ImageIcon icon = photo.getImageIcon();
@@ -237,7 +254,8 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   /**
    * Removes a photo from photo list panel.
    * 
-   * @param photo photo to remove
+   * @param photo
+   *            photo to remove
    */
   private void removePhoto(Photo photo) {
     JLabel label = this.photos.get(photo);

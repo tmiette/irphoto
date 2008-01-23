@@ -17,7 +17,8 @@ import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoSortModel;
+import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.PhotoSortModel;
 
 public class AlbumDetailContainer implements ContainerInitializer {
 
@@ -26,8 +27,7 @@ public class AlbumDetailContainer implements ContainerInitializer {
   private JLabel albumTitle;
   private final Album album;
 
-  public AlbumDetailContainer(Album album,
-      final AlbumSelectionModel albumSelectionModel,
+  public AlbumDetailContainer(Album album, final AlbumModel albumModel,
       PhotoSortModel photoSortModel) {
     this.album = album;
 
@@ -45,7 +45,7 @@ public class AlbumDetailContainer implements ContainerInitializer {
       @Override
       public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
-          albumSelectionModel.selectAlbum(AlbumDetailContainer.this.album);
+          albumModel.selectAlbum(AlbumDetailContainer.this.album);
         }
 
       }

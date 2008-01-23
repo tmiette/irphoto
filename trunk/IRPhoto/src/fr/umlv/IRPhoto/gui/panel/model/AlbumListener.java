@@ -1,4 +1,4 @@
-package fr.umlv.IRPhoto.gui.panel.album;
+package fr.umlv.IRPhoto.gui.panel.model;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
@@ -12,5 +12,7 @@ public interface AlbumListener {
   public void albumRenamed(Album album, String newName);
 
   public void photoAdded(Album album, Photo photo);
+  
+  public void albumSelected(Album album);
 
 }
