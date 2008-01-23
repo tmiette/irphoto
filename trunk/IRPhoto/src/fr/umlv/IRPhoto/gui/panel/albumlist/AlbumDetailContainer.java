@@ -17,8 +17,8 @@ import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
-import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.model.PhotoSortModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
 
 public class AlbumDetailContainer implements ContainerInitializer {
 

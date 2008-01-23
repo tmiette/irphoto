@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 
 public class AlbumLoader {
 

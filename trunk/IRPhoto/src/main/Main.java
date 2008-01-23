@@ -14,8 +14,8 @@ import javax.swing.SwingUtilities;
 
 import fr.umlv.IRPhoto.album.AlbumLoader;
 import fr.umlv.IRPhoto.gui.ContainerFactory;
-import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.model.AlbumModelImpl;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModelImpl;
 
 public class Main {
 

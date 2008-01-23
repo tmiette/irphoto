@@ -26,7 +26,7 @@ import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumTreeModel.AlbumTreeNode;
-import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 
 public class AlbumTreeContainer implements ContainerInitializer {
 

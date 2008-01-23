@@ -1,4 +1,4 @@
-package fr.umlv.IRPhoto.gui.panel.model;
+package fr.umlv.IRPhoto.gui.panel.model.album;
 
 import java.io.File;
 import java.io.FileNotFoundException;

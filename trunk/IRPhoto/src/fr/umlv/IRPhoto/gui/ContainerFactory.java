@@ -11,10 +11,10 @@ import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumTreeContainer;
 import fr.umlv.IRPhoto.gui.panel.features.FeaturesContainer;
 import fr.umlv.IRPhoto.gui.panel.map.MapContainer;
 import fr.umlv.IRPhoto.gui.panel.map.PhotoWithoutGPListContainer;
-import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.model.PhotoSelectionModel;
-import fr.umlv.IRPhoto.gui.panel.model.PhotoSelectionModelImpl;
-import fr.umlv.IRPhoto.gui.panel.model.PhotoUpdatedModelImpl;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSelectionModel;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSelectionModelImpl;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoUpdatedModelImpl;
 
 public class ContainerFactory {
 

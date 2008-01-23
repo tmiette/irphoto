@@ -38,10 +38,10 @@ import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerFactory;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
-import fr.umlv.IRPhoto.gui.panel.model.AlbumListener;
-import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.model.PhotoUpdatedListener;
-import fr.umlv.IRPhoto.gui.panel.model.PhotoUpdatedModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumListener;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoUpdatedListener;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoUpdatedModel;
 import fr.umlv.IRPhoto.util.ImageUtil;
 
 public class MapContainer implements ContainerInitializer {

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.umlv.IRPhoto.gui.panel.model;
+package fr.umlv.IRPhoto.gui.panel.model.photo;
 
 import java.util.ArrayList;
 

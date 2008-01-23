@@ -10,8 +10,8 @@ import javax.swing.tree.TreePath;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
-import fr.umlv.IRPhoto.gui.panel.model.AlbumListener;
-import fr.umlv.IRPhoto.gui.panel.model.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumListener;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 
 public class AlbumTreeModel extends DefaultTreeModel {
 
