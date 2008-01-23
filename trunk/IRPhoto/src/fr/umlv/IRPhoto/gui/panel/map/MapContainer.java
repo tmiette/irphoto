@@ -40,8 +40,8 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoUpdatedListener;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoUpdatedModel;
 import fr.umlv.IRPhoto.util.ImageUtil;
 
 public class MapContainer implements ContainerInitializer {
@@ -51,18 +51,18 @@ public class MapContainer implements ContainerInitializer {
   private final JXMapViewer map;
   private GeoPosition currentPosition;
   private final AlbumModel albumModel;
-  private final PhotoUpdatedModel photoUpdatedModel;
+  private final PhotoModel photoModel;
   private final JComponent photoListContainer;
   private HashMap<Waypoint, Photo> waypoints;
   private final JLabel thumbnail;
 
   public MapContainer(AlbumModel albumModel,
-      PhotoUpdatedModel photoUpdatedModel) {
+      PhotoModel photoModel) {
     MyJXMapKit kit = new MyJXMapKit();
     this.map = kit.getMainMap();
     
-    this.photoUpdatedModel = photoUpdatedModel;
-    this.photoUpdatedModel.addPhotoUpdatedListener(new PhotoUpdatedListener() {
+    this.photoModel = photoModel;
+    this.photoModel.addPhotoUpdatedListener(new PhotoUpdatedListener() {
 
       @Override
       public void geoppositionUpdated(Photo photo) {

@@ -34,9 +34,8 @@ import fr.umlv.IRPhoto.album.Photo.GeoPosition;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSelectionModel;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoUpdatedListener;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoUpdatedModel;
 import fr.umlv.IRPhoto.util.ImageUtil;
 
 /**
@@ -48,8 +47,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
 
   private static final Logger logger = Logger.getLogger(Main.loggerName);
   private final AlbumModel albumModel;
-  private final PhotoSelectionModel photoSelectionModel;
-  private final PhotoUpdatedModel photoUpdatedModel;
+  private final PhotoModel photoModel;
   private final JPanel panel;
   private final JPanel photoListPanel;
   private JTextField latitudeField;
@@ -68,11 +66,10 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
    * 
    */
   public PhotoWithoutGPListContainer(AlbumModel albumModel,
-      PhotoSelectionModel photoSelectionModel,
-      PhotoUpdatedModel photoUpdatedModel) {
+      PhotoModel photoModel) {
 
-    this.photoUpdatedModel = photoUpdatedModel;
-    this.photoUpdatedModel.addPhotoUpdatedListener(new PhotoUpdatedListener() {
+    this.photoModel = photoModel;
+    this.photoModel.addPhotoUpdatedListener(new PhotoUpdatedListener() {
 
       @Override
       public void geoppositionUpdated(Photo photo) {
@@ -87,7 +84,6 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
       }
 
     });
-    this.photoSelectionModel = photoSelectionModel;
     this.albumModel = albumModel;
     this.albumModel.addAlbumListener(new AlbumListener() {
 
@@ -172,7 +168,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
             photoSelected.getGeoPosition().setLatitude(latitude);
             photoSelected.getGeoPosition().setLongitude(longitude);
           }
-          photoUpdatedModel.geopositionUpdated(photoSelected);
+          photoModel.geopositionUpdated(photoSelected);
         }
       }
     });
@@ -241,7 +237,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
                 DEFAULT_THUMBNAIL_SELECTED_BORDER);
           }
           // Selecting photo
-          photoSelectionModel.selectPhoto(photo);
+          photoModel.selectPhoto(photo);
           label.setBorder(BorderFactory.createLineBorder(Color.GRAY));
           photoSelected = photo;
         }

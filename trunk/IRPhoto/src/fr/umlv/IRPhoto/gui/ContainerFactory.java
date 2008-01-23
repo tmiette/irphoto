@@ -12,15 +12,13 @@ import fr.umlv.IRPhoto.gui.panel.features.FeaturesContainer;
 import fr.umlv.IRPhoto.gui.panel.map.MapContainer;
 import fr.umlv.IRPhoto.gui.panel.map.PhotoWithoutGPListContainer;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSelectionModel;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSelectionModelImpl;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoUpdatedModelImpl;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModelImpl;
 
 public class ContainerFactory {
 
   private static AlbumModel albumModel;
-  private static final PhotoSelectionModel photoSelectionModel = new PhotoSelectionModelImpl();
-  private static final PhotoUpdatedModelImpl photoUpdatedModel = new PhotoUpdatedModelImpl();
+  private static final PhotoModel photoModel = new PhotoModelImpl();
 
   public static JComponent createMainContainer(AlbumModel model) {
     albumModel = model;
@@ -32,7 +30,7 @@ public class ContainerFactory {
   }
 
   public static JComponent createFeaturesContainer() {
-    return new FeaturesContainer(photoSelectionModel, photoUpdatedModel)
+    return new FeaturesContainer(photoModel)
         .getComponent();
   }
 
@@ -41,7 +39,7 @@ public class ContainerFactory {
   }
 
   public static JComponent createMapContainer() {
-    return new MapContainer(albumModel, photoUpdatedModel).getComponent();
+    return new MapContainer(albumModel, photoModel).getComponent();
   }
 
   public static JComponent createAlbumListContainer() {
@@ -49,13 +47,12 @@ public class ContainerFactory {
   }
 
   public static JComponent createPhotoWithoutGPListContainer() {
-    return new PhotoWithoutGPListContainer(albumModel, photoSelectionModel,
-        photoUpdatedModel).getComponent();
+    return new PhotoWithoutGPListContainer(albumModel, photoModel).getComponent();
   }
 
   public static PhotoMiniatureContainer createPhotoMiniatureContainer(
       Photo photo) {
-    return new PhotoMiniatureContainer(photo, photoSelectionModel);
+    return new PhotoMiniatureContainer(photo, photoModel);
   }
 
 }

@@ -19,11 +19,11 @@ import javax.swing.JPanel;
 
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSelectionModel;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 
 public class PhotoMiniatureContainer implements ContainerInitializer {
 
-  private final PhotoSelectionModel model;
+  private final PhotoModel model;
   private final Photo photo;
   private final JPanel mainPanel;
 
@@ -32,7 +32,7 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
       96);
   private static final int MAX_CHAR_NAME_LENGTH = 12;
 
-  public PhotoMiniatureContainer(Photo photo, PhotoSelectionModel model) {
+  public PhotoMiniatureContainer(Photo photo, PhotoModel model) {
 
     this.model = model;
     this.photo = photo;
