@@ -18,11 +18,12 @@ public class MainContainer implements ContainerInitializer {
 
     PhotoModel photoModel = new PhotoModelImpl();
 
+    JComponent features = new FeaturesContainer(photoModel).getContainer();
     final JSplitPane rightSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
         true, new TabbedPaneContainer(albumModel, photoModel).getContainer(),
-        new FeaturesContainer(photoModel).getContainer());
+        features);
     rightSplitPane.setOneTouchExpandable(true);
-    rightSplitPane.setDividerLocation(400);
+    rightSplitPane.setDividerLocation(320);
 
     this.container = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true,
         new AlbumTreeContainer(albumModel).getContainer(), rightSplitPane);
