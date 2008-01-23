@@ -25,6 +25,7 @@ import javax.swing.border.EtchedBorder;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.album.Photo.GeoPosition;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedModel;
@@ -43,12 +44,13 @@ public class FeaturesContainer implements ContainerInitializer {
   private Photo photo;
   private ImageScaledToPanel image;
 
-  public FeaturesContainer(PhotoSelectionModel model, PhotoUpdatedModel photoUpdatedModel) {
+  public FeaturesContainer(PhotoSelectionModel model,
+      PhotoUpdatedModel photoUpdatedModel) {
 
     this.photoUpdatedModel = photoUpdatedModel;
     this.latitudeField = createTextField();
     this.longitudeField = createTextField();
-    this.submit = new JButton("OK");
+    this.submit = new JButton("OK", IconFactory.getIcon("globe-32x32.png"));
     this.submit.setToolTipText("Validate the new coordinates.");
     this.submit.addActionListener(new ActionListener() {
       @Override
