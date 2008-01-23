@@ -1,6 +1,8 @@
 package fr.umlv.IRPhoto.gui.panel.model.photo;
 
 import fr.umlv.IRPhoto.album.Photo;
+import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoSelectionListener;
+import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoUpdateListener;
 
 public interface PhotoModel {
 

@@ -14,6 +14,9 @@ import javax.imageio.ImageIO;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumSelectionListener;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumUpdateListener;
 
 public class AlbumModelImpl implements AlbumModel {
 

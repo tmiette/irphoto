@@ -1,4 +1,4 @@
-package fr.umlv.IRPhoto.gui.panel.model.photo;
+package fr.umlv.IRPhoto.gui.panel.model.photo.listener;
 
 import fr.umlv.IRPhoto.album.Photo;
 

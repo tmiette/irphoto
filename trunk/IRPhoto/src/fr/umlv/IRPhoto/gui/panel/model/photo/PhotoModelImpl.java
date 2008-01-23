@@ -3,6 +3,8 @@ package fr.umlv.IRPhoto.gui.panel.model.photo;
 import java.util.ArrayList;
 
 import fr.umlv.IRPhoto.album.Photo;
+import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoSelectionListener;
+import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoUpdateListener;
 
 public class PhotoModelImpl implements PhotoModel {
 

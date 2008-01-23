@@ -27,7 +27,7 @@ import fr.umlv.IRPhoto.album.Photo.GeoPosition;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSelectionListener;
+import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoSelectionListener;
 
 public class FeaturesContainer implements ContainerInitializer {
 
