@@ -8,11 +8,11 @@ public class PhotoModelImpl implements PhotoModel {
 
   private Photo selectedPhoto;
   private final ArrayList<PhotoSelectionListener> selectionListeners;
-  private final ArrayList<PhotoUpdatedListener> updateListeners;
+  private final ArrayList<PhotoUpdateListener> updateListeners;
 
   public PhotoModelImpl() {
     this.selectionListeners = new ArrayList<PhotoSelectionListener>();
-    this.updateListeners = new ArrayList<PhotoUpdatedListener>();
+    this.updateListeners = new ArrayList<PhotoUpdateListener>();
   }
 
   @Override
@@ -38,7 +38,7 @@ public class PhotoModelImpl implements PhotoModel {
   }
 
   @Override
-  public void addPhotoUpdatedListener(PhotoUpdatedListener photoUpdatedListener) {
+  public void addPhotoUpdatedListener(PhotoUpdateListener photoUpdatedListener) {
     this.updateListeners.add(photoUpdatedListener);
   }
 
@@ -53,13 +53,13 @@ public class PhotoModelImpl implements PhotoModel {
   }
 
   protected void fireNameUpdated(Photo photo) {
-    for (PhotoUpdatedListener listener : this.updateListeners) {
+    for (PhotoUpdateListener listener : this.updateListeners) {
       listener.nameUpdated(photo);
     }
   }
 
   protected void fireGeopositionUpdated(Photo photo) {
-    for (PhotoUpdatedListener listener : this.updateListeners) {
+    for (PhotoUpdateListener listener : this.updateListeners) {
       listener.geoppositionUpdated(photo);
     }
   }

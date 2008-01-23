@@ -23,8 +23,12 @@ public interface AlbumModel {
   public void linkAlbum(Album album, File albumFile);
 
   public void nameAlbum(Album album, String name);
-
-  public void addAlbumListener(AlbumListener listener);
   
   public void selectAlbum(Album album);
+  
+  public void addAlbumListener(AlbumListener listener);
+  
+  public void addAlbumSelectionListener(AlbumSelectionListener listener);
+  
+  public void addAlbumUpdateListener(AlbumUpdateListener listener);
 }

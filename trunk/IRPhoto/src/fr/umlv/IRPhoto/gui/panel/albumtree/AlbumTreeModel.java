@@ -12,6 +12,7 @@ import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumUpdateListener;
 
 public class AlbumTreeModel extends DefaultTreeModel {
 
@@ -34,7 +35,8 @@ public class AlbumTreeModel extends DefaultTreeModel {
       public void albumRemoved(Album album) {
         getRootTreeNode().remove(album);
       }
-
+    });
+    this.model.addAlbumUpdateListener(new AlbumUpdateListener() {
       @Override
       public void albumRenamed(Album album, String newName) {
         getRootTreeNode().rename(album, newName);
@@ -44,12 +46,6 @@ public class AlbumTreeModel extends DefaultTreeModel {
       public void photoAdded(Album album, Photo photo) {
         // do nothing
       }
-
-      @Override
-      public void albumSelected(Album album) {
-        // do nothing
-      }
-      
     });
 
     for (Album album : model.getAlbums()) {

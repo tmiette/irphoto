@@ -21,18 +21,34 @@ public class AlbumModelImpl implements AlbumModel {
 
   private Album currentAlbum;
 
-  private final ArrayList<AlbumListener> listeners;
+  private final ArrayList<AlbumListener> albumListeners;
+
+  private final ArrayList<AlbumSelectionListener> selectionListeners;
+
+  private final ArrayList<AlbumUpdateListener> updateListeners;
 
   private static MimetypesFileTypeMap mimeTypesFileTypeMap = new MimetypesFileTypeMap();
 
   public AlbumModelImpl() {
     this.albums = new ArrayList<Album>();
-    this.listeners = new ArrayList<AlbumListener>();
+    this.albumListeners = new ArrayList<AlbumListener>();
+    this.selectionListeners = new ArrayList<AlbumSelectionListener>();
+    this.updateListeners = new ArrayList<AlbumUpdateListener>();
   }
 
   @Override
   public void addAlbumListener(AlbumListener listener) {
-    this.listeners.add(listener);
+    this.albumListeners.add(listener);
+  }
+
+  @Override
+  public void addAlbumSelectionListener(AlbumSelectionListener listener) {
+    this.selectionListeners.add(listener);
+  }
+
+  @Override
+  public void addAlbumUpdateListener(AlbumUpdateListener listener) {
+    this.updateListeners.add(listener);
   }
 
   @Override
@@ -98,31 +114,31 @@ public class AlbumModelImpl implements AlbumModel {
   }
 
   protected void fireAlbumSelected(Album album) {
-    for (AlbumListener listener : this.listeners) {
+    for (AlbumSelectionListener listener : this.selectionListeners) {
       listener.albumSelected(album);
     }
   }
 
   protected void fireAlbumAdded(Album album) {
-    for (AlbumListener listener : this.listeners) {
+    for (AlbumListener listener : this.albumListeners) {
       listener.albumAdded(album);
     }
   }
 
   protected void fireAlbumRemoved(Album album) {
-    for (AlbumListener listener : this.listeners) {
+    for (AlbumListener listener : this.albumListeners) {
       listener.albumRemoved(album);
     }
   }
 
   protected void fireAlbumRenamed(Album album, String newName) {
-    for (AlbumListener listener : this.listeners) {
+    for (AlbumUpdateListener listener : this.updateListeners) {
       listener.albumRenamed(album, newName);
     }
   }
 
   protected void firePhotoAdded(Album album, Photo photo) {
-    for (AlbumListener listener : this.listeners) {
+    for (AlbumUpdateListener listener : this.updateListeners) {
       listener.photoAdded(album, photo);
     }
   }

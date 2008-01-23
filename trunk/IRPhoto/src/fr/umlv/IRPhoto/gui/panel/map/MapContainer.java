@@ -38,10 +38,10 @@ import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerFactory;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
-import fr.umlv.IRPhoto.gui.panel.model.album.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoUpdatedListener;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoUpdateListener;
 import fr.umlv.IRPhoto.util.ImageUtil;
 
 public class MapContainer implements ContainerInitializer {
@@ -62,7 +62,7 @@ public class MapContainer implements ContainerInitializer {
     this.map = kit.getMainMap();
     
     this.photoModel = photoModel;
-    this.photoModel.addPhotoUpdatedListener(new PhotoUpdatedListener() {
+    this.photoModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
 
       @Override
       public void geoppositionUpdated(Photo photo) {
@@ -87,32 +87,12 @@ public class MapContainer implements ContainerInitializer {
     this.currentPosition = new GeoPosition(43.604503, 1.444026);
 
     this.albumModel = albumModel;
-    this.albumModel.addAlbumListener(new AlbumListener(){
-      @Override
-      public void albumAdded(Album album) {
-        // do nothing
-      }
-
-      @Override
-      public void albumRemoved(Album album) {
-        // do nothing
-      }
-
-      @Override
-      public void albumRenamed(Album album, String newName) {
-        // do nothing
-      }
-
+    this.albumModel.addAlbumSelectionListener(new AlbumSelectionListener(){
       @Override
       public void albumSelected(Album album) {
         logger.info("Album selected");
         addAlbum(album);
         map.repaint();
-      }
-
-      @Override
-      public void photoAdded(Album album, Photo photo) {
-        // do nothing
       }
     });
 

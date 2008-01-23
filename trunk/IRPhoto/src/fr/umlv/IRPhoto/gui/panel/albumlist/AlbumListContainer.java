@@ -15,6 +15,7 @@ import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumUpdateListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModelImpl;
 
 public class AlbumListContainer implements ContainerInitializer {
@@ -39,7 +40,8 @@ public class AlbumListContainer implements ContainerInitializer {
       public void albumRemoved(Album album) {
         AlbumListContainer.this.removeAlbum(album);
       }
-
+    });
+    this.albumModel.addAlbumUpdateListener(new AlbumUpdateListener() {
       @Override
       public void albumRenamed(Album album, String newName) {
         AlbumListContainer.this.renameAlbum(album, newName);
@@ -49,12 +51,6 @@ public class AlbumListContainer implements ContainerInitializer {
       public void photoAdded(Album album, Photo photo) {
         AlbumListContainer.this.addPhoto(album, photo);
       }
-
-      @Override
-      public void albumSelected(Album album) {
-        // do nothing
-      }
-
     });
 
     this.constraints = new GridBagConstraints();
@@ -91,8 +87,8 @@ public class AlbumListContainer implements ContainerInitializer {
   private void addAlbum(Album album) {
     this.constraints.gridy++;
 
-    final AlbumDetailContainer ta = new AlbumDetailContainer(album, this.albumModel,
-        new PhotoSortModelImpl());
+    final AlbumDetailContainer ta = new AlbumDetailContainer(album,
+        this.albumModel, new PhotoSortModelImpl());
     this.albumsDetailContainers.put(album, ta);
     this.mainPanel.add(ta.getComponent(), this.constraints);
     this.addEndPanel();

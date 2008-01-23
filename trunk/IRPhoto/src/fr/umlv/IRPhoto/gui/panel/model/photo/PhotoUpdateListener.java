@@ -10,7 +10,7 @@ import fr.umlv.IRPhoto.album.Photo;
  * @author MOURET Sebastien
  *
  */
-public interface PhotoUpdatedListener {
+public interface PhotoUpdateListener {
 
   public void nameUpdated(Photo photo);
   public void geoppositionUpdated(Photo photo);

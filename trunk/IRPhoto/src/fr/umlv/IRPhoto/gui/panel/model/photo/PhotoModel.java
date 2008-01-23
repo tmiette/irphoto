@@ -14,6 +14,6 @@ public interface PhotoModel {
   
   public void addPhotoSelectionListener(PhotoSelectionListener listener);
 
-  public void addPhotoUpdatedListener(PhotoUpdatedListener photoUpdatedListener);
+  public void addPhotoUpdatedListener(PhotoUpdateListener photoUpdatedListener);
   
 }
