@@ -78,7 +78,7 @@ public class FeaturesContainer implements ContainerInitializer {
     this.formatLabel = createInfosValueLabel(null);
     this.dimensionsLabel = createInfosValueLabel(null);
     this.image = new ImageScaledToPanel(null);
-    this.image.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    this.image.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
 
     this.model = model;
     this.model.addPhotoSelectionListener(new PhotoSelectionListener() {
@@ -106,7 +106,7 @@ public class FeaturesContainer implements ContainerInitializer {
     this.container = new JPanel(new BorderLayout());
 
     final JPanel featuresNamesPanel = new JPanel(null);
-    featuresNamesPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    featuresNamesPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
     featuresNamesPanel.setMinimumSize(new Dimension(0, 0));
     featuresNamesPanel.setLayout(new BoxLayout(featuresNamesPanel,
         BoxLayout.Y_AXIS));
@@ -117,7 +117,7 @@ public class FeaturesContainer implements ContainerInitializer {
     featuresNamesPanel.add(createInfosLabel("Dimensions :"));
 
     final JPanel featuresPanel = new JPanel(null);
-    featuresPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    featuresPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
     featuresPanel.setMinimumSize(new Dimension(0, 0));
     featuresPanel.setLayout(new BoxLayout(featuresPanel, BoxLayout.Y_AXIS));
     featuresPanel.add(this.nameLabel);
@@ -127,28 +127,28 @@ public class FeaturesContainer implements ContainerInitializer {
     featuresPanel.add(this.dimensionsLabel);
 
     final JPanel gridPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    gridPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    gridPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
     gridPanel.add(featuresNamesPanel);
     gridPanel.add(featuresPanel);
 
     final JScrollPane scrollGridPane = new JScrollPane(gridPanel,
         JScrollPane.VERTICAL_SCROLLBAR_NEVER,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    scrollGridPane.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    scrollGridPane.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
     scrollGridPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
         .createEtchedBorder(EtchedBorder.LOWERED), "Infos :"));
 
     final JPanel coordinatesPanel = new JPanel(new GridLayout(5, 1));
     coordinatesPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
         .createEtchedBorder(EtchedBorder.LOWERED), "Coordinates :"));
-    coordinatesPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    coordinatesPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
     coordinatesPanel.add(new JLabel("Latitude"));
     coordinatesPanel.add(this.latitudeField);
     coordinatesPanel.add(new JLabel("Longitude"));
     coordinatesPanel.add(this.longitudeField);
     coordinatesPanel.add(this.submit);
     final JPanel northCoordinates = new JPanel(new BorderLayout());
-    northCoordinates.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    northCoordinates.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
     northCoordinates.add(coordinatesPanel, BorderLayout.NORTH);
 
     this.container.add(this.image, BorderLayout.WEST);

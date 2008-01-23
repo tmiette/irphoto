@@ -65,7 +65,7 @@ public class AlbumListContainer implements ContainerInitializer {
 
     this.endPanel = new JPanel(null);
     this.mainPanel = createAlbumListPanel();
-    this.mainPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    this.mainPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
 
     for (Album album : this.albumModel.getAlbums()) {
       this.addAlbum(album);

@@ -53,7 +53,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
     this.tree = this.initializeTree(new AlbumTreeModel(this.albumModel));
 
     this.container = new JPanel(new BorderLayout());
-    this.container.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    this.container.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
     this.container.add(this.initializeButtonsPanel(), BorderLayout.NORTH);
     final JScrollPane scrollPane = new JScrollPane(this.tree,
         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -146,7 +146,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
   private JPanel initializeButtonsPanel() {
 
     final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    panel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
 
     // create the add button
     final JLabel addButton = new JLabel(IconFactory.getIcon("add-32x32.png"));

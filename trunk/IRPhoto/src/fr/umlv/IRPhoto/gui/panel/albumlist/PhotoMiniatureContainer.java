@@ -46,7 +46,7 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
     this.container = new JPanel(null);
     this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
     this.container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    this.container.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    this.container.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
     this.container.setToolTipText(photo.getName());
 
     ImageIcon icon = photo.getImageIcon();
@@ -79,7 +79,7 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
 
       @Override
       public void mouseExited(MouseEvent e) {
-        container.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+        container.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
       }
     });
 

@@ -110,7 +110,7 @@ public class PhotoListContainer implements ContainerInitializer {
 
   private JPanel createPhotoListPanel() {
     final JPanel panel = new JPanel(null);
-    panel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    panel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
 
     panel.setLayout(new LayoutManager() {
 
