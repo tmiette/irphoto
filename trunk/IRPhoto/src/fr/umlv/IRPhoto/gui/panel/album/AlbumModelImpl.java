@@ -31,6 +31,7 @@ public class AlbumModelImpl implements AlbumModel {
   @Override
   public void addSavedAlbum(Album album) {
     this.albums.add(album);
+    Album.setIdOfSavedAlbum(album.getId());
   }
 
   @Override

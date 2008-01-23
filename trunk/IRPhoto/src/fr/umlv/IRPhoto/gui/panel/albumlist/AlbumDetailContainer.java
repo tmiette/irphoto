@@ -36,8 +36,8 @@ public class AlbumDetailContainer implements ContainerInitializer {
 
     this.mainPanel = new JPanel(null);
     this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
-    final JPanel title = createTitlePanel(album.getName());
-    this.mainPanel.add(title);
+    final JPanel titlePanel = createTitlePanel(album.getName());
+    this.mainPanel.add(titlePanel);
     this.mainPanel.add(this.photoListView.getComponent());
     this.mainPanel.setBorder(BorderFactory
         .createEtchedBorder(EtchedBorder.RAISED));

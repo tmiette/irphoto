@@ -8,8 +8,6 @@ import fr.umlv.IRPhoto.gui.panel.TabbedPaneContainer;
 import fr.umlv.IRPhoto.gui.panel.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModel;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoSelectionModelImpl;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoSortModel;
-import fr.umlv.IRPhoto.gui.panel.album.PhotoSortModelImpl;
 import fr.umlv.IRPhoto.gui.panel.album.PhotoUpdatedModelImpl;
 import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumListContainer;
 import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumSelectionModelImpl;
@@ -23,7 +21,6 @@ public class ContainerFactory {
 
   private static AlbumModel albumModel;
   private static final PhotoSelectionModel photoSelectionModel = new PhotoSelectionModelImpl();
-  private static final PhotoSortModel photoSortModel = new PhotoSortModelImpl();
   private static final AlbumSelectionModelImpl albumSelectionModel = new AlbumSelectionModelImpl();
   private static final PhotoUpdatedModelImpl photoUpdatedModel = new PhotoUpdatedModelImpl();
 
@@ -49,8 +46,7 @@ public class ContainerFactory {
   }
 
   public static JComponent createAlbumListContainer() {
-    return new AlbumListContainer(albumModel, albumSelectionModel,
-        photoSortModel).getComponent();
+    return new AlbumListContainer(albumModel, albumSelectionModel).getComponent();
   }
 
   public static JComponent createPhotoWithoutGPListContainer() {

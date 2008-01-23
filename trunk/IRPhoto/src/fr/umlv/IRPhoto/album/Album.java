@@ -10,19 +10,25 @@ import java.util.List;
 public class Album implements Serializable {
 
   private static final long serialVersionUID = -8637058736078893180L;
-  
+
   private static int albumsCreated;
   private final int id;
   private final ArrayList<Photo> photos;
   private String name;
   private File directory;
 
+  public static void setIdOfSavedAlbum(int id) {
+    if (albumsCreated <= id) {
+      albumsCreated = id + 1;
+    }
+  }
+
   public Album() {
     this.id = albumsCreated++;
     this.name = "Album" + this.id;
     this.photos = new ArrayList<Photo>();
   }
-  
+
   /**
    * @return the id
    */

@@ -110,7 +110,6 @@ public class PhotoListContainer implements ContainerInitializer {
     final JPanel panel = new JPanel(null);
     panel.setBackground(Color.WHITE);
 
-    
     panel.setLayout(new LayoutManager() {
 
       private static final int CHILD_WIDTH = 116;
@@ -183,8 +182,8 @@ public class PhotoListContainer implements ContainerInitializer {
     b.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        photoSortModel.sortPhoto(album,
-            Photo.PHOTO_LAST_MODIFIED_DATE_COMPARATOR);
+          photoSortModel.sortPhoto(album,
+              Photo.PHOTO_LAST_MODIFIED_DATE_COMPARATOR);
       }
     });
     return b;
