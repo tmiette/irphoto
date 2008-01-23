@@ -1,7 +1,6 @@
 package fr.umlv.IRPhoto.gui.panel.albumlist;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -35,7 +34,7 @@ public class PhotoListContainer implements ContainerInitializer {
   // Contains photos
   private JPanel photoListPanel;
   // General panel
-  private final JPanel mainPanel;
+  private final JPanel container;
   private final JPanel topPanel;
   private final HashMap<Photo, PhotoMiniatureContainer> photoMiniatures;
 
@@ -64,11 +63,11 @@ public class PhotoListContainer implements ContainerInitializer {
       this.addPhoto(photo);
     }
 
-    this.mainPanel = new JPanel(new BorderLayout());
-    this.mainPanel.add(this.topPanel, BorderLayout.NORTH);
-    this.mainPanel.add(this.photoListPanel, BorderLayout.CENTER);
+    this.container = new JPanel(new BorderLayout());
+    this.container.add(this.topPanel, BorderLayout.NORTH);
+    this.container.add(this.photoListPanel, BorderLayout.CENTER);
 
-    this.mainPanel.addComponentListener(new ComponentAdapter() {
+    this.container.addComponentListener(new ComponentAdapter() {
       @Override
       public void componentResized(ComponentEvent e) {
         photoListPanel.revalidate();
@@ -111,7 +110,7 @@ public class PhotoListContainer implements ContainerInitializer {
 
   private JPanel createPhotoListPanel() {
     final JPanel panel = new JPanel(null);
-    panel.setBackground(Color.WHITE);
+    panel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
 
     panel.setLayout(new LayoutManager() {
 
@@ -133,7 +132,7 @@ public class PhotoListContainer implements ContainerInitializer {
       @Override
       public void layoutContainer(Container parent) {
         int count = parent.getComponentCount();
-        int line = ((int) mainPanel.getSize().getWidth() - WIDTH_SEPARATION)
+        int line = ((int) container.getSize().getWidth() - WIDTH_SEPARATION)
             / (CHILD_WIDTH + WIDTH_SEPARATION);
         int counter = 0;
         int x = WIDTH_SEPARATION;
@@ -163,7 +162,7 @@ public class PhotoListContainer implements ContainerInitializer {
         int height = 0;
         int width = 0;
         if (parent.getComponentCount() > 0) {
-          int line = ((int) mainPanel.getWidth() - WIDTH_SEPARATION)
+          int line = ((int) container.getWidth() - WIDTH_SEPARATION)
               / (CHILD_WIDTH + WIDTH_SEPARATION);
           if (line == 0) {
             line = 2;
@@ -249,7 +248,7 @@ public class PhotoListContainer implements ContainerInitializer {
 
   @Override
   public JPanel getContainer() {
-    return this.mainPanel;
+    return this.container;
   }
 
 }

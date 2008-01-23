@@ -1,6 +1,5 @@
 package fr.umlv.IRPhoto.gui.panel.albumlist;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -19,13 +18,14 @@ import javax.swing.JPanel;
 
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 
 public class PhotoMiniatureContainer implements ContainerInitializer {
 
   private final PhotoModel model;
   private final Photo photo;
-  private final JPanel mainPanel;
+  private final JPanel container;
 
   // Miniature default dimension
   public static final Dimension DEFAULT_MINIATURE_DIMENSION = new Dimension(96,
@@ -43,11 +43,11 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
     }
     name.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-    this.mainPanel = new JPanel(null);
-    this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
-    this.mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    this.mainPanel.setBackground(Color.WHITE);
-    this.mainPanel.setToolTipText(photo.getName());
+    this.container = new JPanel(null);
+    this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
+    this.container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    this.container.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
+    this.container.setToolTipText(photo.getName());
 
     ImageIcon icon = photo.getImageIcon();
     double ratio = icon.getIconWidth() / DEFAULT_MINIATURE_DIMENSION.getWidth();
@@ -61,10 +61,10 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
     miniature.setIcon(thumbnailIcon);
     miniature.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-    this.mainPanel.add(miniature);
-    this.mainPanel.add(name);
+    this.container.add(miniature);
+    this.container.add(name);
 
-    this.mainPanel.addMouseListener(new MouseAdapter() {
+    this.container.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
         PhotoMiniatureContainer.this.model
@@ -73,16 +73,16 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
 
       @Override
       public void mouseEntered(MouseEvent e) {
-        mainPanel.setBackground(new Color(0, 0, 205, 70));
+        container.setBackground(GraphicalConstants.ROLLOVER_BACKGROUND);
 
       }
 
       @Override
       public void mouseExited(MouseEvent e) {
-        mainPanel.setBackground(Color.WHITE);
+        container.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
       }
     });
- 
+
   }
 
   /**
@@ -112,6 +112,6 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
 
   @Override
   public JComponent getContainer() {
-    return this.mainPanel;
+    return this.container;
   }
 }

@@ -1,18 +1,17 @@
 package fr.umlv.IRPhoto.gui.panel.albumlist;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.HashMap;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumUpdateListener;
@@ -36,23 +35,23 @@ public class AlbumListContainer implements ContainerInitializer {
 
       @Override
       public void albumAdded(Album album) {
-        AlbumListContainer.this.addAlbum(album);
+        addAlbum(album);
       }
 
       @Override
       public void albumRemoved(Album album) {
-        AlbumListContainer.this.removeAlbum(album);
+        removeAlbum(album);
       }
     });
     this.albumModel.addAlbumUpdateListener(new AlbumUpdateListener() {
       @Override
       public void albumRenamed(Album album, String newName) {
-        AlbumListContainer.this.renameAlbum(album, newName);
+        renameAlbum(album, newName);
       }
 
       @Override
       public void photoAdded(Album album, Photo photo) {
-        AlbumListContainer.this.addPhoto(album, photo);
+        addPhoto(album, photo);
       }
     });
 
@@ -65,10 +64,8 @@ public class AlbumListContainer implements ContainerInitializer {
     this.constraints.insets = new Insets(5, 5, 5, 5);
 
     this.endPanel = new JPanel(null);
-    this.endPanel.setBackground(Color.RED);
-    this.endPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 10));
     this.mainPanel = createAlbumListPanel();
-    this.mainPanel.setBackground(Color.WHITE);
+    this.mainPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
 
     for (Album album : this.albumModel.getAlbums()) {
       this.addAlbum(album);
