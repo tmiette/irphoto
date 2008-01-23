@@ -1,7 +1,6 @@
 package fr.umlv.IRPhoto.gui.panel.albumtree;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -25,6 +24,7 @@ import javax.swing.tree.TreePath;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumTreeModel.AlbumTreeNode;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
@@ -53,7 +53,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
     this.tree = this.initializeTree(new AlbumTreeModel(this.albumModel));
 
     this.container = new JPanel(new BorderLayout());
-    this.container.setBackground(Color.WHITE);
+    this.container.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
     this.container.add(this.initializeButtonsPanel(), BorderLayout.NORTH);
     final JScrollPane scrollPane = new JScrollPane(this.tree,
         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -146,7 +146,7 @@ public class AlbumTreeContainer implements ContainerInitializer {
   private JPanel initializeButtonsPanel() {
 
     final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    panel.setBackground(Color.WHITE);
+    panel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND);
 
     // create the add button
     final JLabel addButton = new JLabel(IconFactory.getIcon("add-32x32.png"));
