@@ -246,6 +246,31 @@ public class MapContainer implements ContainerInitializer {
    */
   public void addPhoto(Photo photo) {
 
+    if (photo.getAlbum().equals(this.albumModel.getCurrentAlbum())) {
+
+      Album album = photo.getAlbum();
+      Set<Waypoint> waypoints = new HashSet<Waypoint>();
+
+      Waypoint wp;
+      // adding photo waypoint
+      for (Photo p : album.getPhotos()) {
+        if (p.getGeoPosition() != null) {
+          // Adding valid geoposition corrdinates
+          waypoints.add(wp = new Waypoint(p.getGeoPosition().getLatitude(), p
+              .getGeoPosition().getLongitude()));
+          this.waypoints.put(wp, p);
+        }
+
+      }
+
+      // create a WaypointPainter to draw the points
+      WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
+      painter.setWaypoints(waypoints);
+
+      // Display waypoints
+      this.map.setOverlayPainter(painter);
+    }
+
   }
 
   @Override

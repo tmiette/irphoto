@@ -21,13 +21,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
+import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.album.Photo.GeoPosition;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoSelectionListener;
+import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoUpdateListener;
 
 public class FeaturesContainer implements ContainerInitializer {
 
@@ -43,11 +47,11 @@ public class FeaturesContainer implements ContainerInitializer {
   private Photo photo;
   private ImageScaledToPanel image;
 
-  public FeaturesContainer(final PhotoModel model) {
+  public FeaturesContainer(final AlbumModel albumModel, final PhotoModel model) {
 
     this.latitudeField = createTextField();
     this.longitudeField = createTextField();
-    this.submit = new JButton("OK", IconFactory.getIcon("globe-32x32.png"));
+    this.submit = new JButton("OK", IconFactory.getIcon("globe-12x12.png"));
     this.submit.setToolTipText("Validate the new coordinates.");
     this.submit.addActionListener(new ActionListener() {
       @Override
@@ -102,11 +106,40 @@ public class FeaturesContainer implements ContainerInitializer {
       }
 
     });
+    this.model.addPhotoUpdatedListener(new PhotoUpdateListener() {
+      @Override
+      public void nameUpdated(Photo photo) {
+        // do nothing
+      }
+
+      @Override
+      public void geoppositionUpdated(Photo photo) {
+        if (photo.getGeoPosition() != null) {
+          latitudeField.setText(photo.getGeoPosition().getLatitude() + "");
+          longitudeField.setText(photo.getGeoPosition().getLongitude() + "");
+        }
+      }
+    });
+
+    albumModel.addAlbumListener(new AlbumListener() {
+      @Override
+      public void albumRemoved(Album album) {
+        if (model.getSelectedPhoto().getAlbum().equals(album)) {
+          eraseFields();
+        }
+      }
+
+      @Override
+      public void albumAdded(Album album) {
+        // do nothing
+      }
+    });
 
     this.container = new JPanel(new BorderLayout());
 
     final JPanel featuresNamesPanel = new JPanel(null);
-    featuresNamesPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
+    featuresNamesPanel
+        .setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
     featuresNamesPanel.setMinimumSize(new Dimension(0, 0));
     featuresNamesPanel.setLayout(new BoxLayout(featuresNamesPanel,
         BoxLayout.Y_AXIS));
@@ -173,6 +206,17 @@ public class FeaturesContainer implements ContainerInitializer {
 
   private void setPhoto(Photo photo) {
     this.photo = photo;
+  }
+
+  private void eraseFields() {
+    setPhoto(null);
+    longitudeField.setText("");
+    latitudeField.setText("");
+    nameLabel.setText("");
+    formatLabel.setText("");
+    dimensionsLabel.setText("");
+    image.setImage(null);
+    image.repaint();
   }
 
   private static JTextField createTextField() {

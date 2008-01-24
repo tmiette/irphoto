@@ -18,7 +18,8 @@ public class MainContainer implements ContainerInitializer {
 
     PhotoModel photoModel = new PhotoModelImpl();
 
-    JComponent features = new FeaturesContainer(photoModel).getContainer();
+    JComponent features = new FeaturesContainer(albumModel, photoModel)
+        .getContainer();
     final JSplitPane rightSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
         true, new TabbedPaneContainer(albumModel, photoModel).getContainer(),
         features);

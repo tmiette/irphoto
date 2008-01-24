@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
@@ -25,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 import main.Main;
@@ -32,6 +35,7 @@ import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.album.Photo.GeoPosition;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
+import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
@@ -79,8 +83,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
 
       @Override
       public void nameUpdated(Photo photo) {
-        // TODO Auto-generated method stub
-
+        // do nothing
       }
 
     });
@@ -90,7 +93,6 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
       public void albumSelected(Album album) {
         photoListPanel.removeAll();
         addPhotos(getPhotosWhitoutGP(album.getPhotos()));
-        scrollPane.validate();
       }
     });
 
@@ -122,10 +124,10 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     JPanel jp = new JPanel(null);
     jp.setLayout(new BoxLayout(jp, BoxLayout.Y_AXIS));
 
-    this.latitudeField = new JTextField("latitude");
-    this.longitudeField = new JTextField("longitude");
+    this.latitudeField = new JTextField("");
+    this.longitudeField = new JTextField("");
 
-    this.button = new JButton("OK");
+    this.button = new JButton("OK", IconFactory.getIcon("globe-12x12.png"));
     this.button.addActionListener(new ActionListener() {
       /*
        * (non-Javadoc)
@@ -174,6 +176,8 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     return jp;
   }
 
+  private static final Object lock = new Object();
+
   /**
    * Adds photos to photo list panel.
    * 
@@ -182,8 +186,23 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
    */
   private void addPhotos(List<Photo> photos) {
     logger.info("adding photos to list panel");
-    for (Photo photo : photos) {
-      this.addPhoto(photo);
+    ExecutorService executor = Executors.newFixedThreadPool(2);
+    for (final Photo photo : photos) {
+      executor.execute(new Runnable() {
+        @Override
+        public void run() {
+          synchronized (lock) {
+            addPhoto(photo);
+          }
+          SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+              photoListPanel.revalidate();
+            }
+          });
+        }
+      });
+
     }
   }
 
