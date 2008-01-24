@@ -41,7 +41,6 @@ import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoUpdateListener;
-import fr.umlv.IRPhoto.util.ImageUtil;
 
 public class MapContainer implements ContainerInitializer {
 
@@ -68,13 +67,6 @@ public class MapContainer implements ContainerInitializer {
         addPhoto(photo);
         map.repaint();
       }
-
-      @Override
-      public void nameUpdated(Photo photo) {
-        // nothing
-
-      }
-
     });
 
     this.waypoints = new HashMap<Waypoint, Photo>();
@@ -137,8 +129,9 @@ public class MapContainer implements ContainerInitializer {
       }
 
       private Icon getImageFromWP(Waypoint wp) {
-        return new ImageIcon(ImageUtil.getScaledImage(waypoints.get(wp)
-            .getImageIcon().getImage(), 50, 50));
+        return new ImageIcon(waypoints.get(wp).getScaledInstance());
+       // return new ImageIcon(ImageUtil.getScaledImage(waypoints.get(wp)
+        //    .getImageIcon().getImage(), 50, 50));
       }
 
       private Point2D convertGP2Point(GeoPosition position) {

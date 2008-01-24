@@ -12,6 +12,5 @@ import fr.umlv.IRPhoto.album.Photo;
  */
 public interface PhotoUpdateListener {
 
-  public void nameUpdated(Photo photo);
   public void geoppositionUpdated(Photo photo);
 }

@@ -1,6 +1,7 @@
 package fr.umlv.IRPhoto.album;
 
 import java.awt.Dimension;
+import java.awt.Image;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
@@ -9,10 +10,15 @@ import java.util.Date;
 
 import javax.swing.ImageIcon;
 
+import fr.umlv.IRPhoto.util.ImageUtil;
+
 public class Photo implements Serializable {
 
   private static final long serialVersionUID = -7367951897048766147L;
+  public static final Dimension DEFAULT_MINIATURE_DIMENSION = new Dimension(96,
+      96);
 
+  private transient Image scaledImage;
   private final File file;
   private String type;
   private GeoPosition geoPosition;
@@ -86,6 +92,16 @@ public class Photo implements Serializable {
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public Image getScaledInstance() {
+    if (this.scaledImage == null) {
+      scaledImage = ImageUtil
+          .getScaledImage(getImageIcon().getImage(),
+              DEFAULT_MINIATURE_DIMENSION.width,
+              DEFAULT_MINIATURE_DIMENSION.height);
+    }
+    return scaledImage;
   }
 
   public ImageIcon getImageIcon() {

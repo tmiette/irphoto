@@ -108,11 +108,6 @@ public class FeaturesContainer implements ContainerInitializer {
     });
     this.model.addPhotoUpdatedListener(new PhotoUpdateListener() {
       @Override
-      public void nameUpdated(Photo photo) {
-        // do nothing
-      }
-
-      @Override
       public void geoppositionUpdated(Photo photo) {
         if (photo.getGeoPosition() != null) {
           latitudeField.setText(photo.getGeoPosition().getLatitude() + "");

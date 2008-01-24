@@ -10,8 +10,6 @@ public interface PhotoModel {
   
   public void selectPhoto(Photo photo);
   
-  public void nameUpdated(Photo photo);
-  
   public void geopositionUpdated(Photo photo);
   
   public void addPhotoSelectionListener(PhotoSelectionListener listener);

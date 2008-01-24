@@ -40,7 +40,6 @@ import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoUpdateListener;
-import fr.umlv.IRPhoto.util.ImageUtil;
 
 /**
  * @author MIETTE Tom
@@ -49,6 +48,8 @@ import fr.umlv.IRPhoto.util.ImageUtil;
  */
 public class PhotoWithoutGPListContainer implements ContainerInitializer {
 
+  private ExecutorService executor;
+  private static final Object lock = new Object();
   private static final Logger logger = Logger.getLogger(Main.loggerName);
   private final AlbumModel albumModel;
   private final PhotoModel photoModel;
@@ -81,17 +82,17 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
         scrollPane.validate();
       }
 
-      @Override
-      public void nameUpdated(Photo photo) {
-        // do nothing
-      }
-
     });
     this.albumModel = albumModel;
     this.albumModel.addAlbumSelectionListener(new AlbumSelectionListener() {
       @Override
       public void albumSelected(Album album) {
         photoListPanel.removeAll();
+        photoListPanel.revalidate();
+        if (executor != null) {
+          System.out.println("Shutdown now !!!");
+          executor.shutdownNow();
+        }
         addPhotos(getPhotosWhitoutGP(album.getPhotos()));
       }
     });
@@ -176,8 +177,6 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     return jp;
   }
 
-  private static final Object lock = new Object();
-
   /**
    * Adds photos to photo list panel.
    * 
@@ -186,7 +185,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
    */
   private void addPhotos(List<Photo> photos) {
     logger.info("adding photos to list panel");
-    ExecutorService executor = Executors.newFixedThreadPool(2);
+    executor = Executors.newFixedThreadPool(2);
     for (final Photo photo : photos) {
       executor.execute(new Runnable() {
         @Override
@@ -202,8 +201,8 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
           });
         }
       });
-
     }
+    executor.shutdown();
   }
 
   /**
@@ -213,10 +212,11 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
    *            photo to add
    */
   private void addPhoto(final Photo photo) {
-    ImageIcon icon = photo.getImageIcon();
+    //ImageIcon icon = photo.getImageIcon();
     final JLabel label = new JLabel();
-    icon = new ImageIcon(ImageUtil.getScaledImage(icon.getImage(),
-        DEFAULT_THUMBNAIL_SIZE.width, DEFAULT_THUMBNAIL_SIZE.height));
+    //icon = new ImageIcon(ImageUtil.getScaledImage(icon.getImage(),
+      //  DEFAULT_THUMBNAIL_SIZE.width, DEFAULT_THUMBNAIL_SIZE.height));
+    ImageIcon icon = new ImageIcon(photo.getScaledInstance());
     label.setIcon(icon);
     label.addMouseListener(new MouseAdapter() {
       /*

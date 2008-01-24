@@ -45,19 +45,8 @@ public class PhotoModelImpl implements PhotoModel {
   }
 
   @Override
-  public void nameUpdated(Photo photo) {
-    this.fireNameUpdated(photo);
-  }
-
-  @Override
   public void geopositionUpdated(Photo photo) {
     this.fireGeopositionUpdated(photo);
-  }
-
-  protected void fireNameUpdated(Photo photo) {
-    for (PhotoUpdateListener listener : this.updateListeners) {
-      listener.nameUpdated(photo);
-    }
   }
 
   protected void fireGeopositionUpdated(Photo photo) {
