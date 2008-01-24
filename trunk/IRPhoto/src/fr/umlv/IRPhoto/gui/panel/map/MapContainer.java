@@ -114,7 +114,7 @@ public class MapContainer implements ContainerInitializer {
             // hoverLabel.setLocation(converted_gp_pt);
             Icon icon = getImageFromWP(wp.getKey());
             Point p = (Point)pt;
-            p.translate(0, -icon.getIconHeight() - 5);
+            p.translate(0, -icon.getIconHeight() - 33);
             thumbnail.setLocation(p);
             thumbnail.setIcon(icon);
             thumbnail.setVisible(true);
@@ -227,19 +227,20 @@ public class MapContainer implements ContainerInitializer {
     // create a WaypointPainter to draw the points
     WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
     painter.setWaypoints(waypoints);
-    painter.setRenderer(new WaypointRenderer() {
-      /* (non-Javadoc)
-       * @see org.jdesktop.swingx.mapviewer.WaypointRenderer#paintWaypoint(java.awt.Graphics2D, org.jdesktop.swingx.JXMapViewer, org.jdesktop.swingx.mapviewer.Waypoint)
-       */
-      @Override
-      public boolean paintWaypoint(Graphics2D g, JXMapViewer arg1,
-          Waypoint wp) {
-        g.setPaint(new Color(0,0,0,150));
-        g.fillOval((int)wp.getPosition().getLatitude() - 5, (int)wp.getPosition().getLongitude() - 5, 10, 10);
-        g.setPaint(Color.WHITE);
-return false;
-      }
-    });
+//    painter.setRenderer(new WaypointRenderer() {
+//      /* (non-Javadoc)
+//       * @see org.jdesktop.swingx.mapviewer.WaypointRenderer#paintWaypoint(java.awt.Graphics2D, org.jdesktop.swingx.JXMapViewer, org.jdesktop.swingx.mapviewer.Waypoint)
+//       */
+//      @Override
+//      public boolean paintWaypoint(Graphics2D g, JXMapViewer arg1,
+//          Waypoint wp) {
+//        g.setPaint(new Color(0,0,0,150));
+//        g.fillOval((int)wp.getPosition().getLatitude() - 5, (int)wp.getPosition().getLongitude() - 5, 10, 10);
+//        g.setPaint(Color.WHITE);
+//        g.fillOval((int)wp.getPosition().getLatitude() - 6, (int)wp.getPosition().getLongitude() - 6, 11, 11);
+//return false;
+//      }
+//    });
 
     // Display waypoints
     this.map.setOverlayPainter(painter);
