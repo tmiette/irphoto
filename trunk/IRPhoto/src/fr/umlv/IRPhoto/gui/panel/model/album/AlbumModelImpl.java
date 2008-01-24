@@ -14,9 +14,12 @@ import javax.imageio.ImageIO;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
+import fr.umlv.IRPhoto.album.Photo.GeoPosition;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumUpdateListener;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoSelectionListener;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoUpdateListener;
 
 public class AlbumModelImpl implements AlbumModel {
 
@@ -24,19 +27,27 @@ public class AlbumModelImpl implements AlbumModel {
 
   private Album currentAlbum;
 
+  private Photo currentPhoto;
+
+  private final ArrayList<PhotoSelectionListener> photoSelectionListeners;
+
+  private final ArrayList<PhotoUpdateListener> photoUpdateListeners;
+
   private final ArrayList<AlbumListener> albumListeners;
 
-  private final ArrayList<AlbumSelectionListener> selectionListeners;
+  private final ArrayList<AlbumSelectionListener> albumSelectionListeners;
 
-  private final ArrayList<AlbumUpdateListener> updateListeners;
+  private final ArrayList<AlbumUpdateListener> albumUpdateListeners;
 
   private static MimetypesFileTypeMap mimeTypesFileTypeMap = new MimetypesFileTypeMap();
 
   public AlbumModelImpl() {
     this.albums = new ArrayList<Album>();
     this.albumListeners = new ArrayList<AlbumListener>();
-    this.selectionListeners = new ArrayList<AlbumSelectionListener>();
-    this.updateListeners = new ArrayList<AlbumUpdateListener>();
+    this.albumSelectionListeners = new ArrayList<AlbumSelectionListener>();
+    this.albumUpdateListeners = new ArrayList<AlbumUpdateListener>();
+    this.photoSelectionListeners = new ArrayList<PhotoSelectionListener>();
+    this.photoUpdateListeners = new ArrayList<PhotoUpdateListener>();
   }
 
   @Override
@@ -46,12 +57,22 @@ public class AlbumModelImpl implements AlbumModel {
 
   @Override
   public void addAlbumSelectionListener(AlbumSelectionListener listener) {
-    this.selectionListeners.add(listener);
+    this.albumSelectionListeners.add(listener);
   }
 
   @Override
   public void addAlbumUpdateListener(AlbumUpdateListener listener) {
-    this.updateListeners.add(listener);
+    this.albumUpdateListeners.add(listener);
+  }
+
+  @Override
+  public void addPhotoSelectionListener(PhotoSelectionListener listener) {
+    this.photoSelectionListeners.add(listener);
+  }
+
+  @Override
+  public void addPhotoUpdatedListener(PhotoUpdateListener photoUpdatedListener) {
+    this.photoUpdateListeners.add(photoUpdatedListener);
   }
 
   @Override
@@ -118,8 +139,27 @@ public class AlbumModelImpl implements AlbumModel {
     }
   }
 
+  @Override
+  public Photo getSelectedPhoto() {
+    return this.currentPhoto;
+  }
+
+  @Override
+  public void updateGeoPosition(Photo photo, GeoPosition geo) {
+    if (geo != null) {
+      photo.setGeoPosition(geo);
+      this.fireGeopositionUpdated(photo, geo);
+    }
+  }
+
+  @Override
+  public void selectPhoto(Photo photo) {
+    this.currentPhoto = photo;
+    this.firePhotoSelected(photo);
+  }
+
   protected void fireAlbumSelected(Album album) {
-    for (AlbumSelectionListener listener : this.selectionListeners) {
+    for (AlbumSelectionListener listener : this.albumSelectionListeners) {
       listener.albumSelected(album);
     }
   }
@@ -137,14 +177,26 @@ public class AlbumModelImpl implements AlbumModel {
   }
 
   protected void fireAlbumRenamed(Album album, String newName) {
-    for (AlbumUpdateListener listener : this.updateListeners) {
+    for (AlbumUpdateListener listener : this.albumUpdateListeners) {
       listener.albumRenamed(album, newName);
     }
   }
 
   protected void firePhotoAdded(Album album, Photo photo) {
-    for (AlbumUpdateListener listener : this.updateListeners) {
+    for (AlbumUpdateListener listener : this.albumUpdateListeners) {
       listener.photoAdded(album, photo);
+    }
+  }
+
+  protected void firePhotoSelected(Photo photo) {
+    for (PhotoSelectionListener listener : this.photoSelectionListeners) {
+      listener.photoSelected(photo);
+    }
+  }
+
+  protected void fireGeopositionUpdated(Photo photo, GeoPosition geo) {
+    for (PhotoUpdateListener listener : this.photoUpdateListeners) {
+      listener.geopPositionUpdated(photo, geo);
     }
   }
 
