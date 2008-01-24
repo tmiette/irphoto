@@ -72,7 +72,7 @@ public class SplashScreenManager {
 
   private static void drawImage(Image image, int strut) {
     Graphics2D graphics = splash.createGraphics();
-    int baseline = splash.getSize().height - 70;
+    int baseline = splash.getSize().height - 61;
     graphics.drawImage(image, 20 + strut * 70, baseline, 32, 32, null);
     splash.update();
     graphics.dispose();
