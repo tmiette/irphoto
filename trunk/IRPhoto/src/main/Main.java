@@ -33,7 +33,6 @@ public class Main {
       logger.setLevel(Level.ALL);
       SimpleFormatter formatter = new SimpleFormatter();
       fh.setFormatter(formatter);
-
       logger.log(Level.WARNING, "Logger started");
     } catch (SecurityException e) {
       e.printStackTrace();
