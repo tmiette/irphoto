@@ -152,6 +152,9 @@ public class Photo implements Serializable {
   // album which contains this photo
   private final Album album;
 
+  // name of this photo without file extension
+  private String nameWithoutExtension;
+
   // last modified date of this photo
   private Date date;
 
@@ -252,6 +255,22 @@ public class Photo implements Serializable {
    */
   public String getName() {
     return this.file.getName();
+  }
+
+  /**
+   * Returns the name of this photo without file extension.
+   * 
+   * @return the name of this photo without file extension.
+   */
+  public String getNameWithoutExtension() {
+    if (nameWithoutExtension == null) {
+      nameWithoutExtension = getName();
+      int index = nameWithoutExtension.lastIndexOf(".");
+      if (index != -1) {
+        nameWithoutExtension = nameWithoutExtension.substring(0, index);
+      }
+    }
+    return nameWithoutExtension;
   }
 
   /**
