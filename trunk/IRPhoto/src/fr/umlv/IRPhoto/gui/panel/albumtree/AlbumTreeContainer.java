@@ -90,14 +90,14 @@ public class AlbumTreeContainer implements ContainerInitializer {
         // ignore root node
         if (tree.getModel().isLeaf(node) && tree.getRowCount() != 1) {
 
-          albumModel.selectAlbum(node.getAlbum());
-
           if (e.getClickCount() == 2) {
             // inform the model of changes
             File albumFile = selectNewAlbum();
             if (albumFile != null) {
               albumModel.linkAlbum(node.getAlbum(), albumFile);
             }
+          } else {
+            albumModel.selectAlbum(node.getAlbum());
           }
         }
       }
