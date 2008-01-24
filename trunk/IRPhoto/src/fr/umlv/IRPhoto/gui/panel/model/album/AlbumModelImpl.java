@@ -134,8 +134,10 @@ public class AlbumModelImpl implements AlbumModel {
   @Override
   public void selectAlbum(Album album) {
     if (this.currentAlbum == null || !this.currentAlbum.equals(album)) {
-      this.currentAlbum = album;
-      this.fireAlbumSelected(album);
+      if (album.getPhotos().size() != 0) {
+        this.currentAlbum = album;
+        this.fireAlbumSelected(album);
+      }
     }
   }
 
