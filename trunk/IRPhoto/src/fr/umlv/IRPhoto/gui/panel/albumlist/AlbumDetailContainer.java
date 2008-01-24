@@ -18,7 +18,6 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
 
 public class AlbumDetailContainer implements ContainerInitializer {
@@ -29,11 +28,11 @@ public class AlbumDetailContainer implements ContainerInitializer {
   private final Album album;
 
   public AlbumDetailContainer(Album album, final AlbumModel albumModel,
-      PhotoModel photoModel, PhotoSortModel photoSortModel) {
+      PhotoSortModel photoSortModel) {
     this.album = album;
 
     // Contains panel with photos and search & sort buttons
-    this.photoListView = createPhotoListPanel(album, photoModel, photoSortModel);
+    this.photoListView = createPhotoListPanel(album, albumModel, photoSortModel);
 
     this.mainPanel = new JPanel(null);
     this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
@@ -63,8 +62,8 @@ public class AlbumDetailContainer implements ContainerInitializer {
   }
 
   private PhotoListContainer createPhotoListPanel(Album album,
-      PhotoModel photoModel, PhotoSortModel photoSortModel) {
-    final PhotoListContainer view = new PhotoListContainer(album, photoModel,
+      AlbumModel albumModel, PhotoSortModel photoSortModel) {
+    final PhotoListContainer view = new PhotoListContainer(album, albumModel,
         photoSortModel);
     view.getContainer().setVisible(false);
     view.getContainer().setAlignmentX(Component.LEFT_ALIGNMENT);

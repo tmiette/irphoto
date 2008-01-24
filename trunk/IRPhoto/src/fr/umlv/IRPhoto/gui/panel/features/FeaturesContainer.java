@@ -29,9 +29,8 @@ import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
-import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoSelectionListener;
-import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoUpdateListener;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoSelectionListener;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoUpdateListener;
 
 public class FeaturesContainer implements ContainerInitializer {
 
@@ -43,11 +42,9 @@ public class FeaturesContainer implements ContainerInitializer {
   private final JLabel nameLabel;
   private final JLabel formatLabel;
   private final JLabel dimensionsLabel;
-  private final PhotoModel model;
-  private Photo photo;
   private ImageScaledToPanel image;
 
-  public FeaturesContainer(final AlbumModel albumModel, final PhotoModel model) {
+  public FeaturesContainer(final AlbumModel albumModel) {
 
     this.latitudeField = createTextField();
     this.longitudeField = createTextField();
@@ -56,24 +53,15 @@ public class FeaturesContainer implements ContainerInitializer {
     this.submit.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        Photo photo = getPhoto();
-        GeoPosition geo = photo.getGeoPosition();
-        double latitude;
-        double longitude;
-        try {
-          longitude = Double.parseDouble(longitudeField.getText());
-          latitude = Double.parseDouble(latitudeField.getText());
-          if (geo == null) {
-            photo.setGeoPosition(new GeoPosition(latitude, longitude));
-            model.geopositionUpdated(photo);
+        if (albumModel.getSelectedPhoto() != null) {
+          GeoPosition g = GeoPosition.validateCoordinates(latitudeField
+              .getText(), longitudeField.getText());
+          if (g != null) {
+            albumModel.updateGeoPosition(albumModel.getSelectedPhoto(), g);
           } else {
-            photo.getGeoPosition().setLatitude(latitude);
-            photo.getGeoPosition().setLongitude(longitude);
-            model.geopositionUpdated(photo);
+            longitudeField.setText("");
+            latitudeField.setText("");
           }
-        } catch (NumberFormatException e1) {
-          longitudeField.setText("");
-          latitudeField.setText("");
         }
       }
     });
@@ -84,12 +72,10 @@ public class FeaturesContainer implements ContainerInitializer {
     this.image = new ImageScaledToPanel(null);
     this.image.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
 
-    this.model = model;
-    this.model.addPhotoSelectionListener(new PhotoSelectionListener() {
+    albumModel.addPhotoSelectionListener(new PhotoSelectionListener() {
 
       @Override
       public void photoSelected(Photo photo) {
-        setPhoto(photo);
         if (photo.getGeoPosition() != null) {
           latitudeField.setText(photo.getGeoPosition().getLatitude() + "");
           longitudeField.setText(photo.getGeoPosition().getLongitude() + "");
@@ -106,20 +92,18 @@ public class FeaturesContainer implements ContainerInitializer {
       }
 
     });
-    this.model.addPhotoUpdatedListener(new PhotoUpdateListener() {
+    albumModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
       @Override
-      public void geoppositionUpdated(Photo photo) {
-        if (photo.getGeoPosition() != null) {
-          latitudeField.setText(photo.getGeoPosition().getLatitude() + "");
-          longitudeField.setText(photo.getGeoPosition().getLongitude() + "");
-        }
+      public void geopPositionUpdated(Photo photo, GeoPosition geo) {
+        latitudeField.setText(geo.getLatitude() + "");
+        longitudeField.setText(geo.getLongitude() + "");
       }
     });
 
     albumModel.addAlbumListener(new AlbumListener() {
       @Override
       public void albumRemoved(Album album) {
-        if (model.getSelectedPhoto().getAlbum().equals(album)) {
+        if (albumModel.getSelectedPhoto().getAlbum().equals(album)) {
           eraseFields();
         }
       }
@@ -195,16 +179,7 @@ public class FeaturesContainer implements ContainerInitializer {
 
   }
 
-  public Photo getPhoto() {
-    return this.photo;
-  }
-
-  private void setPhoto(Photo photo) {
-    this.photo = photo;
-  }
-
   private void eraseFields() {
-    setPhoto(null);
     longitudeField.setText("");
     latitudeField.setText("");
     nameLabel.setText("");

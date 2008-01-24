@@ -15,11 +15,10 @@ import javax.swing.JPanel;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 
 public class PhotoMiniatureContainer implements ContainerInitializer {
 
-  private final PhotoModel model;
   private final Photo photo;
   private final JPanel container;
 
@@ -28,9 +27,8 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
       96);
   private static final int MAX_CHAR_NAME_LENGTH = 12;
 
-  public PhotoMiniatureContainer(Photo photo, PhotoModel model) {
+  public PhotoMiniatureContainer(Photo photo, final AlbumModel model) {
 
-    this.model = model;
     this.photo = photo;
 
     final JLabel name = new JLabel(photo.getName());
@@ -57,8 +55,7 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
     this.container.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        PhotoMiniatureContainer.this.model
-            .selectPhoto(PhotoMiniatureContainer.this.photo);
+        model.selectPhoto(PhotoMiniatureContainer.this.photo);
       }
 
       @Override

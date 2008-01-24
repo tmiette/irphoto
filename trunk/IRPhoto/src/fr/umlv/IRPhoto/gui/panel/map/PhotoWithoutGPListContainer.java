@@ -38,8 +38,7 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumSelectionListener;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
-import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoUpdateListener;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoUpdateListener;
 
 /**
  * @author MIETTE Tom
@@ -52,13 +51,12 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   private static final Object lock = new Object();
   private static final Logger logger = Logger.getLogger(Main.loggerName);
   private final AlbumModel albumModel;
-  private final PhotoModel photoModel;
   private final JPanel panel;
   private final JPanel photoListPanel;
   private JTextField latitudeField;
   private JTextField longitudeField;
   private final HashMap<Photo, JLabel> photos;
-  private Photo photoSelected;
+  private Photo previousSelectedPhoto;
   private JButton button;
   private final JScrollPane scrollPane;
   public static final Dimension DEFAULT_THUMBNAIL_SIZE = new Dimension(100, 100);
@@ -70,19 +68,8 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   /**
    * 
    */
-  public PhotoWithoutGPListContainer(AlbumModel albumModel,
-      PhotoModel photoModel) {
+  public PhotoWithoutGPListContainer(AlbumModel albumModel) {
 
-    this.photoModel = photoModel;
-    this.photoModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
-
-      @Override
-      public void geoppositionUpdated(Photo photo) {
-        removePhoto(photo);
-        scrollPane.validate();
-      }
-
-    });
     this.albumModel = albumModel;
     this.albumModel.addAlbumSelectionListener(new AlbumSelectionListener() {
       @Override
@@ -95,6 +82,15 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
         }
         addPhotos(getPhotosWhitoutGP(album.getPhotos()));
       }
+    });
+    this.albumModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
+
+      @Override
+      public void geopPositionUpdated(Photo photo, GeoPosition geo) {
+        removePhoto(photo);
+        scrollPane.validate();
+      }
+
     });
 
     this.photos = new HashMap<Photo, JLabel>();
@@ -137,20 +133,18 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
        */
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (photoSelected != null && latitudeField != null
-            && longitudeField != null
-            && isValidCoordinate(latitudeField.getText())
-            && isValidCoordinate(longitudeField.getText())) {
-          double latitude = Double.parseDouble(latitudeField.getText());
-          double longitude = Double.parseDouble(longitudeField.getText());
-          if (photoSelected.getGeoPosition() == null) {
-            photoSelected.setGeoPosition(new GeoPosition(latitude, longitude));
+
+        if (albumModel.getSelectedPhoto() != null) {
+          GeoPosition g = GeoPosition.validateCoordinates(latitudeField
+              .getText(), longitudeField.getText());
+          if (g != null) {
+            albumModel.updateGeoPosition(albumModel.getSelectedPhoto(), g);
           } else {
-            photoSelected.getGeoPosition().setLatitude(latitude);
-            photoSelected.getGeoPosition().setLongitude(longitude);
+            longitudeField.setText("");
+            latitudeField.setText("");
           }
-          photoModel.geopositionUpdated(photoSelected);
         }
+
       }
     });
 
@@ -158,15 +152,6 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     jp.add(this.longitudeField);
     jp.add(button);
     return jp;
-  }
-
-  private boolean isValidCoordinate(String coordinate) {
-    try {
-      Double.parseDouble(coordinate);
-    } catch (NumberFormatException e) {
-      return false;
-    }
-    return true;
   }
 
   private JPanel createPhotoListPanel(List<Photo> photos) {
@@ -212,10 +197,10 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
    *            photo to add
    */
   private void addPhoto(final Photo photo) {
-    //ImageIcon icon = photo.getImageIcon();
+    // ImageIcon icon = photo.getImageIcon();
     final JLabel label = new JLabel();
-    //icon = new ImageIcon(ImageUtil.getScaledImage(icon.getImage(),
-      //  DEFAULT_THUMBNAIL_SIZE.width, DEFAULT_THUMBNAIL_SIZE.height));
+    // icon = new ImageIcon(ImageUtil.getScaledImage(icon.getImage(),
+    // DEFAULT_THUMBNAIL_SIZE.width, DEFAULT_THUMBNAIL_SIZE.height));
     ImageIcon icon = new ImageIcon(photo.getScaledInstance());
     label.setIcon(icon);
     label.addMouseListener(new MouseAdapter() {
@@ -229,14 +214,14 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
         super.mouseClicked(e);
         if (e.getClickCount() == 1) {
           // Unselecting photo
-          if (photoSelected != null) {
-            photos.get(photoSelected).setBorder(
+          if (previousSelectedPhoto != null) {
+            photos.get(previousSelectedPhoto).setBorder(
                 DEFAULT_THUMBNAIL_SELECTED_BORDER);
           }
           // Selecting photo
-          photoModel.selectPhoto(photo);
+          albumModel.selectPhoto(photo);
           label.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-          photoSelected = photo;
+          previousSelectedPhoto = photo;
         }
       }
     });
@@ -254,7 +239,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     JLabel label = this.photos.get(photo);
     if (label != null) {
       this.photoListPanel.remove(label);
-      this.photoSelected = null;
+      this.previousSelectedPhoto = null;
     }
   }
 

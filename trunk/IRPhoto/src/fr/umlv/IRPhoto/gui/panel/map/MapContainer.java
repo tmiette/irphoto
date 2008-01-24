@@ -39,8 +39,7 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumSelectionListener;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
-import fr.umlv.IRPhoto.gui.panel.model.photo.listener.PhotoUpdateListener;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoUpdateListener;
 
 public class MapContainer implements ContainerInitializer {
 
@@ -49,25 +48,13 @@ public class MapContainer implements ContainerInitializer {
   private final JXMapViewer map;
   private GeoPosition currentPosition;
   private final AlbumModel albumModel;
-  private final PhotoModel photoModel;
   private final JComponent photoListContainer;
   private HashMap<Waypoint, Photo> waypoints;
   private final JLabel thumbnail;
 
-  public MapContainer(AlbumModel albumModel, PhotoModel photoModel) {
+  public MapContainer(AlbumModel albumModel) {
     MyJXMapKit kit = new MyJXMapKit();
     this.map = kit.getMainMap();
-
-    this.photoModel = photoModel;
-    this.photoModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
-
-      @Override
-      public void geoppositionUpdated(Photo photo) {
-        logger.info("Photo updated : new geoposition coordinate");
-        addPhoto(photo);
-        map.repaint();
-      }
-    });
 
     this.waypoints = new HashMap<Waypoint, Photo>();
     this.thumbnail = new JLabel();
@@ -82,6 +69,15 @@ public class MapContainer implements ContainerInitializer {
       public void albumSelected(Album album) {
         logger.info("Album selected");
         addAlbum(album);
+        map.repaint();
+      }
+    });
+    this.albumModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
+      @Override
+      public void geopPositionUpdated(Photo photo,
+          fr.umlv.IRPhoto.album.Photo.GeoPosition geo) {
+        logger.info("Photo updated : new geoposition coordinate");
+        addPhoto(photo);
         map.repaint();
       }
     });
@@ -130,8 +126,8 @@ public class MapContainer implements ContainerInitializer {
 
       private Icon getImageFromWP(Waypoint wp) {
         return new ImageIcon(waypoints.get(wp).getScaledInstance());
-       // return new ImageIcon(ImageUtil.getScaledImage(waypoints.get(wp)
-        //    .getImageIcon().getImage(), 50, 50));
+        // return new ImageIcon(ImageUtil.getScaledImage(waypoints.get(wp)
+        // .getImageIcon().getImage(), 50, 50));
       }
 
       private Point2D convertGP2Point(GeoPosition position) {
@@ -156,8 +152,8 @@ public class MapContainer implements ContainerInitializer {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setOpaque(false);
     panel.add(createCollapseButton(), BorderLayout.WEST);
-    this.photoListContainer = new PhotoWithoutGPListContainer(albumModel,
-        photoModel).getContainer();
+    this.photoListContainer = new PhotoWithoutGPListContainer(albumModel)
+        .getContainer();
     this.photoListContainer.setVisible(false);
     panel.add(this.photoListContainer, BorderLayout.CENTER);
 

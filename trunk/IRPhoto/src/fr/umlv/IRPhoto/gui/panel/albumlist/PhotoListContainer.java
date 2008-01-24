@@ -28,7 +28,7 @@ import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
 
@@ -45,15 +45,13 @@ public class PhotoListContainer implements ContainerInitializer {
   private final HashMap<Photo, PhotoMiniatureContainer> photoMiniatures;
 
   private final Album album;
-
-  private final PhotoModel photoModel;
+  private final AlbumModel albumModel;
   private final PhotoSortModel photoSortModel;
 
-  public PhotoListContainer(Album album, PhotoModel photoModel,
-      PhotoSortModel photoSortModel) {
+  public PhotoListContainer(Album album, AlbumModel albumModel, PhotoSortModel photoSortModel) {
     this.executor = Executors.newFixedThreadPool(2);
     this.album = album;
-    this.photoModel = photoModel;
+    this.albumModel = albumModel;
     this.photoSortModel = photoSortModel;
     this.photoSortModel.addPhotoSortListener(new PhotoSortListener() {
       @Override
@@ -254,7 +252,7 @@ public class PhotoListContainer implements ContainerInitializer {
         synchronized (lock) {
           PhotoMiniatureContainer c = photoMiniatures.get(photo);
           if (c == null) {
-            c = new PhotoMiniatureContainer(photo, photoModel);
+            c = new PhotoMiniatureContainer(photo, albumModel);
             photoListPanel.add(c.getContainer());
             photoMiniatures.put(photo, c);
           } else {

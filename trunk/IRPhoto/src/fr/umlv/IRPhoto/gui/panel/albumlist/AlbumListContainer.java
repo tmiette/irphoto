@@ -15,21 +15,18 @@ import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumUpdateListener;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModelImpl;
 
 public class AlbumListContainer implements ContainerInitializer {
 
   private final JPanel mainPanel;
   private final AlbumModel albumModel;
-  private final PhotoModel photoModel;
   private final GridBagConstraints constraints;
   private final HashMap<Album, AlbumDetailContainer> albumsDetailContainers;
   private final JPanel endPanel;
 
-  public AlbumListContainer(AlbumModel albumModel, PhotoModel photoModel) {
+  public AlbumListContainer(AlbumModel albumModel) {
     this.albumsDetailContainers = new HashMap<Album, AlbumDetailContainer>();
-    this.photoModel = photoModel;
     this.albumModel = albumModel;
     this.albumModel.addAlbumListener(new AlbumListener() {
 
@@ -88,7 +85,7 @@ public class AlbumListContainer implements ContainerInitializer {
     this.constraints.gridy++;
 
     final AlbumDetailContainer ta = new AlbumDetailContainer(album,
-        this.albumModel, this.photoModel, new PhotoSortModelImpl());
+        this.albumModel, new PhotoSortModelImpl());
     this.albumsDetailContainers.put(album, ta);
     this.mainPanel.add(ta.getContainer(), this.constraints);
     this.addEndPanel();
