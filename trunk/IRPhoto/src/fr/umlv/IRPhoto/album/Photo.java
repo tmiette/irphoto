@@ -185,6 +185,17 @@ public class Photo implements Serializable {
       this.longitude = longitude;
     }
 
+    public static GeoPosition validateCoordinates(String latitude,
+        String longitude) {
+      try {
+        double longitudeDouble = Double.parseDouble(longitude);
+        double latitudeDouble = Double.parseDouble(latitude);
+        return new GeoPosition(latitudeDouble, longitudeDouble);
+      } catch (NumberFormatException e1) {
+        return null;
+      }
+    }
+
   }
 
   /**
