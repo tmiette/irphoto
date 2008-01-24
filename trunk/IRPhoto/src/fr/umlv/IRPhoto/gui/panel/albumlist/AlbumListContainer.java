@@ -43,7 +43,7 @@ public class AlbumListContainer implements ContainerInitializer {
     this.albumModel.addAlbumUpdateListener(new AlbumUpdateListener() {
       @Override
       public void albumRenamed(Album album, String newName) {
-        renameAlbum(album, newName);
+        
       }
 
       @Override
@@ -102,12 +102,6 @@ public class AlbumListContainer implements ContainerInitializer {
     }
   }
 
-  private void renameAlbum(Album album, String newName) {
-    AlbumDetailContainer c = this.albumsDetailContainers.get(album);
-    if (c != null) {
-      c.renameAlbum(album, newName);
-    }
-  }
 
   private void addPhoto(Album album, Photo photo) {
     AlbumDetailContainer c = this.albumsDetailContainers.get(album);

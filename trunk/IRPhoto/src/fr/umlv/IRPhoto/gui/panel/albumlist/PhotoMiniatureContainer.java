@@ -31,9 +31,9 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
 
     this.photo = photo;
 
-    final JLabel name = new JLabel(photo.getName());
-    if (photo.getName().length() > MAX_CHAR_NAME_LENGTH) {
-      name.setText(photo.getName().substring(0, MAX_CHAR_NAME_LENGTH) + "...");
+    final JLabel name = new JLabel(photo.getNameWithoutExtension());
+    if (photo.getNameWithoutExtension().length() > MAX_CHAR_NAME_LENGTH) {
+      name.setText(photo.getNameWithoutExtension().substring(0, MAX_CHAR_NAME_LENGTH) + "...");
     }
     name.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -41,7 +41,7 @@ public class PhotoMiniatureContainer implements ContainerInitializer {
     this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
     this.container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     this.container.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
-    this.container.setToolTipText(photo.getName());
+    this.container.setToolTipText(photo.getNameWithoutExtension());
 
     final ImageIcon thumbnailIcon = new ImageIcon(photo.getScaledInstance());
     final JLabel miniature = new JLabel();

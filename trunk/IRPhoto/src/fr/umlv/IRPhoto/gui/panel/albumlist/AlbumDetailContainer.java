@@ -18,91 +18,113 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumUpdateListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
 
+/**
+ * 
+ * This container represents an album with the miniatures of each photo.
+ * 
+ * @author MIETTE Tom
+ * @author MOURET Sebastien
+ * 
+ */
 public class AlbumDetailContainer implements ContainerInitializer {
 
+  // container
   private final JPanel mainPanel;
-  private final PhotoListContainer photoListView;
-  private JLabel albumTitle;
-  private final Album album;
 
-  public AlbumDetailContainer(Album album, final AlbumModel albumModel,
+  // panel with the miniatures
+  private final PhotoListContainer photoList;
+
+  /**
+   * Constructor of the container.
+   * 
+   * @param album
+   *            the album to display.
+   * @param albumModel
+   *            the album model.
+   * @param photoSortModel
+   *            the model to sort the photos.
+   */
+  public AlbumDetailContainer(final Album album, final AlbumModel albumModel,
       PhotoSortModel photoSortModel) {
-    this.album = album;
 
-    // Contains panel with photos and search & sort buttons
-    this.photoListView = createPhotoListPanel(album, albumModel, photoSortModel);
+    // initialize the panel with the miniatures
+    this.photoList = new PhotoListContainer(album, albumModel, photoSortModel);
+    this.photoList.getContainer().setVisible(false);
+    this.photoList.getContainer().setAlignmentX(Component.LEFT_ALIGNMENT);
 
+    // initialize the label with the name of album
+    final JLabel albumNameLabel = new JLabel(album.getName());
+
+    // initialize the button to show and hide the panel with miniatures
+    final JLabel showButton = new JLabel(IconFactory.getIcon("next-20x20.png"));
+    showButton.setToolTipText("Show/hide photos of this album.");
+    // add the action listener
+    showButton.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        // show or hide the photos panel
+        AlbumDetailContainer.this.photoList.getContainer().setVisible(
+            !AlbumDetailContainer.this.photoList.getContainer().isVisible());
+        if (showButton.getIcon() == IconFactory.getIcon("down-20x20.png")) {
+          showButton.setIcon(IconFactory.getIcon("next-20x20.png"));
+        } else {
+          showButton.setIcon(IconFactory.getIcon("down-20x20.png"));
+        }
+      }
+    });
+
+    // initialize the header panel
+    final JPanel titlePanel = new JPanel(null);
+    titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
+    titlePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+    titlePanel.setBackground(GraphicalConstants.BLUE);
+    titlePanel.add(Box.createHorizontalStrut(10));
+    titlePanel.add(albumNameLabel);
+    titlePanel.add(Box.createHorizontalGlue());
+    titlePanel.add(showButton);
+
+    // initialize the main container
     this.mainPanel = new JPanel(null);
     this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
-    final JPanel titlePanel = createTitlePanel(album.getName());
     this.mainPanel.add(titlePanel);
-    this.mainPanel.add(this.photoListView.getContainer());
+    this.mainPanel.add(this.photoList.getContainer());
     this.mainPanel.setBorder(BorderFactory
         .createEtchedBorder(EtchedBorder.RAISED));
+
+    // add a listener to select the album
     this.mainPanel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
-          albumModel.selectAlbum(AlbumDetailContainer.this.album);
+          albumModel.selectAlbum(album);
         }
 
       }
     });
 
-  }
+    // listen the update of album model
+    albumModel.addAlbumUpdateListener(new AlbumUpdateListener() {
+      @Override
+      public void albumRenamed(Album album2, String newName) {
+        if (album.equals(album2)) {
+          // update the label with the name of the album
+          albumNameLabel.setText(newName);
+        }
+      }
 
-  public void renameAlbum(Album album, String newName) {
-    this.albumTitle.setText(newName);
+      @Override
+      public void photoAdded(Album album, Photo photo) {
+        // do nothing
+      }
+    });
+
   }
 
   public void addPhoto(Photo photo) {
-    this.photoListView.addPhoto(photo);
-  }
-
-  private PhotoListContainer createPhotoListPanel(Album album,
-      AlbumModel albumModel, PhotoSortModel photoSortModel) {
-    final PhotoListContainer view = new PhotoListContainer(album, albumModel,
-        photoSortModel);
-    view.getContainer().setVisible(false);
-    view.getContainer().setAlignmentX(Component.LEFT_ALIGNMENT);
-    return view;
-  }
-
-  private JPanel createTitlePanel(String title) {
-    final JPanel jp = new JPanel(null);
-    jp.setLayout(new BoxLayout(jp, BoxLayout.X_AXIS));
-    jp.setAlignmentX(Component.LEFT_ALIGNMENT);
-    jp.setBackground(GraphicalConstants.BLUE);
-
-    this.albumTitle = new JLabel(title);
-    jp.add(Box.createHorizontalStrut(10));
-    jp.add(this.albumTitle);
-    jp.add(Box.createHorizontalGlue());
-    jp.add(createShowPhotoListButton());
-
-    return jp;
-  }
-
-  private JLabel createShowPhotoListButton() {
-    final JLabel l = new JLabel(IconFactory.getIcon("next-20x20.png"));
-    l.setToolTipText("Show/hide photos of this album.");
-    l.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        AlbumDetailContainer.this.photoListView.getContainer()
-            .setVisible(
-                !AlbumDetailContainer.this.photoListView.getContainer()
-                    .isVisible());
-        if (l.getIcon() == IconFactory.getIcon("down-20x20.png")) {
-          l.setIcon(IconFactory.getIcon("next-20x20.png"));
-        } else {
-          l.setIcon(IconFactory.getIcon("down-20x20.png"));
-        }
-      }
-    });
-    return l;
+    this.photoList.addPhoto(photo);
   }
 
   @Override
