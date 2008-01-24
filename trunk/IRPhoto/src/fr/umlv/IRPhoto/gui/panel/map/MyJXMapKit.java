@@ -8,10 +8,8 @@ import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 
 import org.jdesktop.swingx.JXMapViewer;
@@ -68,7 +66,7 @@ public class MyJXMapKit {
 
   public void setDefaultMap(MyDefaultMaps myDefaultMap) {
     if (myDefaultMap == MyDefaultMaps.OpenStreetMap) {
-      final int max = 14;
+      final int max = 10;
       TileFactoryInfo info = new TileFactoryInfo(1, max - 2, max, 256, true,
           true, // tile size is 256 and x/y orientation is normal
           "http://tile.openstreetmap.org",// 5/15/10.png",
@@ -176,20 +174,6 @@ public class MyJXMapKit {
    */
   public JXMapViewer getMainMap() {
     return this.mainMap;
-  }
-
-  public static void main(String[] args) {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        MyJXMapKit map = new MyJXMapKit();
-        JFrame frame = new JFrame("JXMapKit test");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(map.getMainMap());
-        frame.pack();
-        frame.setSize(500, 300);
-        frame.setVisible(true);
-      }
-    });
   }
 
 }

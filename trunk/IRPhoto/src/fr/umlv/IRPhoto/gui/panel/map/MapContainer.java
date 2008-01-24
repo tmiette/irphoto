@@ -1,9 +1,11 @@
 package fr.umlv.IRPhoto.gui.panel.map;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -32,6 +34,7 @@ import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
+import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
@@ -104,12 +107,18 @@ public class MapContainer implements ContainerInitializer {
         // map.getViewportBounds().x,
         // (int) gp_pt.getY() - map.getViewportBounds().y));
         // // check if near the mouse
+        
         for (Entry<Waypoint, Photo> wp : waypoints.entrySet()) {
-          if (convertGP2Point(wp.getKey().getPosition()).distance(e.getPoint()) < 10) {
+          Point2D pt = convertGP2Point(wp.getKey().getPosition());
+          if (pt.distance(e.getPoint()) < 5) {
             // hoverLabel.setLocation(converted_gp_pt);
-            thumbnail.setIcon(getImageFromWP(wp.getKey()));
-            thumbnail.setLocation(e.getPoint());
+            Icon icon = getImageFromWP(wp.getKey());
+            Point p = (Point)pt;
+            p.translate(0, -icon.getIconHeight() - 5);
+            thumbnail.setLocation(p);
+            thumbnail.setIcon(icon);
             thumbnail.setVisible(true);
+            
           } else {
             thumbnail.setVisible(false);
           }
@@ -138,9 +147,6 @@ public class MapContainer implements ContainerInitializer {
         Rectangle rect = map.getViewportBounds();
         Point converted_gp_pt = new Point((int) gp_pt.getX() - rect.x,
             (int) gp_pt.getY() - rect.y);
-        System.out.println(new Point((int) gp_pt.getX()
-            - map.getViewportBounds().x, (int) gp_pt.getY()
-            - map.getViewportBounds().y));
         // check if near the mouse
         return converted_gp_pt;
       }
@@ -221,6 +227,19 @@ public class MapContainer implements ContainerInitializer {
     // create a WaypointPainter to draw the points
     WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
     painter.setWaypoints(waypoints);
+    painter.setRenderer(new WaypointRenderer() {
+      /* (non-Javadoc)
+       * @see org.jdesktop.swingx.mapviewer.WaypointRenderer#paintWaypoint(java.awt.Graphics2D, org.jdesktop.swingx.JXMapViewer, org.jdesktop.swingx.mapviewer.Waypoint)
+       */
+      @Override
+      public boolean paintWaypoint(Graphics2D g, JXMapViewer arg1,
+          Waypoint wp) {
+        g.setPaint(new Color(0,0,0,150));
+        g.fillOval((int)wp.getPosition().getLatitude() - 5, (int)wp.getPosition().getLongitude() - 5, 10, 10);
+        g.setPaint(Color.WHITE);
+return false;
+      }
+    });
 
     // Display waypoints
     this.map.setOverlayPainter(painter);
