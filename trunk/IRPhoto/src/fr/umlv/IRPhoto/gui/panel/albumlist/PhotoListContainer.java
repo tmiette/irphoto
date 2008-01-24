@@ -250,6 +250,7 @@ public class PhotoListContainer implements ContainerInitializer {
       @Override
       public void run() {
         synchronized (lock) {
+          System.out.println("add" +photo.getName());
           PhotoMiniatureContainer c = photoMiniatures.get(photo);
           if (c == null) {
             c = new PhotoMiniatureContainer(photo, albumModel);

@@ -17,6 +17,7 @@ import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumUpdateListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModelImpl;
 
+
 public class AlbumListContainer implements ContainerInitializer {
 
   private final JPanel mainPanel;
@@ -25,7 +26,7 @@ public class AlbumListContainer implements ContainerInitializer {
   private final HashMap<Album, AlbumDetailContainer> albumsDetailContainers;
   private final JPanel endPanel;
 
-  public AlbumListContainer(AlbumModel albumModel) {
+  public AlbumListContainer(final AlbumModel albumModel) {
     this.albumsDetailContainers = new HashMap<Album, AlbumDetailContainer>();
     this.albumModel = albumModel;
     this.albumModel.addAlbumListener(new AlbumListener() {

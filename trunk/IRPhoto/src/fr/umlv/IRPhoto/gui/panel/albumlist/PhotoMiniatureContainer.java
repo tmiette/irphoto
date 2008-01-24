@@ -1,7 +1,6 @@
 package fr.umlv.IRPhoto.gui.panel.albumlist;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -17,45 +16,61 @@ import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 
+/**
+ * This container represents a photo miniature with its name without file
+ * extension.
+ * 
+ * @author MIETTE Tom
+ * @author MOURET Sebastien
+ * 
+ */
 public class PhotoMiniatureContainer implements ContainerInitializer {
 
-  private final Photo photo;
+  // container
   private final JPanel container;
 
-  // Miniature default dimension
-  public static final Dimension DEFAULT_MINIATURE_DIMENSION = new Dimension(96,
-      96);
+  // maximum number of characters displayed for the name of the photo
   private static final int MAX_CHAR_NAME_LENGTH = 12;
 
-  public PhotoMiniatureContainer(Photo photo, final AlbumModel model) {
+  /**
+   * Constructor of the container.
+   * 
+   * @param photo
+   *            the photo to display.
+   * @param model
+   *            the album model.
+   */
+  public PhotoMiniatureContainer(final Photo photo, final AlbumModel model) {
 
-    this.photo = photo;
-
-    final JLabel name = new JLabel(photo.getNameWithoutExtension());
+    // initialize the name label
+    final JLabel nameLabel = new JLabel(photo.getNameWithoutExtension());
     if (photo.getNameWithoutExtension().length() > MAX_CHAR_NAME_LENGTH) {
-      name.setText(photo.getNameWithoutExtension().substring(0, MAX_CHAR_NAME_LENGTH) + "...");
+      nameLabel.setText(photo.getNameWithoutExtension().substring(0,
+          MAX_CHAR_NAME_LENGTH)
+          + "...");
     }
-    name.setAlignmentX(Component.CENTER_ALIGNMENT);
+    nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+    // initialize the miniature
+    final JLabel miniature = new JLabel(
+        new ImageIcon(photo.getScaledInstance()));
+    miniature.setMaximumSize(Photo.DEFAULT_MINIATURE_DIMENSION);
+    miniature.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    // initialize the main container
     this.container = new JPanel(null);
     this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
     this.container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     this.container.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
     this.container.setToolTipText(photo.getNameWithoutExtension());
-
-    final ImageIcon thumbnailIcon = new ImageIcon(photo.getScaledInstance());
-    final JLabel miniature = new JLabel();
-    miniature.setMaximumSize(DEFAULT_MINIATURE_DIMENSION);
-    miniature.setIcon(thumbnailIcon);
-    miniature.setAlignmentX(Component.CENTER_ALIGNMENT);
-
     this.container.add(miniature);
-    this.container.add(name);
+    this.container.add(nameLabel);
 
+    // add a mouse listener for the roll over effect
     this.container.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        model.selectPhoto(PhotoMiniatureContainer.this.photo);
+        model.selectPhoto(photo);
       }
 
       @Override

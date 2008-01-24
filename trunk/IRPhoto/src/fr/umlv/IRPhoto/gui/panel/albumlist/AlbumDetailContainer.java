@@ -32,7 +32,7 @@ import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
 public class AlbumDetailContainer implements ContainerInitializer {
 
   // container
-  private final JPanel mainPanel;
+  private final JPanel container;
 
   // panel with the miniatures
   private final PhotoListContainer photoList;
@@ -48,7 +48,7 @@ public class AlbumDetailContainer implements ContainerInitializer {
    *            the model to sort the photos.
    */
   public AlbumDetailContainer(final Album album, final AlbumModel albumModel,
-      PhotoSortModel photoSortModel) {
+      final PhotoSortModel photoSortModel) {
 
     // initialize the panel with the miniatures
     this.photoList = new PhotoListContainer(album, albumModel, photoSortModel);
@@ -87,15 +87,15 @@ public class AlbumDetailContainer implements ContainerInitializer {
     titlePanel.add(showButton);
 
     // initialize the main container
-    this.mainPanel = new JPanel(null);
-    this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
-    this.mainPanel.add(titlePanel);
-    this.mainPanel.add(this.photoList.getContainer());
-    this.mainPanel.setBorder(BorderFactory
+    this.container = new JPanel(null);
+    this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
+    this.container.add(titlePanel);
+    this.container.add(this.photoList.getContainer());
+    this.container.setBorder(BorderFactory
         .createEtchedBorder(EtchedBorder.RAISED));
 
     // add a listener to select the album
-    this.mainPanel.addMouseListener(new MouseAdapter() {
+    this.container.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
@@ -129,7 +129,7 @@ public class AlbumDetailContainer implements ContainerInitializer {
 
   @Override
   public JComponent getContainer() {
-    return this.mainPanel;
+    return this.container;
   }
 
 }
