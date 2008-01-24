@@ -53,17 +53,21 @@ public class Main {
         AlbumLoader.save(model);
       }
     });
+    SplashScreenManager.endStep();
     frame.setVisible(true);
   }
 
   public static void main(String[] args) {
+
+    SplashScreenManager.start();
 
     // model
     final AlbumModel model = new AlbumModelImpl();
 
     // load
     AlbumLoader.load(model);
-
+    SplashScreenManager.endStep();
+    
     // Schedule a job for the event dispatch thread:
     // creating and showing this application's GUI.
     SwingUtilities.invokeLater(new Runnable() {
@@ -71,5 +75,6 @@ public class Main {
         createAndShowGUI(model);
       }
     });
+    
   }
 }

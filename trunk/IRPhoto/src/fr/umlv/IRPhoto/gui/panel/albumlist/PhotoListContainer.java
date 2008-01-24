@@ -12,11 +12,14 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
@@ -30,6 +33,9 @@ import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
 
 public class PhotoListContainer implements ContainerInitializer {
+
+  private static final Object lock = new Object();
+  private final ExecutorService executor;
 
   // Contains photos
   private JPanel photoListPanel;
@@ -45,6 +51,7 @@ public class PhotoListContainer implements ContainerInitializer {
 
   public PhotoListContainer(Album album, PhotoModel photoModel,
       PhotoSortModel photoSortModel) {
+    this.executor = Executors.newFixedThreadPool(2);
     this.album = album;
     this.photoModel = photoModel;
     this.photoSortModel = photoSortModel;
@@ -59,9 +66,6 @@ public class PhotoListContainer implements ContainerInitializer {
 
     this.topPanel = createTopPanel();
     this.photoListPanel = createPhotoListPanel();
-    for (Photo photo : album.getPhotos()) {
-      this.addPhoto(photo);
-    }
 
     this.container = new JPanel(new BorderLayout());
     this.container.add(this.topPanel, BorderLayout.NORTH);
@@ -73,6 +77,15 @@ public class PhotoListContainer implements ContainerInitializer {
         photoListPanel.revalidate();
       }
     });
+
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        for (Photo photo : PhotoListContainer.this.album.getPhotos()) {
+          addPhoto(photo);
+        }
+      }
+    }).start();
 
   }
 
@@ -234,16 +247,29 @@ public class PhotoListContainer implements ContainerInitializer {
     photoListPanel.repaint();
   }
 
-  public void addPhoto(Photo photo) {
-    PhotoMiniatureContainer c = this.photoMiniatures.get(photo);
-    if (c == null) {
-      c = new PhotoMiniatureContainer(photo, this.photoModel);
-      this.photoListPanel.add(c.getContainer());
-      this.photoMiniatures.put(photo, c);
-    } else {
-      this.photoListPanel.add(c.getContainer());
-    }
-    this.photoListPanel.revalidate();
+  public void addPhoto(final Photo photo) {
+    executor.execute(new Runnable() {
+      @Override
+      public void run() {
+        synchronized (lock) {
+          PhotoMiniatureContainer c = photoMiniatures.get(photo);
+          if (c == null) {
+            c = new PhotoMiniatureContainer(photo, photoModel);
+            photoListPanel.add(c.getContainer());
+            photoMiniatures.put(photo, c);
+          } else {
+            photoListPanel.add(c.getContainer());
+          }
+        }
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            photoListPanel.revalidate();
+          }
+        });
+
+      }
+    });
   }
 
   @Override

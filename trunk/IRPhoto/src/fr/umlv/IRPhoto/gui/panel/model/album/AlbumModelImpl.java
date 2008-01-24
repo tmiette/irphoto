@@ -113,7 +113,7 @@ public class AlbumModelImpl implements AlbumModel {
   @Override
   public void selectAlbum(Album album) {
     this.currentAlbum = album;
-    this.fireAlbumSelected(album);
+    // this.fireAlbumSelected(album);
   }
 
   protected void fireAlbumSelected(Album album) {
@@ -176,6 +176,7 @@ public class AlbumModelImpl implements AlbumModel {
         }
       }
     }
+
   }
 
 }

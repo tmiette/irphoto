@@ -16,6 +16,7 @@ public class Album implements Serializable {
   private final ArrayList<Photo> photos;
   private String name;
   private File directory;
+  private boolean busy = false;
 
   public static void setIdOfSavedAlbum(int id) {
     if (albumsCreated <= id) {
@@ -92,6 +93,14 @@ public class Album implements Serializable {
 
     Album a = (Album) obj;
     return this.id == a.id;
+  }
+
+  public void setBusy(boolean busy) {
+    this.busy = busy;
+  }
+
+  public boolean isBusy() {
+    return this.busy;
   }
 
 }

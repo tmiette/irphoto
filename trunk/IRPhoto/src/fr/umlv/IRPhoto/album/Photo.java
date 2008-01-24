@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
-import java.net.URLConnection;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -13,11 +12,10 @@ import javax.swing.ImageIcon;
 public class Photo implements Serializable {
 
   private static final long serialVersionUID = -7367951897048766147L;
-  
+
   private final File file;
   private String type;
-  private transient ImageIcon icon;
- private GeoPosition geoPosition;
+  private GeoPosition geoPosition;
   private Dimension dimension;
   private Date date;
   private final Album album;
@@ -55,22 +53,20 @@ public class Photo implements Serializable {
           + " does not exist.");
     }
     this.file = file;
-    this.type = URLConnection.guessContentTypeFromName(this.file.getName());
     this.date = new Date(this.file.lastModified());
-    // TODO appel bloquant
-    this.icon = new ImageIcon(this.getPath());
     this.album = album;
   }
-  
+
   /**
    * @return the geoPosition
    */
   public GeoPosition getGeoPosition() {
     return this.geoPosition;
   }
-  
+
   /**
-   * @param geoPosition the geoPosition to set
+   * @param geoPosition
+   *            the geoPosition to set
    */
   public void setGeoPosition(GeoPosition geoPosition) {
     this.geoPosition = geoPosition;
@@ -93,16 +89,14 @@ public class Photo implements Serializable {
   }
 
   public ImageIcon getImageIcon() {
-    if(this.icon == null){
-      this.icon = new ImageIcon(this.getPath());
-    }
-    return this.icon;
+    ImageIcon icon = new ImageIcon(this.getPath());
+    this.dimension = new Dimension(icon.getIconWidth(), icon.getIconHeight());
+    return icon;
   }
 
   public Dimension getDimension() {
     if (this.dimension == null) {
-      this.dimension = new Dimension(this.icon.getIconWidth(), this.icon
-          .getIconHeight());
+      getImageIcon();
     }
     return this.dimension;
   }
@@ -128,7 +122,7 @@ public class Photo implements Serializable {
     sb.append("Photo ").append("(name=").append(this.getName()).append(") ");
     return sb.toString();
   }
-  
+
   public static class GeoPosition implements Serializable {
     /**
      * 
@@ -136,7 +130,7 @@ public class Photo implements Serializable {
     private static final long serialVersionUID = 1103404436818445389L;
     private double latitude;
     private double longitude;
-    
+
     /**
      * 
      */
@@ -151,23 +145,25 @@ public class Photo implements Serializable {
     public double getLongitude() {
       return this.longitude;
     }
-    
+
     /**
      * @return the latitude
      */
     public double getLatitude() {
       return this.latitude;
     }
-    
+
     /**
-     * @param latitude the latitude to set
+     * @param latitude
+     *            the latitude to set
      */
     public void setLatitude(double latitude) {
       this.latitude = latitude;
     }
-    
+
     /**
-     * @param longitude the longitude to set
+     * @param longitude
+     *            the longitude to set
      */
     public void setLongitude(double longitude) {
       this.longitude = longitude;
