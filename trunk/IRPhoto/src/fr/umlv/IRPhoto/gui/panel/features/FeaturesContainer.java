@@ -103,7 +103,8 @@ public class FeaturesContainer implements ContainerInitializer {
     albumModel.addAlbumListener(new AlbumListener() {
       @Override
       public void albumRemoved(Album album) {
-        if (albumModel.getSelectedPhoto().getAlbum().equals(album)) {
+        if (albumModel.getSelectedPhoto() != null
+            && albumModel.getSelectedPhoto().getAlbum().equals(album)) {
           eraseFields();
         }
       }
