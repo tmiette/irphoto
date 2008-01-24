@@ -77,14 +77,21 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
       public void albumRemoved(Album album) {
         if (photoListPanel != null) {
           photoListPanel.removeAll();
-          photoListPanel.revalidate();
+          photoListPanel.repaint();
         }
         
       }
 
       @Override
       public void albumAdded(Album album) {
-        // TODO Auto-generated method stub
+        photoListPanel.removeAll();
+//        photoListPanel.revalidate();
+        if (executor != null) {
+          System.out.println("Shutdown now !!!");
+          executor.shutdownNow();
+        }
+        addPhotos(getPhotosWhitoutGP(album.getPhotos()));
+        photoListPanel.repaint();
         
       }
     });
@@ -92,12 +99,13 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
       @Override
       public void albumSelected(Album album) {
         photoListPanel.removeAll();
-        photoListPanel.revalidate();
+//        photoListPanel.revalidate();
         if (executor != null) {
           System.out.println("Shutdown now !!!");
           executor.shutdownNow();
         }
         addPhotos(getPhotosWhitoutGP(album.getPhotos()));
+        photoListPanel.repaint();
       }
       
     });
