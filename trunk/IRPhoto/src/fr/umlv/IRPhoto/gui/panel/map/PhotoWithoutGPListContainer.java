@@ -91,7 +91,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
           executor.shutdownNow();
         }
         addPhotos(getPhotosWhitoutGP(album.getPhotos()));
-        photoListPanel.repaint();
+        //photoListPanel.repaint();
         
       }
     });
