@@ -113,9 +113,10 @@ public class MapContainer implements ContainerInitializer {
             thumbnail.setLocation(e.getPoint());
             thumbnail.setVisible(true);
           } else {
-            // thumbnail.setVisible(false);
+             thumbnail.setVisible(false);
           }
         }
+        
         // if (converted_gp_pt.distance(e.getPoint()) < 10) {
         // hoverLabel.setLocation(converted_gp_pt);
         // hoverLabel.setVisible(true);
