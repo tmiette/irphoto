@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.swing.JComponent;
@@ -82,8 +83,12 @@ public class TabbedPaneContainer implements ContainerInitializer {
 
     // adds different panels to main panel
     cardPanel.add(scroll, "Albums");
-    cardPanel.add(new MapContainer(albumModel).getContainer(),
-        "Map");
+    try {
+      cardPanel.add(new MapContainer(albumModel).getContainer(),
+          "Map");
+    } catch (UnknownHostException e1) {
+      cardPanel.add(new JPanel(), "Map");
+    }
     this.container.add(cardPanel, BorderLayout.CENTER);
     this.container.add(bouttonsPanel, BorderLayout.SOUTH);
   }

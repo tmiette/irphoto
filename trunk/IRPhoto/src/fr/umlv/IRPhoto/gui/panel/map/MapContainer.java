@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -52,7 +53,7 @@ public class MapContainer implements ContainerInitializer {
   private HashMap<Waypoint, Photo> waypoints;
   private final JLabel thumbnail;
 
-  public MapContainer(AlbumModel albumModel) {
+  public MapContainer(AlbumModel albumModel) throws UnknownHostException {
     MyJXMapKit kit = new MyJXMapKit();
     this.map = kit.getMainMap();
 
@@ -165,11 +166,6 @@ public class MapContainer implements ContainerInitializer {
     b.setPreferredSize(new Dimension(12, 0));
 
     b.addActionListener(new ActionListener() {
-      /*
-       * (non-Javadoc)
-       * 
-       * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-       */
       @Override
       public void actionPerformed(ActionEvent e) {
         boolean bool = photoListContainer.isVisible();
@@ -209,20 +205,6 @@ public class MapContainer implements ContainerInitializer {
     // create a WaypointPainter to draw the points
     WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
     painter.setWaypoints(waypoints);
-//    painter.setRenderer(new WaypointRenderer() {
-//      /* (non-Javadoc)
-//       * @see org.jdesktop.swingx.mapviewer.WaypointRenderer#paintWaypoint(java.awt.Graphics2D, org.jdesktop.swingx.JXMapViewer, org.jdesktop.swingx.mapviewer.Waypoint)
-//       */
-//      @Override
-//      public boolean paintWaypoint(Graphics2D g, JXMapViewer arg1,
-//          Waypoint wp) {
-//        g.setPaint(new Color(0,0,0,150));
-//        g.fillOval((int)wp.getPosition().getLatitude() - 5, (int)wp.getPosition().getLongitude() - 5, 10, 10);
-//        g.setPaint(Color.WHITE);
-//        g.fillOval((int)wp.getPosition().getLatitude() - 6, (int)wp.getPosition().getLongitude() - 6, 11, 11);
-//return false;
-//      }
-//    });
 
     // Display waypoints
     this.map.setOverlayPainter(painter);
