@@ -141,6 +141,7 @@ public class MapContainer implements ContainerInitializer {
 
     JPanel leftPanel = new JPanel(new BorderLayout());
     leftPanel.setOpaque(false);
+    leftPanel.add(panel, BorderLayout.WEST);
     
     JPanel thumbPanel = new JPanel();
     thumbPanel.setOpaque(false);

@@ -75,7 +75,10 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     this.albumModel.addAlbumListener(new AlbumListener() {
       @Override
       public void albumRemoved(Album album) {
-        // TODO Auto-generated method stub
+        if (photoListPanel != null) {
+          photoListPanel.removeAll();
+          photoListPanel.revalidate();
+        }
         
       }
 
