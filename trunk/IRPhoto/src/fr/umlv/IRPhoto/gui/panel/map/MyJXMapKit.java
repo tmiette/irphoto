@@ -7,7 +7,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import javax.swing.JPanel;
@@ -45,11 +44,11 @@ public class MyJXMapKit {
    * @throws UnknownHostException 
    * 
    */
-  public MyJXMapKit() throws UnknownHostException {
+  public MyJXMapKit() {
     this(MyDefaultMaps.OpenStreetMap);
   }
   
-  public MyJXMapKit(MyDefaultMaps myDefaultMaps) throws UnknownHostException {
+  public MyJXMapKit(MyDefaultMaps myDefaultMaps) {
     initComponents();
     zoomSlider.setOpaque(false);
     setDefaultMap(myDefaultMaps);
@@ -67,10 +66,9 @@ public class MyJXMapKit {
         .setThreadPoolSize(MAP_THREAD_NB);
   }
 
-  public void setDefaultMap(MyDefaultMaps myDefaultMap) throws UnknownHostException {
+  public void setDefaultMap(MyDefaultMaps myDefaultMap) {
     
     if (myDefaultMap == MyDefaultMaps.OpenStreetMap) {
-      InetAddress.getByName("http://tile.openstreetmap.org");
       final int max = 10;
       TileFactoryInfo info = new TileFactoryInfo(1, max - 2, max, 256, true,
           true, // tile size is 256 and x/y orientation is normal

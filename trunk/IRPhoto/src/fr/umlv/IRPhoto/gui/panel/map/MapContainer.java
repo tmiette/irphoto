@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,7 +52,7 @@ public class MapContainer implements ContainerInitializer {
   private HashMap<Waypoint, Photo> waypoints;
   private final JLabel thumbnail;
 
-  public MapContainer(AlbumModel albumModel) throws UnknownHostException {
+  public MapContainer(AlbumModel albumModel) {
     MyJXMapKit kit = new MyJXMapKit();
     this.map = kit.getMainMap();
 

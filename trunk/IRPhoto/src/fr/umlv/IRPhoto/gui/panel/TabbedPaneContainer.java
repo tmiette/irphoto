@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.swing.JComponent;
@@ -38,8 +37,7 @@ public class TabbedPaneContainer implements ContainerInitializer {
 
     // scroll pane for the albums details panel
     final JScrollPane scroll = new JScrollPane(new AlbumListContainer(
-        albumModel).getContainer(),
-        JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+        albumModel).getContainer(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     // buttons panel to imitate tabbed pane
@@ -83,12 +81,7 @@ public class TabbedPaneContainer implements ContainerInitializer {
 
     // adds different panels to main panel
     cardPanel.add(scroll, "Albums");
-    try {
-      cardPanel.add(new MapContainer(albumModel).getContainer(),
-          "Map");
-    } catch (UnknownHostException e1) {
-      cardPanel.add(new JPanel(), "Map");
-    }
+    cardPanel.add(new MapContainer(albumModel).getContainer(), "Map");
     this.container.add(cardPanel, BorderLayout.CENTER);
     this.container.add(bouttonsPanel, BorderLayout.SOUTH);
   }
