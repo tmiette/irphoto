@@ -21,7 +21,6 @@ import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumListContainer;
 import fr.umlv.IRPhoto.gui.panel.map.MapContainer;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoModel;
 
 public class TabbedPaneContainer implements ContainerInitializer {
 
@@ -29,7 +28,7 @@ public class TabbedPaneContainer implements ContainerInitializer {
   private final ArrayList<JLabel> tabs = new ArrayList<JLabel>();
   private JLabel currentTab;
 
-  public TabbedPaneContainer(AlbumModel albumModel, PhotoModel photoModel) {
+  public TabbedPaneContainer(AlbumModel albumModel) {
     this.container = new JPanel(new BorderLayout());
 
     // panel which imitate a tabbed pane
@@ -38,7 +37,7 @@ public class TabbedPaneContainer implements ContainerInitializer {
 
     // scroll pane for the albums details panel
     final JScrollPane scroll = new JScrollPane(new AlbumListContainer(
-        albumModel, photoModel).getContainer(),
+        albumModel).getContainer(),
         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -83,7 +82,7 @@ public class TabbedPaneContainer implements ContainerInitializer {
 
     // adds different panels to main panel
     cardPanel.add(scroll, "Albums");
-    cardPanel.add(new MapContainer(albumModel, photoModel).getContainer(),
+    cardPanel.add(new MapContainer(albumModel).getContainer(),
         "Map");
     this.container.add(cardPanel, BorderLayout.CENTER);
     this.container.add(bouttonsPanel, BorderLayout.SOUTH);
