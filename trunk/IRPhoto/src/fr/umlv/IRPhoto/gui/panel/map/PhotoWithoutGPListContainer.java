@@ -37,6 +37,7 @@ import fr.umlv.IRPhoto.album.Photo.GeoPosition;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoUpdateListener;
 
@@ -71,6 +72,19 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   public PhotoWithoutGPListContainer(AlbumModel albumModel) {
 
     this.albumModel = albumModel;
+    this.albumModel.addAlbumListener(new AlbumListener() {
+      @Override
+      public void albumRemoved(Album album) {
+        // TODO Auto-generated method stub
+        
+      }
+
+      @Override
+      public void albumAdded(Album album) {
+        // TODO Auto-generated method stub
+        
+      }
+    });
     this.albumModel.addAlbumSelectionListener(new AlbumSelectionListener() {
       @Override
       public void albumSelected(Album album) {
@@ -82,6 +96,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
         }
         addPhotos(getPhotosWhitoutGP(album.getPhotos()));
       }
+      
     });
     this.albumModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
 

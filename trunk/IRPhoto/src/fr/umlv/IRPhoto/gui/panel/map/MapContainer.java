@@ -1,11 +1,9 @@
 package fr.umlv.IRPhoto.gui.panel.map;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -34,7 +32,6 @@ import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
-import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
@@ -62,7 +59,7 @@ public class MapContainer implements ContainerInitializer {
     this.waypoints = new HashMap<Waypoint, Photo>();
     this.thumbnail = new JLabel();
     this.thumbnail.setVisible(false);
-    this.map.add(this.thumbnail);
+//    this.map.add(this.thumbnail);
 
     this.currentPosition = new GeoPosition(43.604503, 1.444026);
 
@@ -95,19 +92,6 @@ public class MapContainer implements ContainerInitializer {
 
       public void mouseMoved(MouseEvent e) {
 
-        // // location of Java
-        // GeoPosition gp = currentPosition;
-        // // convert to world bitmap
-        // Point2D gp_pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
-        // // convert to screen
-        // Rectangle rect = map.getViewportBounds();
-        // Point converted_gp_pt = new Point((int) gp_pt.getX() - rect.x,
-        // (int) gp_pt.getY() - rect.y);
-        // System.out.println(new Point((int) gp_pt.getX() -
-        // map.getViewportBounds().x,
-        // (int) gp_pt.getY() - map.getViewportBounds().y));
-        // // check if near the mouse
-        
         for (Entry<Waypoint, Photo> wp : waypoints.entrySet()) {
           Point2D pt = convertGP2Point(wp.getKey().getPosition());
           if (pt.distance(e.getPoint()) < 5) {
@@ -123,13 +107,6 @@ public class MapContainer implements ContainerInitializer {
             thumbnail.setVisible(false);
           }
         }
-
-        // if (converted_gp_pt.distance(e.getPoint()) < 10) {
-        // hoverLabel.setLocation(converted_gp_pt);
-        // hoverLabel.setVisible(true);
-        // } else {
-        // hoverLabel.setVisible(false);
-        // }
       }
 
       private Icon getImageFromWP(Waypoint wp) {
@@ -164,10 +141,14 @@ public class MapContainer implements ContainerInitializer {
 
     JPanel leftPanel = new JPanel(new BorderLayout());
     leftPanel.setOpaque(false);
-    leftPanel.add(panel, BorderLayout.WEST);
+    
+    JPanel thumbPanel = new JPanel();
+    thumbPanel.setOpaque(false);
+    thumbPanel.add(this.thumbnail);
 
     this.mainPanel = new JLayeredPane();
     this.mainPanel.setLayout(createLayoutManager());
+    this.mainPanel.add(thumbPanel, new Integer(2));
     this.mainPanel.add(leftPanel, new Integer(1));
     this.mainPanel.add(this.map, new Integer(0));
   }
