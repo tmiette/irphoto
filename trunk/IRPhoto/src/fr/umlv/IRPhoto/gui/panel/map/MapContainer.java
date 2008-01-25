@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +39,7 @@ import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoUpdateListener;
 
@@ -59,7 +61,6 @@ public class MapContainer implements ContainerInitializer {
     this.waypoints = new HashMap<Waypoint, Photo>();
     this.thumbnail = new JLabel();
     this.thumbnail.setVisible(false);
-//    this.map.add(this.thumbnail);
 
     this.currentPosition = new GeoPosition(43.604503, 1.444026);
 
@@ -68,6 +69,22 @@ public class MapContainer implements ContainerInitializer {
       @Override
       public void albumSelected(Album album) {
         logger.info("Album selected");
+        addAlbum(album);
+        map.repaint();
+      }
+    });
+    this.albumModel.addAlbumListener(new AlbumListener() {
+      @Override
+      public void albumRemoved(Album album) {
+        logger.info("Album removed");
+        waypoints.clear();
+        removeAllWaypoints();
+        map.repaint();
+      }
+      
+      @Override
+      public void albumAdded(Album album) {
+        logger.info("Album added");
         addAlbum(album);
         map.repaint();
       }
@@ -209,6 +226,13 @@ public class MapContainer implements ContainerInitializer {
     this.map.setOverlayPainter(painter);
 
   }
+  
+private void removeAllWaypoints() {
+  Set<Waypoint> set = Collections.<Waypoint>emptySet();
+  WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
+  painter.setWaypoints(set);
+  this.map.setOverlayPainter(painter);
+}  
 
   /**
    * 

@@ -79,35 +79,31 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
           photoListPanel.removeAll();
           photoListPanel.repaint();
         }
-        
+
       }
 
       @Override
       public void albumAdded(Album album) {
         photoListPanel.removeAll();
-//        photoListPanel.revalidate();
         if (executor != null) {
           System.out.println("Shutdown now !!!");
           executor.shutdownNow();
         }
         addPhotos(getPhotosWhitoutGP(album.getPhotos()));
-        //photoListPanel.repaint();
-        
+
       }
     });
     this.albumModel.addAlbumSelectionListener(new AlbumSelectionListener() {
       @Override
       public void albumSelected(Album album) {
         photoListPanel.removeAll();
-//        photoListPanel.revalidate();
         if (executor != null) {
           System.out.println("Shutdown now !!!");
           executor.shutdownNow();
         }
         addPhotos(getPhotosWhitoutGP(album.getPhotos()));
-        photoListPanel.repaint();
       }
-      
+
     });
     this.albumModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
 
@@ -191,8 +187,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   /**
    * Adds photos to photo list panel.
    * 
-   * @param photos
-   *            photos to add
+   * @param photos photos to add
    */
   private void addPhotos(List<Photo> photos) {
     logger.info("adding photos to list panel");
@@ -219,8 +214,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   /**
    * Adds a photo to photo list panel.
    * 
-   * @param photo
-   *            photo to add
+   * @param photo photo to add
    */
   private void addPhoto(final Photo photo) {
     // ImageIcon icon = photo.getImageIcon();
@@ -258,8 +252,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   /**
    * Removes a photo from photo list panel.
    * 
-   * @param photo
-   *            photo to remove
+   * @param photo photo to remove
    */
   private void removePhoto(Photo photo) {
     JLabel label = this.photos.get(photo);
