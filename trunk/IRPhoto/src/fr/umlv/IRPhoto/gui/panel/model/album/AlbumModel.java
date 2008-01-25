@@ -12,6 +12,7 @@ import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumUpdateListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoUpdateListener;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
 
 public interface AlbumModel {
 
@@ -48,4 +49,6 @@ public interface AlbumModel {
   public void addPhotoSelectionListener(PhotoSelectionListener listener);
 
   public void addPhotoUpdatedListener(PhotoUpdateListener photoUpdatedListener);
+  
+  public PhotoSortModel createNewPhotoSortModel();
 }

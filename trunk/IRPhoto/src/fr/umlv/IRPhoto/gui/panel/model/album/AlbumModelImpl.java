@@ -20,6 +20,8 @@ import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumUpdateListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoUpdateListener;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
+import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModelImpl;
 
 public class AlbumModelImpl implements AlbumModel {
 
@@ -160,6 +162,11 @@ public class AlbumModelImpl implements AlbumModel {
     this.firePhotoSelected(photo);
   }
 
+  @Override
+  public PhotoSortModel createNewPhotoSortModel() {
+    return new PhotoSortModelImpl();
+  }
+
   protected void fireAlbumSelected(Album album) {
     for (AlbumSelectionListener listener : this.albumSelectionListeners) {
       listener.albumSelected(album);
@@ -202,6 +209,8 @@ public class AlbumModelImpl implements AlbumModel {
     }
   }
 
+  private final static Object lock = new Object();
+
   private void crawle(File directory, final Album album) {
 
     ExecutorService executor = Executors.newFixedThreadPool(10);
@@ -222,7 +231,9 @@ public class AlbumModelImpl implements AlbumModel {
             try {
               Photo photo = new Photo(f, album);
               photo.setType(mimeType);
-              album.addPhoto(photo);
+              synchronized (lock) {
+                album.addPhoto(photo);
+              }
               this.firePhotoAdded(album, photo);
             } catch (FileNotFoundException e) {
               System.err.println(e.getMessage());
@@ -232,7 +243,7 @@ public class AlbumModelImpl implements AlbumModel {
         }
       }
     }
-
+    executor.shutdown();
   }
 
 }
