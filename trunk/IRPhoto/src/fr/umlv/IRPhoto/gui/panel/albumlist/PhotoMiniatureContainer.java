@@ -26,11 +26,11 @@ import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
  */
 public class PhotoMiniatureContainer implements ContainerInitializer {
 
-  // container
-  private final JPanel container;
-
   // maximum number of characters displayed for the name of the photo
   private static final int MAX_CHAR_NAME_LENGTH = 12;
+
+  // container
+  private final JPanel container;
 
   /**
    * Constructor of the container.

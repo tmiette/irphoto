@@ -19,7 +19,6 @@ import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumUpdateListener;
-import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
 
 /**
  * 
@@ -44,14 +43,11 @@ public class AlbumDetailContainer implements ContainerInitializer {
    *            the album to display.
    * @param albumModel
    *            the album model.
-   * @param photoSortModel
-   *            the model to sort the photos.
    */
-  public AlbumDetailContainer(final Album album, final AlbumModel albumModel,
-      final PhotoSortModel photoSortModel) {
+  public AlbumDetailContainer(final Album album, final AlbumModel albumModel) {
 
     // initialize the panel with the miniatures
-    this.photoList = new PhotoListContainer(album, albumModel, photoSortModel);
+    this.photoList = new PhotoListContainer(album, albumModel);
     this.photoList.getContainer().setVisible(false);
     this.photoList.getContainer().setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -121,10 +117,6 @@ public class AlbumDetailContainer implements ContainerInitializer {
       }
     });
 
-  }
-
-  public void addPhoto(Photo photo) {
-    this.photoList.addPhoto(photo);
   }
 
   @Override
