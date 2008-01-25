@@ -112,14 +112,14 @@ public class MapContainer implements ContainerInitializer {
         for (Entry<Waypoint, Photo> wp : waypoints.entrySet()) {
           Point2D pt = convertGP2Point(wp.getKey().getPosition());
           if (pt.distance(e.getPoint()) < 5) {
-            // hoverLabel.setLocation(converted_gp_pt);
             Icon icon = getImageFromWP(wp.getKey());
             Point p = (Point)pt;
             p.translate(0, -icon.getIconHeight() - 33);
+            System.out.println(p);
             thumbnail.setLocation(p);
             thumbnail.setIcon(icon);
             thumbnail.setVisible(true);
-            
+            MapContainer.this.albumModel.selectPhoto(wp.getValue());
           } else {
             thumbnail.setVisible(false);
           }
@@ -128,8 +128,6 @@ public class MapContainer implements ContainerInitializer {
 
       private Icon getImageFromWP(Waypoint wp) {
         return new ImageIcon(waypoints.get(wp).getScaledInstance());
-        // return new ImageIcon(ImageUtil.getScaledImage(waypoints.get(wp)
-        // .getImageIcon().getImage(), 50, 50));
       }
 
       private Point2D convertGP2Point(GeoPosition position) {

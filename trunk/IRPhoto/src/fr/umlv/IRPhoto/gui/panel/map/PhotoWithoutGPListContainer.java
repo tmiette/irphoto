@@ -137,7 +137,8 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   }
 
   /**
-   * @return
+   * Gets a panel containing two text fields to set longitude and latitude values.
+   * @return jpanel with boxlayout 
    */
   private JPanel createTextFieldPanel() {
     JPanel jp = new JPanel(null);
@@ -148,11 +149,6 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
 
     this.button = new JButton("OK", IconFactory.getIcon("globe-12x12.png"));
     this.button.addActionListener(new ActionListener() {
-      /*
-       * (non-Javadoc)
-       * 
-       * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-       */
       @Override
       public void actionPerformed(ActionEvent e) {
 
@@ -176,6 +172,11 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     return jp;
   }
 
+  /**
+   * Gets a panel containing photos without geoposition coordinates.
+   * @param photos list of photos
+   * @return jpanel containing photos
+   */
   private JPanel createPhotoListPanel(List<Photo> photos) {
     final JPanel jp = new JPanel(null);
     jp.setLayout(new BoxLayout(jp, BoxLayout.Y_AXIS));
@@ -191,6 +192,8 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
    */
   private void addPhotos(List<Photo> photos) {
     logger.info("adding photos to list panel");
+    
+    // Delegate work to executor
     executor = Executors.newFixedThreadPool(2);
     for (final Photo photo : photos) {
       executor.execute(new Runnable() {
@@ -212,23 +215,16 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   }
 
   /**
-   * Adds a photo to photo list panel.
+   * Adds a single photo to a photo list panel.
    * 
    * @param photo photo to add
    */
   private void addPhoto(final Photo photo) {
     // ImageIcon icon = photo.getImageIcon();
     final JLabel label = new JLabel();
-    // icon = new ImageIcon(ImageUtil.getScaledImage(icon.getImage(),
-    // DEFAULT_THUMBNAIL_SIZE.width, DEFAULT_THUMBNAIL_SIZE.height));
     ImageIcon icon = new ImageIcon(photo.getScaledInstance());
     label.setIcon(icon);
     label.addMouseListener(new MouseAdapter() {
-      /*
-       * (non-Javadoc)
-       * 
-       * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
-       */
       @Override
       public void mouseClicked(MouseEvent e) {
         super.mouseClicked(e);
