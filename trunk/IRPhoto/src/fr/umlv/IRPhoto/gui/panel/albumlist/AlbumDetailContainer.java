@@ -53,6 +53,8 @@ public class AlbumDetailContainer implements ContainerInitializer {
 
     // initialize the label with the name of album
     final JLabel albumNameLabel = new JLabel(album.getName());
+    // Label with the number of photos
+    final JLabel numberLabel = new JLabel("(" + album.getPhotos().size() + ")");
 
     // initialize the button to show and hide the panel with miniatures
     final JLabel showButton = new JLabel(IconFactory.getIcon("next-20x20.png"));
@@ -79,6 +81,8 @@ public class AlbumDetailContainer implements ContainerInitializer {
     titlePanel.setBackground(GraphicalConstants.BLUE);
     titlePanel.add(Box.createHorizontalStrut(10));
     titlePanel.add(albumNameLabel);
+    titlePanel.add(Box.createHorizontalStrut(3));
+    titlePanel.add(numberLabel);
     titlePanel.add(Box.createHorizontalGlue());
     titlePanel.add(showButton);
 
@@ -112,8 +116,10 @@ public class AlbumDetailContainer implements ContainerInitializer {
       }
 
       @Override
-      public void photoAdded(Album album, Photo photo) {
-        // do nothing
+      public void photoAdded(Album album2, Photo photo) {
+        if (album.equals(album2)) {
+          numberLabel.setText("(" + photo.getAlbum().getPhotos().size() + ")");
+        }
       }
     });
 

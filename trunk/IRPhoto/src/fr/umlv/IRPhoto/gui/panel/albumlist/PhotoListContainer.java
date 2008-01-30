@@ -43,7 +43,7 @@ import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
 public class PhotoListContainer implements ContainerInitializer {
 
   // max number of threads used to display miniatures
-  private static final int MAX_THREADS = 2;
+  private static final int MAX_THREADS = 5;
 
   /**
    * Creates and returns a button to sort the photos of an album by name.
@@ -181,17 +181,9 @@ public class PhotoListContainer implements ContainerInitializer {
       }
 
       @Override
-      public void photoAdded(Album album2, Photo photo) {
+      public void photoAdded(Album album2, final Photo photo) {
         if (album.equals(album2)) {
-          PhotoMiniatureContainer c = photoMiniatures.get(photo);
-          if (c == null) {
-            c = new PhotoMiniatureContainer(photo, albumModel);
-            photoListPanel.add(c.getContainer());
-            photoMiniatures.put(photo, c);
-          } else {
-            photoListPanel.add(c.getContainer());
-          }
-          photoListPanel.revalidate();
+          addNewMiniature(albumModel, photo);
         }
       }
     });
@@ -218,29 +210,9 @@ public class PhotoListContainer implements ContainerInitializer {
     new Thread(new Runnable() {
       @Override
       public void run() {
-        executor = Executors.newFixedThreadPool(MAX_THREADS);
         for (final Photo photo : album.getPhotos()) {
-          executor.execute(new Runnable() {
-            @Override
-            public void run() {
-              PhotoMiniatureContainer c = photoMiniatures.get(photo);
-              if (c == null) {
-                c = new PhotoMiniatureContainer(photo, albumModel);
-                photoListPanel.add(c.getContainer());
-                photoMiniatures.put(photo, c);
-              } else {
-                photoListPanel.add(c.getContainer());
-              }
-              SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                  photoListPanel.revalidate();
-                }
-              });
-            }
-          });
+          addNewMiniature(albumModel, photo);
         }
-        executor.shutdown();
       }
     }).start();
 
@@ -329,6 +301,41 @@ public class PhotoListContainer implements ContainerInitializer {
     });
 
     return panel;
+  }
+
+  /**
+   * Adds a new miniature panel to the list of miniature already existing. The
+   * add operation is invoked in a runnable task to not freeze the application.
+   * 
+   * @param albumModel
+   *            the album model.
+   * @param photo
+   *            the new photo.
+   */
+  private void addNewMiniature(final AlbumModel albumModel, final Photo photo) {
+    executor.execute(new Runnable() {
+      // new runnable task
+      @Override
+      public void run() {
+        PhotoMiniatureContainer c = photoMiniatures.get(photo);
+        if (c == null) {
+          // creates the miniature panel if it not exists.
+          c = new PhotoMiniatureContainer(photo, albumModel);
+          photoListPanel.add(c.getContainer());
+          photoMiniatures.put(photo, c);
+        } else {
+          photoListPanel.add(c.getContainer());
+        }
+
+        // refresh the panel display
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            photoListPanel.revalidate();
+          }
+        });
+      }
+    });
   }
 
   @Override
