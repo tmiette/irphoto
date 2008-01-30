@@ -37,11 +37,11 @@ import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
-import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoUpdateListener;
+import fr.umlv.IRPhoto.util.IconFactory;
 
 public class MapContainer implements ContainerInitializer {
 

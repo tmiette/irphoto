@@ -26,12 +26,12 @@ import javax.swing.event.CaretListener;
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
-import fr.umlv.IRPhoto.gui.GraphicalConstants;
-import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumUpdateListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortListener;
 import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModel;
+import fr.umlv.IRPhoto.util.GraphicalConstants;
+import fr.umlv.IRPhoto.util.IconFactory;
 
 /**
  * The container represents all the miniatures images of an album.

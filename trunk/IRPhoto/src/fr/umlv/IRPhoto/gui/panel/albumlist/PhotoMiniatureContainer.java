@@ -13,8 +13,8 @@ import javax.swing.JPanel;
 
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
-import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.util.GraphicalConstants;
 
 /**
  * This container represents a photo miniature with its name without file

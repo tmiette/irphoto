@@ -23,10 +23,10 @@ import javax.swing.tree.TreePath;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
-import fr.umlv.IRPhoto.gui.GraphicalConstants;
-import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.albumtree.AlbumTreeModel.AlbumTreeNode;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.util.GraphicalConstants;
+import fr.umlv.IRPhoto.util.IconFactory;
 
 /**
  * 

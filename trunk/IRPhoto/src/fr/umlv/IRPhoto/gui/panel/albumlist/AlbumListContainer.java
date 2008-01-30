@@ -10,9 +10,9 @@ import javax.swing.JPanel;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
-import fr.umlv.IRPhoto.gui.GraphicalConstants;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
+import fr.umlv.IRPhoto.util.GraphicalConstants;
 
 /**
  * 

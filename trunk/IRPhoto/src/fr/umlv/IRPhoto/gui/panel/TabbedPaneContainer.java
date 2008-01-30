@@ -16,11 +16,11 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import fr.umlv.IRPhoto.gui.ContainerInitializer;
-import fr.umlv.IRPhoto.gui.GraphicalConstants;
-import fr.umlv.IRPhoto.gui.IconFactory;
 import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumListContainer;
 import fr.umlv.IRPhoto.gui.panel.map.MapContainer;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
+import fr.umlv.IRPhoto.util.GraphicalConstants;
+import fr.umlv.IRPhoto.util.IconFactory;
 
 /**
  * 
