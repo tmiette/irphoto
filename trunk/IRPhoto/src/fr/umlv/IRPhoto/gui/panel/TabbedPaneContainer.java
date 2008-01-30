@@ -22,44 +22,55 @@ import fr.umlv.IRPhoto.gui.panel.albumlist.AlbumListContainer;
 import fr.umlv.IRPhoto.gui.panel.map.MapContainer;
 import fr.umlv.IRPhoto.gui.panel.model.album.AlbumModel;
 
+/**
+ * 
+ * This class represents a container which imitates the behavior of a tabbed
+ * pane. This container displays the album list with their photos in a first tab
+ * and the world map in another tab.
+ * 
+ * @author MIETTE Tom
+ * @author MOURET Sebastien
+ * 
+ */
 public class TabbedPaneContainer implements ContainerInitializer {
 
+  // main container
   private final JComponent container;
-  private final ArrayList<JLabel> tabs = new ArrayList<JLabel>();
+
+  // label currently selected
   private JLabel currentTab;
 
-  public TabbedPaneContainer(AlbumModel albumModel) {
-    this.container = new JPanel(new BorderLayout());
+  // list of labels imitating tabs
+  private final ArrayList<JLabel> tabs = new ArrayList<JLabel>();
 
-    // panel which imitate a tabbed pane
+  /**
+   * Constructor of this container.
+   * 
+   * @param albumModel
+   *            the album model.
+   */
+  public TabbedPaneContainer(AlbumModel albumModel) {
+
+    // initialize panel which imitate a tabbed pane with cardlayout
     final CardLayout cardLayout = new CardLayout();
     final JPanel cardPanel = new JPanel(cardLayout);
 
-    // scroll pane for the albums details panel
+    // initialize scroll pane for the albums details panel
     final JScrollPane scroll = new JScrollPane(new AlbumListContainer(
         albumModel).getContainer(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-    // buttons panel to imitate tabbed pane
-    final JPanel bouttonsPanel = new JPanel(new GridBagLayout());
-    final GridBagConstraints gbc = new GridBagConstraints();
-
+    // initialize tab labels which imitate tabs
     final JLabel album = createTabLabel("Albums");
+    // show albums detail panel when albums label is clicked
+    album.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        cardLayout.first(cardPanel);
+        scroll.getHorizontalScrollBar().setEnabled(true);
+      }
+    });
     final JLabel map = createTabLabel("Map");
-    setCurrentTab(album);
-
-    // place and add tabs labels
-    gbc.anchor = GridBagConstraints.EAST;
-    bouttonsPanel.add(album, gbc);
-    bouttonsPanel.add(map, gbc);
-
-    // place and add horizontal scroll bar of albums detail panel
-    gbc.weightx = 1;
-    gbc.weighty = 1;
-    gbc.insets = new Insets(0, 3, 0, 0);
-    gbc.fill = GridBagConstraints.BOTH;
-    bouttonsPanel.add(scroll.getHorizontalScrollBar(), gbc);
-
     // show map panel when map label is clicked
     map.addMouseListener(new MouseAdapter() {
       @Override
@@ -69,48 +80,60 @@ public class TabbedPaneContainer implements ContainerInitializer {
       }
 
     });
+    // set the first tab selected
+    setCurrentTab(album);
 
-    // show albums detail panel when albums label is clicked
-    album.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        cardLayout.first(cardPanel);
-        scroll.getHorizontalScrollBar().setEnabled(true);
-      }
-    });
+    // initialize tabs panel
+    final JPanel bouttonsPanel = new JPanel(new GridBagLayout());
+    final GridBagConstraints gbc = new GridBagConstraints();
+    // place and add tabs labels
+    gbc.anchor = GridBagConstraints.EAST;
+    bouttonsPanel.add(album, gbc);
+    bouttonsPanel.add(map, gbc);
+    // place and add horizontal scroll bar of albums detail panel
+    gbc.weightx = 1;
+    gbc.weighty = 1;
+    gbc.insets = new Insets(0, 3, 0, 0);
+    gbc.fill = GridBagConstraints.BOTH;
+    bouttonsPanel.add(scroll.getHorizontalScrollBar(), gbc);
 
-    // adds different panels to main panel
     cardPanel.add(scroll, "Albums");
     cardPanel.add(new MapContainer(albumModel).getContainer(), "Map");
+
+    // initialize main container
+    this.container = new JPanel(new BorderLayout());
     this.container.add(cardPanel, BorderLayout.CENTER);
     this.container.add(bouttonsPanel, BorderLayout.SOUTH);
   }
 
-  @Override
-  public JComponent getContainer() {
-    return this.container;
-  }
-
-  private void setCurrentTab(JLabel label) {
-    for (JLabel l : tabs) {
-      l.setIcon(IconFactory.getIcon("tab.png"));
-    }
-    label.setIcon(IconFactory.getIcon("tab-blue.png"));
-    currentTab = label;
-  }
-
-  private JLabel createTabLabel(String label) {
-    final JLabel l = new JLabel(label, IconFactory.getIcon("tab.png"),
+  /**
+   * Creates and returns a label used as tab.
+   * 
+   * @param text
+   *            the label of the tab.
+   * @return the label created.
+   */
+  private JLabel createTabLabel(String text) {
+    final JLabel l = new JLabel(text, IconFactory.getIcon("tab.png"),
         SwingConstants.CENTER);
     l.setBackground(GraphicalConstants.BLUE);
     l.setVerticalTextPosition(JLabel.CENTER);
     l.setHorizontalTextPosition(JLabel.CENTER);
     l.addMouseListener(new MouseAdapter() {
+
+      // selection effect
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        setCurrentTab(l);
+      }
+
+      // roll over effect
       @Override
       public void mouseEntered(MouseEvent e) {
         l.setIcon(IconFactory.getIcon("tab-blue.png"));
       }
 
+      // roll over effect
       @Override
       public void mouseExited(MouseEvent e) {
         if (!l.equals(currentTab)) {
@@ -118,13 +141,27 @@ public class TabbedPaneContainer implements ContainerInitializer {
         }
       }
 
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        setCurrentTab(l);
-      }
-
     });
     tabs.add(l);
     return l;
+  }
+
+  @Override
+  public JComponent getContainer() {
+    return this.container;
+  }
+
+  /**
+   * Sets the label (used as tab) which is currently selected.
+   * 
+   * @param label
+   *            the label selected.
+   */
+  private void setCurrentTab(JLabel label) {
+    for (JLabel l : tabs) {
+      l.setIcon(IconFactory.getIcon("tab.png"));
+    }
+    label.setIcon(IconFactory.getIcon("tab-blue.png"));
+    currentTab = label;
   }
 }
