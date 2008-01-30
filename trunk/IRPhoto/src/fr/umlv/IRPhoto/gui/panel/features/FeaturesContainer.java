@@ -3,7 +3,6 @@ package fr.umlv.IRPhoto.gui.panel.features;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,31 +31,100 @@ import fr.umlv.IRPhoto.gui.panel.model.album.listener.AlbumListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoSelectionListener;
 import fr.umlv.IRPhoto.gui.panel.model.album.listener.PhotoUpdateListener;
 
+/**
+ * 
+ * This class represents the panel with display photos features (dimension,
+ * miniature, name, type, ...). This panel enable to change the coordinates of
+ * the photo.
+ * 
+ * @author MIETTE Tom
+ * @author MOURET Sebastien
+ * 
+ */
 public class FeaturesContainer implements ContainerInitializer {
 
-  private static final Font boldFont = new Font(null, Font.BOLD, 12);
-  private final JComponent container;
-  private final JTextField latitudeField;
-  private final JTextField longitudeField;
-  private final JButton submit;
-  private final JLabel nameLabel;
-  private final JLabel formatLabel;
-  private final JLabel dimensionsLabel;
-  private ImageScaledToPanel image;
+  /**
+   * Creates and returns a title label for this panel.
+   * 
+   * @param text
+   *            the text of the label.
+   * @return the label created.
+   */
+  private static JLabel createInfosLabel(String text) {
+    final JLabel label = new JLabel(text);
+    label.setFont(GraphicalConstants.BOLD_FONT);
+    label.setForeground(GraphicalConstants.DEFAULT_INFOS_LABEL_COLOR);
+    return label;
+  }
 
+  /**
+   * Creates and returns a value label for this panel.
+   * 
+   * @param text
+   *            the text of the label.
+   * @return the label created.
+   */
+  private static JLabel createInfosValueLabel(String text) {
+    final JLabel label = new JLabel(text);
+    label.setFont(GraphicalConstants.BOLD_FONT);
+    return label;
+  }
+
+  /**
+   * Creates and returns a text field for this panel.
+   * 
+   * @return the text field created.
+   */
+  private static JTextField createTextField() {
+    final JTextField field = new JTextField();
+    field.setPreferredSize(new Dimension(100, 20));
+    return field;
+  }
+
+  // main container
+  private final JComponent container;
+
+  // image dimensions field
+  private final JLabel dimensionsLabel;
+
+  // file type field
+  private final JLabel formatLabel;
+
+  // scaled image
+  private ImageScaledPanel image;
+
+  // latitude field
+  private final JTextField latitudeField;
+
+  // longitude field
+  private final JTextField longitudeField;
+
+  // file name field
+  private final JLabel nameLabel;
+
+  /**
+   * Constructor of the container.
+   * 
+   * @param albumModel
+   *            the album model.
+   */
   public FeaturesContainer(final AlbumModel albumModel) {
 
+    // initialize coordinates text fields
     this.latitudeField = createTextField();
     this.longitudeField = createTextField();
-    this.submit = new JButton("OK", IconFactory.getIcon("globe-12x12.png"));
-    this.submit.setToolTipText("Validate the new coordinates.");
-    this.submit.addActionListener(new ActionListener() {
+    final JButton submit = new JButton("OK", IconFactory
+        .getIcon("globe-12x12.png"));
+    submit.setToolTipText("Validate the new coordinates.");
+    submit.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         if (albumModel.getSelectedPhoto() != null) {
+          // check values typed
           GeoPosition g = GeoPosition.validateCoordinates(latitudeField
               .getText(), longitudeField.getText());
           if (g != null) {
+            // informs model of the coordinates change
             albumModel.updateGeoPosition(albumModel.getSelectedPhoto(), g);
           } else {
             longitudeField.setText("");
@@ -65,58 +133,30 @@ public class FeaturesContainer implements ContainerInitializer {
         }
       }
     });
+    // initialize coordinates panel
+    final JPanel coordinatesPanel = new JPanel(new GridLayout(5, 1));
+    coordinatesPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
+        .createEtchedBorder(EtchedBorder.LOWERED), "Coordinates :"));
+    coordinatesPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
+    coordinatesPanel.add(new JLabel("Latitude"));
+    coordinatesPanel.add(this.latitudeField);
+    coordinatesPanel.add(new JLabel("Longitude"));
+    coordinatesPanel.add(this.longitudeField);
+    coordinatesPanel.add(submit);
+    final JPanel northCoordinates = new JPanel(new BorderLayout());
+    northCoordinates.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
+    northCoordinates.add(coordinatesPanel, BorderLayout.NORTH);
 
+    // initialize panel with scaled image (null at first)
+    this.image = new ImageScaledPanel(null);
+    this.image.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
+
+    // initialize features fields
     this.nameLabel = createInfosValueLabel(null);
     this.formatLabel = createInfosValueLabel(null);
     this.dimensionsLabel = createInfosValueLabel(null);
-    this.image = new ImageScaledToPanel(null);
-    this.image.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
 
-    albumModel.addPhotoSelectionListener(new PhotoSelectionListener() {
-
-      @Override
-      public void photoSelected(Photo photo) {
-        if (photo.getGeoPosition() != null) {
-          latitudeField.setText(photo.getGeoPosition().getLatitude() + "");
-          longitudeField.setText(photo.getGeoPosition().getLongitude() + "");
-        } else {
-          longitudeField.setText("");
-          latitudeField.setText("");
-        }
-        nameLabel.setText(photo.getName());
-        formatLabel.setText(photo.getType());
-        dimensionsLabel.setText(photo.getDimension().getWidth() + "px * "
-            + photo.getDimension().getHeight() + "px");
-        image.setImage(photo.getImageIcon().getImage());
-        image.repaint();
-      }
-
-    });
-    albumModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
-      @Override
-      public void geopPositionUpdated(Photo photo, GeoPosition geo) {
-        latitudeField.setText(geo.getLatitude() + "");
-        longitudeField.setText(geo.getLongitude() + "");
-      }
-    });
-
-    albumModel.addAlbumListener(new AlbumListener() {
-      @Override
-      public void albumRemoved(Album album) {
-        if (albumModel.getSelectedPhoto() != null
-            && albumModel.getSelectedPhoto().getAlbum().equals(album)) {
-          eraseFields();
-        }
-      }
-
-      @Override
-      public void albumAdded(Album album) {
-        // do nothing
-      }
-    });
-
-    this.container = new JPanel(new BorderLayout());
-
+    // initialize the features panel
     final JPanel featuresNamesPanel = new JPanel(null);
     featuresNamesPanel
         .setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
@@ -151,23 +191,11 @@ public class FeaturesContainer implements ContainerInitializer {
     scrollGridPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
         .createEtchedBorder(EtchedBorder.LOWERED), "Infos :"));
 
-    final JPanel coordinatesPanel = new JPanel(new GridLayout(5, 1));
-    coordinatesPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
-        .createEtchedBorder(EtchedBorder.LOWERED), "Coordinates :"));
-    coordinatesPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
-    coordinatesPanel.add(new JLabel("Latitude"));
-    coordinatesPanel.add(this.latitudeField);
-    coordinatesPanel.add(new JLabel("Longitude"));
-    coordinatesPanel.add(this.longitudeField);
-    coordinatesPanel.add(this.submit);
-    final JPanel northCoordinates = new JPanel(new BorderLayout());
-    northCoordinates.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
-    northCoordinates.add(coordinatesPanel, BorderLayout.NORTH);
-
+    // initialize main container
+    this.container = new JPanel(new BorderLayout());
     this.container.add(this.image, BorderLayout.WEST);
     this.container.add(scrollGridPane, BorderLayout.CENTER);
     this.container.add(northCoordinates, BorderLayout.EAST);
-
     this.container.addComponentListener(new ComponentAdapter() {
       @Override
       public void componentResized(ComponentEvent e) {
@@ -178,8 +206,62 @@ public class FeaturesContainer implements ContainerInitializer {
       }
     });
 
+    // listen to photos selections
+    albumModel.addPhotoSelectionListener(new PhotoSelectionListener() {
+      @Override
+      public void photoSelected(Photo photo) {
+        // update all features fields with the new photo features
+        if (photo.getGeoPosition() != null) {
+          latitudeField.setText(photo.getGeoPosition().getLatitude() + "");
+          longitudeField.setText(photo.getGeoPosition().getLongitude() + "");
+        } else {
+          longitudeField.setText("");
+          latitudeField.setText("");
+        }
+        nameLabel.setText(photo.getName());
+        formatLabel.setText(photo.getType());
+        dimensionsLabel.setText(photo.getDimension().getWidth() + "px * "
+            + photo.getDimension().getHeight() + "px");
+        image.setImage(photo.getImageIcon().getImage());
+        image.repaint();
+      }
+
+    });
+
+    // listen to photos modifications
+    albumModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
+      @Override
+      public void geopPositionUpdated(Photo photo, GeoPosition geo) {
+        // update the coordinates fields with the new values
+        latitudeField.setText(geo.getLatitude() + "");
+        longitudeField.setText(geo.getLongitude() + "");
+      }
+    });
+
+    // listen to albums modifications
+    albumModel.addAlbumListener(new AlbumListener() {
+      @Override
+      public void albumAdded(Album album) {
+        // do nothing
+      }
+
+      @Override
+      public void albumRemoved(Album album) {
+        // if the album removed contains the current displayed photo, the photo
+        // is erased too
+        if (albumModel.getSelectedPhoto() != null
+            && albumModel.getSelectedPhoto().getAlbum().equals(album)) {
+          eraseFields();
+        }
+      }
+    });
+
   }
 
+  /**
+   * Erases all values currently displayed in the different fields when none
+   * photo is selected.
+   */
   private void eraseFields() {
     longitudeField.setText("");
     latitudeField.setText("");
@@ -188,25 +270,6 @@ public class FeaturesContainer implements ContainerInitializer {
     dimensionsLabel.setText("");
     image.setImage(null);
     image.repaint();
-  }
-
-  private static JTextField createTextField() {
-    final JTextField field = new JTextField();
-    field.setPreferredSize(new Dimension(100, 20));
-    return field;
-  }
-
-  private static JLabel createInfosLabel(String text) {
-    final JLabel label = new JLabel(text);
-    label.setFont(boldFont);
-    label.setForeground(GraphicalConstants.DEFAULT_INFOS_LABEL_COLOR);
-    return label;
-  }
-
-  private static JLabel createInfosValueLabel(String text) {
-    final JLabel label = new JLabel(text);
-    label.setFont(boldFont);
-    return label;
   }
 
   @Override
