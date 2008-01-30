@@ -219,6 +219,41 @@ public class PhotoListContainer implements ContainerInitializer {
   }
 
   /**
+   * Adds a new miniature panel to the list of miniature already existing. The
+   * add operation is invoked in a runnable task to not freeze the application.
+   * 
+   * @param albumModel
+   *            the album model.
+   * @param photo
+   *            the new photo.
+   */
+  private void addNewMiniature(final AlbumModel albumModel, final Photo photo) {
+    executor.execute(new Runnable() {
+      // new runnable task
+      @Override
+      public void run() {
+        PhotoMiniatureContainer c = photoMiniatures.get(photo);
+        if (c == null) {
+          // creates the miniature panel if it not exists.
+          c = new PhotoMiniatureContainer(photo, albumModel);
+          photoListPanel.add(c.getContainer());
+          photoMiniatures.put(photo, c);
+        } else {
+          photoListPanel.add(c.getContainer());
+        }
+
+        // refresh the panel display
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            photoListPanel.revalidate();
+          }
+        });
+      }
+    });
+  }
+
+  /**
    * Creates and return the panel which contains the miniatures.
    * 
    * @return the panel.
@@ -303,44 +338,17 @@ public class PhotoListContainer implements ContainerInitializer {
     return panel;
   }
 
-  /**
-   * Adds a new miniature panel to the list of miniature already existing. The
-   * add operation is invoked in a runnable task to not freeze the application.
-   * 
-   * @param albumModel
-   *            the album model.
-   * @param photo
-   *            the new photo.
-   */
-  private void addNewMiniature(final AlbumModel albumModel, final Photo photo) {
-    executor.execute(new Runnable() {
-      // new runnable task
-      @Override
-      public void run() {
-        PhotoMiniatureContainer c = photoMiniatures.get(photo);
-        if (c == null) {
-          // creates the miniature panel if it not exists.
-          c = new PhotoMiniatureContainer(photo, albumModel);
-          photoListPanel.add(c.getContainer());
-          photoMiniatures.put(photo, c);
-        } else {
-          photoListPanel.add(c.getContainer());
-        }
-
-        // refresh the panel display
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            photoListPanel.revalidate();
-          }
-        });
-      }
-    });
-  }
-
   @Override
   public JPanel getContainer() {
     return this.container;
+  }
+
+  /**
+   * Stops all threads running.
+   */
+  public void shutdownAll() {
+    // shutdown the executor to cancel miniatures creations
+    this.executor.shutdownNow();
   }
 
 }

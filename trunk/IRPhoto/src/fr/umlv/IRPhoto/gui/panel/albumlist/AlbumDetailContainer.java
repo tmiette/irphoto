@@ -130,4 +130,11 @@ public class AlbumDetailContainer implements ContainerInitializer {
     return this.container;
   }
 
+  /**
+   * Stops all threads running.
+   */
+  public void shutdownAll() {
+    this.photoList.shutdownAll();
+  }
+
 }

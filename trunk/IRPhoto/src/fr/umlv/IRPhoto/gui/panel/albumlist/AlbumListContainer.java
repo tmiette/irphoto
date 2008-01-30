@@ -78,6 +78,9 @@ public class AlbumListContainer implements ContainerInitializer {
       public void albumRemoved(Album album) {
         AlbumDetailContainer c = albumsDetailContainers.remove(album);
         if (c != null) {
+          // stops all threads running
+          c.shutdownAll();
+          // remove the container
           container.remove(c.getContainer());
           constraints.weighty = 1;
           container.add(endPanel, constraints);
