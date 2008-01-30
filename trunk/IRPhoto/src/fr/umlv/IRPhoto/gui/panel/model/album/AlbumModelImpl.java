@@ -25,11 +25,15 @@ import fr.umlv.IRPhoto.gui.panel.model.photo.PhotoSortModelImpl;
 
 public class AlbumModelImpl implements AlbumModel {
 
+  private static final int MAX_THREADS = 2;
+
   private final ArrayList<Album> albums;
 
   private Album currentAlbum;
 
   private Photo currentPhoto;
+
+  private final ExecutorService executor;
 
   private final ArrayList<PhotoSelectionListener> photoSelectionListeners;
 
@@ -44,6 +48,7 @@ public class AlbumModelImpl implements AlbumModel {
   private static MimetypesFileTypeMap mimeTypesFileTypeMap = new MimetypesFileTypeMap();
 
   public AlbumModelImpl() {
+    this.executor = Executors.newFixedThreadPool(MAX_THREADS);
     this.albums = new ArrayList<Album>();
     this.albumListeners = new ArrayList<AlbumListener>();
     this.albumSelectionListeners = new ArrayList<AlbumSelectionListener>();
@@ -209,11 +214,7 @@ public class AlbumModelImpl implements AlbumModel {
     }
   }
 
-  private final static Object lock = new Object();
-
   private void crawle(File directory, final Album album) {
-
-    ExecutorService executor = Executors.newFixedThreadPool(10);
 
     for (final File f : directory.listFiles()) {
       if (f.isDirectory()) {
@@ -231,9 +232,7 @@ public class AlbumModelImpl implements AlbumModel {
             try {
               Photo photo = new Photo(f, album);
               photo.setType(mimeType);
-              synchronized (lock) {
-                album.addPhoto(photo);
-              }
+              album.addPhoto(photo);
               this.firePhotoAdded(album, photo);
             } catch (FileNotFoundException e) {
               System.err.println(e.getMessage());
@@ -243,7 +242,7 @@ public class AlbumModelImpl implements AlbumModel {
         }
       }
     }
-    executor.shutdown();
+
   }
 
 }
