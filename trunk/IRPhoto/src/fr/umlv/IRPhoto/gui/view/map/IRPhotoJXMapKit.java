@@ -101,7 +101,6 @@ public class IRPhotoJXMapKit {
     this.zoomSlider.setOrientation(javax.swing.JSlider.VERTICAL);
     this.zoomSlider.setPaintTicks(true);
     this.zoomSlider.setSnapToTicks(true);
-    this.zoomSlider.setMinimumSize(new Dimension(35, 100));
     this.zoomSlider.setPreferredSize(new Dimension(35, 190));
     this.zoomSlider.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent evt) {
@@ -128,6 +127,7 @@ public class IRPhotoJXMapKit {
     setDefaultMap(myDefaultMaps);
 
     this.mapViewer.setCenterPosition(new GeoPosition(0, 0));
+    this.mapViewer.setAddressLocation(new GeoPosition(43.604503, 1.444026));
     this.mapViewer.setRestrictOutsidePanning(true);
 
     this.mapViewer.addPropertyChangeListener("zoom",

@@ -17,7 +17,7 @@ import javax.swing.SwingConstants;
 
 import fr.umlv.IRPhoto.gui.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.view.albumlist.AlbumListContainer;
-import fr.umlv.IRPhoto.gui.view.map.MapContainer;
+import fr.umlv.IRPhoto.gui.view.map.MapViewerContainer;
 import fr.umlv.IRPhoto.util.GraphicalConstants;
 import fr.umlv.IRPhoto.util.IconFactory;
 
@@ -97,7 +97,7 @@ public class TabbedPaneContainer implements ContainerInitializer {
     bouttonsPanel.add(scroll.getHorizontalScrollBar(), gbc);
 
     cardPanel.add(scroll, "Albums");
-    cardPanel.add(new MapContainer(albumModel).getContainer(), "Map");
+    cardPanel.add(new MapViewerContainer(albumModel).getContainer(), "Map");
 
     // initialize main container
     this.container = new JPanel(new BorderLayout());

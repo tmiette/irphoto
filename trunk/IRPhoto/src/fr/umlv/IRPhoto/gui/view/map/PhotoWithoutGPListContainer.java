@@ -62,7 +62,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   private final JScrollPane scrollPane;
   public static final Dimension DEFAULT_THUMBNAIL_SIZE = new Dimension(100, 100);
   public static final int DEFAULT_WIDTH = DEFAULT_THUMBNAIL_SIZE.width + 20;
-  public static final int DEFAULT_THUMBNAIL_NB = 3;
+  public static final int DEFAULT_THUMBNAIL_NB = 2;
   public static final Border DEFAULT_THUMBNAIL_SELECTED_BORDER = BorderFactory
       .createLineBorder(Color.BLACK);
 
@@ -141,7 +141,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
    * @return jpanel with boxlayout 
    */
   private JPanel createTextFieldPanel() {
-    JPanel jp = new JPanel(null);
+    final JPanel jp = new JPanel(null);
     jp.setLayout(new BoxLayout(jp, BoxLayout.Y_AXIS));
 
     this.latitudeField = new JTextField("");
@@ -180,7 +180,6 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   private JPanel createPhotoListPanel(List<Photo> photos) {
     final JPanel jp = new JPanel(null);
     jp.setLayout(new BoxLayout(jp, BoxLayout.Y_AXIS));
-
     this.addPhotos(photos);
     return jp;
   }
@@ -275,11 +274,6 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
     return photosWithoutGP;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see fr.umlv.IRPhoto.gui.ContainerInitializer#getComponent()
-   */
   @Override
   public JComponent getContainer() {
     return this.panel;
