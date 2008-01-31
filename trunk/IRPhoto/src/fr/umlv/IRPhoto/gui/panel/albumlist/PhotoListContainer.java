@@ -56,7 +56,9 @@ public class PhotoListContainer implements ContainerInitializer {
    */
   private static JButton createAlphaSortButton(final PhotoSortModel model,
       final Album album) {
-    final JButton b = new JButton(IconFactory.getIcon("name-32x32.png"));
+    final JButton b = new JButton(IconFactory.getIcon("alpha-sort-32x32.png"));
+    b.setPreferredSize(new Dimension(b.getIcon().getIconWidth(), b.getIcon()
+        .getIconHeight()));
     b.setToolTipText("Sort photos by last name.");
     b.addActionListener(new ActionListener() {
       @Override
@@ -80,6 +82,8 @@ public class PhotoListContainer implements ContainerInitializer {
   private static JButton createDateSortButton(final PhotoSortModel model,
       final Album album) {
     final JButton b = new JButton(IconFactory.getIcon("calendar-32x32.png"));
+    b.setPreferredSize(new Dimension(b.getIcon().getIconWidth(), b.getIcon()
+        .getIconHeight()));
     b.setToolTipText("Sort photos by last modification date.");
     b.addActionListener(new ActionListener() {
       @Override
@@ -102,6 +106,8 @@ public class PhotoListContainer implements ContainerInitializer {
   private static JButton createTypeSortButton(final PhotoSortModel model,
       final Album album) {
     final JButton b = new JButton(IconFactory.getIcon("type-2-2-32x32.png"));
+    b.setPreferredSize(new Dimension(b.getIcon().getIconWidth(), b.getIcon()
+        .getIconHeight()));
     b.setToolTipText("Sort photos by type.");
     b.addActionListener(new ActionListener() {
       @Override

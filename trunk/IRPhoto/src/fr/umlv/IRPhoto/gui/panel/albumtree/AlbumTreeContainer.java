@@ -55,9 +55,9 @@ public class AlbumTreeContainer implements ContainerInitializer {
   public AlbumTreeContainer(final AlbumModel albumModel) {
 
     // icon for root node
-    final Icon rootIcon = IconFactory.getIcon("album-24x24.png");
+    final Icon rootIcon = IconFactory.getIcon("picture-24x24.png");
     // icon for other nodes
-    final Icon leafIcon = IconFactory.getIcon("album3-24x24.png");
+    final Icon leafIcon = IconFactory.getIcon("folder-blue-24x24.png");
 
     // initialize the tree renderer
     final DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer() {
