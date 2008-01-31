@@ -17,17 +17,63 @@ import fr.umlv.IRPhoto.gui.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.model.album.AlbumModelImpl;
 import fr.umlv.IRPhoto.gui.view.MainContainer;
 
+/**
+ * 
+ * Main class which launches the program.
+ * 
+ * @author MIETTE Tom
+ * @author MOURET Sebastien
+ * 
+ */
 public class Main {
 
+  /**
+   * Logger name.
+   */
   public static final String loggerName = "logger";
 
+  /**
+   * 
+   * Creates and shows the application graphical interface.
+   * 
+   * @param model
+   *            the album model.
+   */
   private static void createAndShowGUI(final AlbumModel model) {
-    Logger logger = Logger.getLogger(loggerName);
-    FileHandler fh;
 
+    // creates main frame
+    final JFrame frame = new JFrame("IRPhoto");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setSize(new Dimension(800, 600));
+    frame.setLocationRelativeTo(null);
+    frame.setContentPane(new MainContainer(model).getContainer());
+    frame.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        // performs save operation on close
+        AlbumLoader.save(model);
+      }
+    });
+    SplashScreenManager.endStep();
+    frame.setVisible(true);
+  }
+
+  /**
+   * 
+   * Main method.
+   * 
+   * @param args
+   *            line command arguments (useless).
+   */
+  public static void main(String[] args) {
+
+    // manages splash screen
+    SplashScreenManager.start();
+
+    // this block configure the logger with handler and formatter
+    final Logger logger = Logger.getLogger(loggerName);
+    final FileHandler fh;
     try {
-
-      // This block configure the logger with handler and formatter
       fh = new FileHandler("IrPhotoLogFile.log", true);
       logger.addHandler(fh);
       logger.setLevel(Level.ALL);
@@ -40,40 +86,20 @@ public class Main {
       e.printStackTrace();
     }
 
-    final JFrame frame = new JFrame("IRPhoto");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setSize(new Dimension(800, 600));
-    frame.setLocationRelativeTo(null);
-    frame.setContentPane(new MainContainer(model).getContainer());
-    frame.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        // save
-        AlbumLoader.save(model);
-      }
-    });
-    SplashScreenManager.endStep();
-    frame.setVisible(true);
-  }
-
-  public static void main(String[] args) {
-
-    SplashScreenManager.start();
-
-    // model
+    // creates album model
     final AlbumModel model = new AlbumModelImpl();
 
-    // load
+    // loads saved files
     AlbumLoader.load(model);
     SplashScreenManager.endStep();
-    
-    // Schedule a job for the event dispatch thread:
+
+    // schedule a job for the event dispatch thread:
     // creating and showing this application's GUI.
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
         createAndShowGUI(model);
       }
     });
-    
+
   }
 }
