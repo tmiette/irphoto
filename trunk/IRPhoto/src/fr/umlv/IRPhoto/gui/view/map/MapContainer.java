@@ -1,9 +1,12 @@
 package fr.umlv.IRPhoto.gui.view.map;
 
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -30,6 +33,7 @@ import javax.swing.JPanel;
 import main.Main;
 
 import org.jdesktop.swingx.JXMapViewer;
+import org.jdesktop.swingx.mapviewer.DefaultWaypointRenderer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
@@ -51,11 +55,11 @@ public class MapContainer implements ContainerInitializer {
   private GeoPosition currentPosition;
   private final AlbumModel albumModel;
   private final JComponent photoListContainer;
-  private HashMap<Waypoint, Photo> waypoints;
+  private final HashMap<Waypoint, Photo> waypoints;
   private final JLabel thumbnail;
 
   public MapContainer(AlbumModel albumModel) {
-    MyJXMapKit kit = new MyJXMapKit();
+    IRPhotoJXMapKit kit = new IRPhotoJXMapKit();
     this.map = kit.getMainMap();
 
     this.waypoints = new HashMap<Waypoint, Photo>();
@@ -81,7 +85,7 @@ public class MapContainer implements ContainerInitializer {
         removeAllWaypoints();
         map.repaint();
       }
-      
+
       @Override
       public void albumAdded(Album album) {
         logger.info("Album added");
@@ -113,7 +117,7 @@ public class MapContainer implements ContainerInitializer {
           Point2D pt = convertGP2Point(wp.getKey().getPosition());
           if (pt.distance(e.getPoint()) < 5) {
             Icon icon = getImageFromWP(wp.getKey());
-            Point p = (Point)pt;
+            Point p = (Point) pt;
             p.translate(0, -icon.getIconHeight() - 33);
             System.out.println(p);
             thumbnail.setLocation(p);
@@ -157,7 +161,7 @@ public class MapContainer implements ContainerInitializer {
     JPanel leftPanel = new JPanel(new BorderLayout());
     leftPanel.setOpaque(false);
     leftPanel.add(panel, BorderLayout.WEST);
-    
+
     JPanel thumbPanel = new JPanel();
     thumbPanel.setOpaque(false);
     thumbPanel.add(this.thumbnail);
@@ -218,19 +222,35 @@ public class MapContainer implements ContainerInitializer {
 
     // create a WaypointPainter to draw the points
     WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
+    painter.setRenderer(new DefaultWaypointRenderer() {
+      @Override
+      public boolean paintWaypoint(Graphics2D g, JXMapViewer map,
+          Waypoint waypoint) {
+        //super.paintWaypoint(g, map, waypoint);
+        Graphics2D g2D = (Graphics2D) g.create();
+        Photo p = MapContainer.this.waypoints.get(waypoint);
+        Image i = p.getScaledInstance();
+        g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP,
+            0.5f));
+        g2D.drawImage(i, -(i.getWidth(null) / 2), -i.getHeight(null), i
+            .getWidth(null), i.getHeight(null), null);
+        g2D.dispose();
+        return true;
+      }
+    });
     painter.setWaypoints(waypoints);
 
     // Display waypoints
     this.map.setOverlayPainter(painter);
 
   }
-  
-private void removeAllWaypoints() {
-  Set<Waypoint> set = Collections.<Waypoint>emptySet();
-  WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
-  painter.setWaypoints(set);
-  this.map.setOverlayPainter(painter);
-}  
+
+  private void removeAllWaypoints() {
+    Set<Waypoint> set = Collections.<Waypoint> emptySet();
+    WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
+    painter.setWaypoints(set);
+    this.map.setOverlayPainter(painter);
+  }
 
   /**
    * 
@@ -258,6 +278,22 @@ private void removeAllWaypoints() {
 
       // create a WaypointPainter to draw the points
       WaypointPainter<JXMapViewer> painter = new WaypointPainter<JXMapViewer>();
+      painter.setRenderer(new DefaultWaypointRenderer() {
+        @Override
+        public boolean paintWaypoint(Graphics2D g, JXMapViewer map,
+            Waypoint waypoint) {
+          //super.paintWaypoint(g, map, waypoint);
+          Graphics2D g2D = (Graphics2D) g.create();
+          Photo p = MapContainer.this.waypoints.get(waypoint);
+          Image i = p.getScaledInstance();
+          g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP,
+              0.5f));
+          g2D.drawImage(i, -(i.getWidth(null) / 2), -i.getHeight(null), i
+              .getWidth(null), i.getHeight(null), null);
+          g2D.dispose();
+          return true;
+        }
+      });
       painter.setWaypoints(waypoints);
 
       // Display waypoints
