@@ -11,12 +11,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -30,7 +28,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
-import main.Main;
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 import fr.umlv.IRPhoto.album.Photo.GeoPosition;
@@ -39,9 +36,13 @@ import fr.umlv.IRPhoto.gui.model.album.listener.AlbumListener;
 import fr.umlv.IRPhoto.gui.model.album.listener.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.model.album.listener.PhotoUpdateListener;
 import fr.umlv.IRPhoto.gui.view.ContainerInitializer;
+import fr.umlv.IRPhoto.util.GraphicalConstants;
 import fr.umlv.IRPhoto.util.IconFactory;
 
 /**
+ * This class represents the collapse panel which lists all photos without
+ * coordinates of an album.
+ * 
  * @author MIETTE Tom
  * @author MOURET Sebastien
  * 
@@ -50,105 +51,60 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
 
   private ExecutorService executor;
   private static final Object lock = new Object();
-  private static final Logger logger = Logger.getLogger(Main.loggerName);
   private final AlbumModel albumModel;
-  private final JPanel panel;
-  private final JPanel photoListPanel;
-  private JTextField latitudeField;
-  private JTextField longitudeField;
-  private final HashMap<Photo, JLabel> photos;
+  // main container
+  private final JPanel container;
+  // panel which lists photos miniatures
+  private final JPanel photosListPanel;
+  // map to store photos labels
+  private final HashMap<Photo, JLabel> photosLabels;
   private Photo previousSelectedPhoto;
-  private JButton button;
-  private final JScrollPane scrollPane;
-  public static final Dimension DEFAULT_THUMBNAIL_SIZE = new Dimension(100, 100);
-  public static final int DEFAULT_WIDTH = DEFAULT_THUMBNAIL_SIZE.width + 20;
-  public static final int DEFAULT_THUMBNAIL_NB = 2;
+
+  // minimum width of photos list panel
+  public static final int DEFAULT_WIDTH = Photo.DEFAULT_MINIATURE_DIMENSION.width + 20;
+
+  // minimum number of miniatures always displayed
+  public static final int MINIMUM_NUMBER_OF_MINIATURES = 2;
+
+  // default border of the selected miniature
   public static final Border DEFAULT_THUMBNAIL_SELECTED_BORDER = BorderFactory
       .createLineBorder(Color.BLACK);
 
+  // minimum dimension for photos list panel
+  private static final Dimension LIST_MINIMUM_DIMENSION = new Dimension(
+      DEFAULT_WIDTH, Photo.DEFAULT_MINIATURE_DIMENSION.height
+          * MINIMUM_NUMBER_OF_MINIATURES);
+
   /**
+   * Constructor of this container.
    * 
+   * @param albumModel
+   *            the album model.
    */
-  public PhotoWithoutGPListContainer(AlbumModel albumModel) {
+  public PhotoWithoutGPListContainer(final AlbumModel albumModel) {
 
-    this.albumModel = albumModel;
-    this.albumModel.addAlbumListener(new AlbumListener() {
-      @Override
-      public void albumRemoved(Album album) {
-        if (photoListPanel != null) {
-          photoListPanel.removeAll();
-          photoListPanel.repaint();
-        }
+    this.photosLabels = new HashMap<Photo, JLabel>();
 
-      }
+    // initialize photos list panel
+    this.photosListPanel = new JPanel(null);
+    this.photosListPanel.setLayout(new BoxLayout(photosListPanel,
+        BoxLayout.Y_AXIS));
+    this.photosListPanel
+        .setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
+    final JScrollPane scrollPane = new JScrollPane(this.photosListPanel,
+        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    scrollPane.setPreferredSize(LIST_MINIMUM_DIMENSION);
+    scrollPane.setMinimumSize(new Dimension(0, 0));
 
-      @Override
-      public void albumAdded(Album album) {
-        photoListPanel.removeAll();
-        if (executor != null) {
-          System.out.println("Shutdown now !!!");
-          executor.shutdownNow();
-        }
-        addPhotos(getPhotosWhitoutGP(album.getPhotos()));
-
-      }
-    });
-    this.albumModel.addAlbumSelectionListener(new AlbumSelectionListener() {
-      @Override
-      public void albumSelected(Album album) {
-        photoListPanel.removeAll();
-        if (executor != null) {
-          System.out.println("Shutdown now !!!");
-          executor.shutdownNow();
-        }
-        addPhotos(getPhotosWhitoutGP(album.getPhotos()));
-      }
-
-    });
-    this.albumModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
-
-      @Override
-      public void geopPositionUpdated(Photo photo, GeoPosition geo) {
-        removePhoto(photo);
-        scrollPane.validate();
-      }
-
-    });
-
-    this.photos = new HashMap<Photo, JLabel>();
-
-    this.photoListPanel = this.createPhotoListPanel(this
-        .getPhotosWhitoutGP(Collections.<Photo> emptyList()));
-    final JPanel textFieldPanel = this.createTextFieldPanel();
-
-    this.scrollPane = new JScrollPane(this.photoListPanel);
-    this.scrollPane
-        .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    this.scrollPane
-        .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    Dimension dim = new Dimension(DEFAULT_WIDTH, DEFAULT_THUMBNAIL_SIZE.height
-        * DEFAULT_THUMBNAIL_NB);
-    this.scrollPane.setPreferredSize(dim);
-    this.scrollPane.setMinimumSize(new Dimension(0, 0));
-
-    this.panel = new JPanel(new BorderLayout());
-    this.panel.add(scrollPane, BorderLayout.CENTER);
-    this.panel.add(textFieldPanel, BorderLayout.SOUTH);
-  }
-
-  /**
-   * Gets a panel containing two text fields to set longitude and latitude values.
-   * @return jpanel with boxlayout 
-   */
-  private JPanel createTextFieldPanel() {
-    final JPanel jp = new JPanel(null);
-    jp.setLayout(new BoxLayout(jp, BoxLayout.Y_AXIS));
-
-    this.latitudeField = new JTextField("");
-    this.longitudeField = new JTextField("");
-
-    this.button = new JButton("OK", IconFactory.getIcon("globe-12x12.png"));
-    this.button.addActionListener(new ActionListener() {
+    // initialize text fields panel
+    final JPanel textFieldsPanel = new JPanel(null);
+    textFieldsPanel.setLayout(new BoxLayout(textFieldsPanel, BoxLayout.Y_AXIS));
+    final JTextField latitudeField = new JTextField();
+    final JTextField longitudeField = new JTextField();
+    final JButton submitButton = new JButton("OK", IconFactory
+        .getIcon("globe-12x12.png"));
+    submitButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
 
@@ -165,33 +121,74 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
 
       }
     });
+    textFieldsPanel.add(latitudeField);
+    textFieldsPanel.add(longitudeField);
+    textFieldsPanel.add(submitButton);
 
-    jp.add(this.latitudeField);
-    jp.add(this.longitudeField);
-    jp.add(button);
-    return jp;
-  }
+    // initialize main container
+    this.container = new JPanel(new BorderLayout());
+    this.container.add(scrollPane, BorderLayout.CENTER);
+    this.container.add(textFieldsPanel, BorderLayout.SOUTH);
 
-  /**
-   * Gets a panel containing photos without geoposition coordinates.
-   * @param photos list of photos
-   * @return jpanel containing photos
-   */
-  private JPanel createPhotoListPanel(List<Photo> photos) {
-    final JPanel jp = new JPanel(null);
-    jp.setLayout(new BoxLayout(jp, BoxLayout.Y_AXIS));
-    this.addPhotos(photos);
-    return jp;
+    this.albumModel = albumModel;
+    // listen to albums modifications
+    this.albumModel.addAlbumListener(new AlbumListener() {
+      @Override
+      public void albumRemoved(Album album) {
+        if (album.equals(albumModel.getCurrentAlbum())) {
+          photosListPanel.removeAll();
+          scrollPane.validate();
+        }
+      }
+
+      @Override
+      public void albumAdded(Album album) {
+        photosListPanel.removeAll();
+        if (executor != null) {
+          System.out.println("Shutdown now !!!");
+          executor.shutdownNow();
+        }
+        addPhotos(getPhotosWhitoutCoordinates(album.getPhotos()));
+
+      }
+    });
+    // listen to albums selections
+    this.albumModel.addAlbumSelectionListener(new AlbumSelectionListener() {
+      @Override
+      public void albumSelected(Album album) {
+        photosListPanel.removeAll();
+        if (executor != null) {
+          System.out.println("Shutdown now !!!");
+          executor.shutdownNow();
+        }
+        addPhotos(getPhotosWhitoutCoordinates(album.getPhotos()));
+      }
+
+    });
+    // listen to photos update
+    this.albumModel.addPhotoUpdatedListener(new PhotoUpdateListener() {
+      @Override
+      public void geopPositionUpdated(Photo photo, GeoPosition geo) {
+        // removes a photo from photos list panel
+        final JLabel label = photosLabels.get(photo);
+        if (label != null) {
+          photosListPanel.remove(label);
+          previousSelectedPhoto = null;
+        }
+        scrollPane.validate();
+      }
+
+    });
+
   }
 
   /**
    * Adds photos to photo list panel.
    * 
-   * @param photos photos to add
+   * @param photos
+   *            photos to add
    */
   private void addPhotos(List<Photo> photos) {
-    logger.info("adding photos to list panel");
-    
     // Delegate work to executor
     executor = Executors.newFixedThreadPool(2);
     for (final Photo photo : photos) {
@@ -204,7 +201,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
           SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-              photoListPanel.revalidate();
+              photosListPanel.revalidate();
             }
           });
         }
@@ -216,7 +213,8 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
   /**
    * Adds a single photo to a photo list panel.
    * 
-   * @param photo photo to add
+   * @param photo
+   *            photo to add
    */
   private void addPhoto(final Photo photo) {
     // ImageIcon icon = photo.getImageIcon();
@@ -230,7 +228,7 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
         if (e.getClickCount() == 1) {
           // Unselecting photo
           if (previousSelectedPhoto != null) {
-            photos.get(previousSelectedPhoto).setBorder(
+            photosLabels.get(previousSelectedPhoto).setBorder(
                 DEFAULT_THUMBNAIL_SELECTED_BORDER);
           }
           // Selecting photo
@@ -240,43 +238,30 @@ public class PhotoWithoutGPListContainer implements ContainerInitializer {
         }
       }
     });
-    this.photos.put(photo, label);
-    this.photoListPanel.add(label);
+    this.photosLabels.put(photo, label);
+    this.photosListPanel.add(label);
   }
 
   /**
-   * Removes a photo from photo list panel.
-   * 
-   * @param photo photo to remove
-   */
-  private void removePhoto(Photo photo) {
-    JLabel label = this.photos.get(photo);
-    if (label != null) {
-      this.photoListPanel.remove(label);
-      this.previousSelectedPhoto = null;
-    }
-  }
-
-  /**
-   * Gets a list of photos which are not containing Geoposition information.
+   * Returns all photos without coordinates of an album.
    * 
    * @param photos
-   * @return photos list with no Geoposition information
+   *            the list of photos to analyze.
+   * @return photos without coordinates.
    */
-  private List<Photo> getPhotosWhitoutGP(List<Photo> photos) {
-    ArrayList<Photo> photosWithoutGP = new ArrayList<Photo>();
+  private ArrayList<Photo> getPhotosWhitoutCoordinates(List<Photo> photos) {
+    ArrayList<Photo> photosWithoutCoordinates = new ArrayList<Photo>();
     for (Photo photo : photos) {
       if (photo.getGeoPosition() == null) {
-        photosWithoutGP.add(photo);
+        photosWithoutCoordinates.add(photo);
       }
     }
-
-    return photosWithoutGP;
+    return photosWithoutCoordinates;
   }
 
   @Override
   public JComponent getContainer() {
-    return this.panel;
+    return this.container;
   }
 
 }

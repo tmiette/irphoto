@@ -41,6 +41,7 @@ import fr.umlv.IRPhoto.gui.model.album.listener.AlbumSelectionListener;
 import fr.umlv.IRPhoto.gui.model.album.listener.PhotoUpdateListener;
 import fr.umlv.IRPhoto.gui.view.ContainerInitializer;
 import fr.umlv.IRPhoto.util.DefaultLayeredPaneLayoutManager;
+import fr.umlv.IRPhoto.util.GraphicalConstants;
 import fr.umlv.IRPhoto.util.IconFactory;
 
 /**
@@ -147,9 +148,9 @@ public class MapViewerContainer implements ContainerInitializer {
           final Photo photo = waypointsMap.get(waypoint);
           if (photo != null) {
             // draws tear icon
-            g2D.drawImage(TEAR_ICON, -(TEAR_ICON.getWidth(null) / 2), -(TEAR_ICON
-                .getHeight(null)), TEAR_ICON.getWidth(null), TEAR_ICON
-                .getHeight(null), null);
+            g2D.drawImage(TEAR_ICON, -(TEAR_ICON.getWidth(null) / 2),
+                -(TEAR_ICON.getHeight(null)), TEAR_ICON.getWidth(null),
+                TEAR_ICON.getHeight(null), null);
             if (SHOW_TRANSPARENT_MINIATURES) {
               // draws the transparent image
               final Image i = photo.getScaledInstance();
@@ -239,7 +240,7 @@ public class MapViewerContainer implements ContainerInitializer {
     final JButton collapseButton = new JButton();
     collapseButton.setIcon(IconFactory.getIcon("arrow-right-12x12.gif"));
     collapseButton.setPreferredSize(new Dimension(12, 0));
-
+    collapseButton.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
     collapseButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -274,6 +275,7 @@ public class MapViewerContainer implements ContainerInitializer {
       @Override
       public void albumSelected(Album album) {
         // add all photos with coordinates on the map
+        eraseAllPhotos();
         drawAllPhotos(album.getPhotos());
       }
     });
@@ -282,6 +284,7 @@ public class MapViewerContainer implements ContainerInitializer {
     albumModel.addAlbumListener(new AlbumListener() {
       @Override
       public void albumAdded(Album album) {
+        eraseAllPhotos();
         drawAllPhotos(album.getPhotos());
       }
 
