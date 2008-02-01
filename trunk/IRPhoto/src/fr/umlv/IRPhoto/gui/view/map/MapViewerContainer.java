@@ -171,7 +171,6 @@ public class MapViewerContainer implements ContainerInitializer {
 
     // initialize thumb nail panel
     final JLabel thumbnailLabel = new JLabel();
-    // thumbnailLabel.setVisible(false);
     thumbnailLabel.setLocation(DEFAULT_THUMBNAIL_LOCATION);
     final JPanel thumbnailPanel = new JPanel();
     thumbnailPanel.setOpaque(false);

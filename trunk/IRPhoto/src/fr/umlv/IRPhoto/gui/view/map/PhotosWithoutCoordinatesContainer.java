@@ -234,6 +234,7 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
   private void addPhoto(final Photo photo) {
     final JLabel label = new JLabel(new ImageIcon(photo.getScaledInstance()));
     label.setBorder(GraphicalConstants.DEFAULT_THUMBNAIL_UNSELECTED_BORDER);
+    label.setToolTipText(photo.getName());
     label.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
