@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -19,6 +20,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
+
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.MetadataException;
+import com.drew.metadata.Tag;
 
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
@@ -184,7 +190,31 @@ public class FeaturesContainer implements ContainerInitializer {
     gridPanel.add(featuresNamesPanel);
     gridPanel.add(featuresPanel);
 
-    final JScrollPane scrollGridPane = new JScrollPane(gridPanel,
+    final JPanel miscellaneousNamesPanel = new JPanel(null);
+    miscellaneousNamesPanel
+        .setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
+    miscellaneousNamesPanel.setMinimumSize(new Dimension(0, 0));
+    miscellaneousNamesPanel.setLayout(new BoxLayout(miscellaneousNamesPanel,
+        BoxLayout.Y_AXIS));
+
+    final JPanel miscellaneousFeaturesPanel = new JPanel(null);
+    miscellaneousFeaturesPanel
+        .setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
+    miscellaneousFeaturesPanel.setLayout(new BoxLayout(
+        miscellaneousFeaturesPanel, BoxLayout.Y_AXIS));
+
+    final JPanel gridPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    gridPanel2.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
+    gridPanel2.setBorder(BorderFactory.createTitledBorder("Miscellaneous :"));
+    gridPanel2.add(miscellaneousNamesPanel);
+    gridPanel2.add(miscellaneousFeaturesPanel);
+
+    final JPanel borderPanel = new JPanel(new BorderLayout());
+    borderPanel.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
+    borderPanel.add(gridPanel, BorderLayout.CENTER);
+    borderPanel.add(gridPanel2, BorderLayout.SOUTH);
+
+    final JScrollPane scrollGridPane = new JScrollPane(borderPanel,
         JScrollPane.VERTICAL_SCROLLBAR_NEVER,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     scrollGridPane.setBackground(GraphicalConstants.DEFAULT_BACKGROUND_COLOR);
@@ -224,8 +254,34 @@ public class FeaturesContainer implements ContainerInitializer {
             + photo.getDimension().getHeight() + "px");
         image.setImage(photo.getImageIcon().getImage());
         image.repaint();
-      }
 
+        miscellaneousNamesPanel.removeAll();
+        miscellaneousFeaturesPanel.removeAll();
+        final Metadata data = photo.getMetadata();
+        if (data != null) {
+          Iterator<?> directories = data.getDirectoryIterator();
+          while (directories.hasNext()) {
+            Directory directory = (Directory) directories.next();
+            Iterator<?> tags = directory.getTagIterator();
+            while (tags.hasNext()) {
+              Tag tag = (Tag) tags.next();
+              try {
+                if (!tag.getDescription().equals("")) {
+                  miscellaneousNamesPanel.add(createInfosLabel(tag.getTagName()
+                      + " :"));
+                  miscellaneousNamesPanel.add(Box.createVerticalStrut(5));
+                  miscellaneousFeaturesPanel.add(createInfosValueLabel(tag
+                      .getDescription()));
+                  miscellaneousFeaturesPanel.add(Box.createVerticalStrut(5));
+                }
+              } catch (MetadataException e) {
+                // do nothing
+              }
+            }
+          }
+        }
+
+      }
     });
 
     // listen to photos modifications

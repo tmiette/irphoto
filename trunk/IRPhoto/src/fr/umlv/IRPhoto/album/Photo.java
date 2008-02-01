@@ -10,6 +10,10 @@ import java.util.Date;
 
 import javax.swing.ImageIcon;
 
+import com.drew.imaging.jpeg.JpegMetadataReader;
+import com.drew.imaging.jpeg.JpegProcessingException;
+import com.drew.metadata.Metadata;
+
 import fr.umlv.IRPhoto.util.ImageUtil;
 
 /**
@@ -152,9 +156,6 @@ public class Photo implements Serializable {
   // album which contains this photo
   private final Album album;
 
-  // name of this photo without file extension
-  private String nameWithoutExtension;
-
   // last modified date of this photo
   private Date date;
 
@@ -166,6 +167,12 @@ public class Photo implements Serializable {
 
   // geo position of this photo
   private GeoPosition geoPosition;
+
+  // exif data
+  private Metadata metadata;
+
+  // name of this photo without file extension
+  private String nameWithoutExtension;
 
   // scaled representation of this photo
   private transient Image scaledImage;
@@ -191,6 +198,14 @@ public class Photo implements Serializable {
     this.file = file;
     this.date = new Date(this.file.lastModified());
     this.album = album;
+
+    // read exif data of the file (only jpeg file)
+    try {
+      this.metadata = JpegMetadataReader.readMetadata(file);
+    } catch (JpegProcessingException e) {
+      this.metadata = null;
+    }
+
   }
 
   @Override
@@ -246,6 +261,15 @@ public class Photo implements Serializable {
     // set the dimension of the photo
     this.dimension = new Dimension(icon.getIconWidth(), icon.getIconHeight());
     return icon;
+  }
+
+  /**
+   * Returns the exif data of the photo.
+   * 
+   * @return the exif data.
+   */
+  public Metadata getMetadata() {
+    return this.metadata;
   }
 
   /**
