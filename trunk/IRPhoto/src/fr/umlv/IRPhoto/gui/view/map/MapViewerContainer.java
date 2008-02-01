@@ -232,7 +232,7 @@ public class MapViewerContainer implements ContainerInitializer {
     });
 
     // initialize photos list panel
-    final JComponent photoListContainer = new PhotoWithoutGPListContainer(
+    final JComponent photoListContainer = new PhotosWithoutCoordinatesContainer(
         albumModel).getContainer();
     photoListContainer.setVisible(false);
 
