@@ -2,6 +2,7 @@ package fr.umlv.IRPhoto.gui.model.album;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,27 +25,16 @@ import fr.umlv.IRPhoto.gui.model.photo.PhotoSortModel;
 import fr.umlv.IRPhoto.gui.model.photo.PhotoSortModelImpl;
 
 public class AlbumModelImpl implements AlbumModel {
-
   private static final int MAX_THREADS = 2;
-
   private final ArrayList<Album> albums;
-
   private Album currentAlbum;
-
   private Photo currentPhoto;
-
   private final ExecutorService executor;
-
   private final ArrayList<PhotoSelectionListener> photoSelectionListeners;
-
   private final ArrayList<PhotoUpdateListener> photoUpdateListeners;
-
   private final ArrayList<AlbumListener> albumListeners;
-
   private final ArrayList<AlbumSelectionListener> albumSelectionListeners;
-
   private final ArrayList<AlbumUpdateListener> albumUpdateListeners;
-
   private static MimetypesFileTypeMap mimeTypesFileTypeMap = new MimetypesFileTypeMap();
 
   public AlbumModelImpl() {
@@ -213,34 +203,31 @@ public class AlbumModelImpl implements AlbumModel {
   }
 
   private void crawle(File directory, final Album album) {
-
-    for (final File f : directory.listFiles()) {
-      if (f.isDirectory()) {
-        // Create a thread for each sub directory
-        executor.execute(new Runnable() {
-          @Override
-          public void run() {
-            crawle(f, album);
-          }
-        });
-      } else {
-        String mimeType = mimeTypesFileTypeMap.getContentType(f);
-        for (final String mime : ImageIO.getReaderMIMETypes()) {
-          if (mimeType.equals(mime)) {
-            try {
-              Photo photo = new Photo(f, album);
-              photo.setType(mimeType);
-              album.addPhoto(photo);
-              this.firePhotoAdded(album, photo);
-            } catch (FileNotFoundException e) {
-              System.err.println(e.getMessage());
+    if (directory.listFiles() != null)
+      for (final File f : directory.listFiles()) {
+        if (f.isDirectory()) {
+          // Create a thread for each sub directory
+          executor.execute(new Runnable() {
+            @Override
+            public void run() {
+              crawle(f, album);
             }
-
+          });
+        } else {
+          String mimeType = URLConnection.guessContentTypeFromName(f.getName());
+          for (final String mime : ImageIO.getReaderMIMETypes()) {
+            if (mimeType != null && mimeType.equals(mime)) {
+              try {
+                Photo photo = new Photo(f, album);
+                photo.setType(mimeType);
+                album.addPhoto(photo);
+                this.firePhotoAdded(album, photo);
+              } catch (FileNotFoundException e) {
+                System.err.println(e.getMessage());
+              }
+            }
           }
         }
       }
-    }
-
   }
-
 }
