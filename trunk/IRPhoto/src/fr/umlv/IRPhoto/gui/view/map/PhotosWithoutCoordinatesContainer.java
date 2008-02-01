@@ -2,8 +2,11 @@ package fr.umlv.IRPhoto.gui.view.map;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -57,6 +60,9 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
   // maximum number of threads
   private static final int MAX_THREADS = 2;
 
+  // album model
+  private final AlbumModel model;
+
   // main container
   private final JPanel container;
 
@@ -93,9 +99,39 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
 
     // initialize text fields panel
     final JPanel textFieldsPanel = new JPanel(null);
-    textFieldsPanel.setLayout(new BoxLayout(textFieldsPanel, BoxLayout.Y_AXIS));
-    final JTextField latitudeField = new JTextField();
-    final JTextField longitudeField = new JTextField();
+    textFieldsPanel.setLayout(new GridLayout(3, 1));
+    final JTextField latitudeField = new JTextField("latitude");
+    latitudeField.addFocusListener(new FocusListener() {
+      @Override
+      public void focusGained(FocusEvent e) {
+        if (latitudeField.getText().equals("latitude")) {
+          latitudeField.setText("");
+        }
+      }
+
+      @Override
+      public void focusLost(FocusEvent e) {
+        if (latitudeField.getText().equals("")) {
+          latitudeField.setText("latitude");
+        }
+      }
+    });
+    final JTextField longitudeField = new JTextField("longitude");
+    longitudeField.addFocusListener(new FocusListener() {
+      @Override
+      public void focusGained(FocusEvent e) {
+        if (longitudeField.getText().equals("longitude")) {
+          longitudeField.setText("");
+        }
+      }
+
+      @Override
+      public void focusLost(FocusEvent e) {
+        if (longitudeField.getText().equals("")) {
+          longitudeField.setText("longitude");
+        }
+      }
+    });
     final JButton submitButton = new JButton("OK", IconFactory
         .getIcon("globe-12x12.png"));
     submitButton.addActionListener(new ActionListener() {
@@ -107,9 +143,8 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
               .getText(), longitudeField.getText());
           if (g != null) {
             albumModel.updateGeoPosition(albumModel.getSelectedPhoto(), g);
-          } else {
-            longitudeField.setText("");
-            latitudeField.setText("");
+            longitudeField.setText("longitude");
+            latitudeField.setText("latitude");
           }
         }
 
@@ -128,17 +163,18 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
     albumModel.addAlbumListener(new AlbumListener() {
       @Override
       public void albumAdded(Album album) {
-        if (!executor.isShutdown()) {
-          executor.shutdownNow();
+        if (album.equals(albumModel.getCurrentAlbum())) {
+          shutdownAll();
+          photosListPanel.removeAll();
+          scrollPane.revalidate();
+          addPhotos(getPhotosWhitoutCoordinates(album.getPhotos()));
         }
-        photosListPanel.removeAll();
-        scrollPane.revalidate();
-        addPhotos(getPhotosWhitoutCoordinates(album.getPhotos()));
       }
 
       @Override
       public void albumRemoved(Album album) {
         if (album.equals(albumModel.getCurrentAlbum())) {
+          shutdownAll();
           photosListPanel.removeAll();
           scrollPane.revalidate();
         }
@@ -148,9 +184,7 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
     albumModel.addAlbumSelectionListener(new AlbumSelectionListener() {
       @Override
       public void albumSelected(Album album) {
-        if (!executor.isShutdown()) {
-          executor.shutdownNow();
-        }
+        shutdownAll();
         photosListPanel.removeAll();
         scrollPane.revalidate();
         addPhotos(getPhotosWhitoutCoordinates(album.getPhotos()));
@@ -170,7 +204,25 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
       }
 
     });
+    this.model = albumModel;
 
+  }
+
+  /**
+   * Shutdowns all running and waiting tasks.
+   */
+  private void shutdownAll() {
+    // shutdowns the current executor
+    if (executor != null && !executor.isTerminated()) {
+      executor.shutdownNow();
+    }
+    // hack to be sure that running tasks are terminated too. With this,
+    // unexpected displays are avoided.
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+      throw new AssertionError();
+    }
   }
 
   /**
@@ -181,6 +233,7 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
    */
   private void addPhoto(final Photo photo) {
     final JLabel label = new JLabel(new ImageIcon(photo.getScaledInstance()));
+    label.setBorder(GraphicalConstants.DEFAULT_THUMBNAIL_UNSELECTED_BORDER);
     label.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -189,6 +242,7 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
               .setBorder(GraphicalConstants.DEFAULT_THUMBNAIL_UNSELECTED_BORDER);
         }
         label.setBorder(GraphicalConstants.DEFAULT_THUMBNAIL_SELECTED_BORDER);
+        model.selectPhoto(photo);
       }
     });
     this.photosLabels.put(photo, label);

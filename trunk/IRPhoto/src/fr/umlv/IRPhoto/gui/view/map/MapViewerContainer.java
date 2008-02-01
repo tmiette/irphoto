@@ -225,7 +225,6 @@ public class MapViewerContainer implements ContainerInitializer {
 
       @Override
       public void mouseWheelMoved(MouseWheelEvent e) {
-        System.out.println("OK");
         // hide thumnail
         thumbnailLabel.setLocation(DEFAULT_THUMBNAIL_LOCATION);
       }
@@ -266,8 +265,8 @@ public class MapViewerContainer implements ContainerInitializer {
     // initialize main container
     this.container = new JLayeredPane();
     this.container.setLayout(new DefaultLayeredPaneLayoutManager());
-    this.container.add(thumbnailPanel, new Integer(2));
-    this.container.add(photosListPanel, new Integer(1));
+    this.container.add(photosListPanel, new Integer(2));
+    this.container.add(thumbnailPanel, new Integer(1));
     this.container.add(this.map, new Integer(0));
 
     // listen to albums selection
@@ -284,8 +283,10 @@ public class MapViewerContainer implements ContainerInitializer {
     albumModel.addAlbumListener(new AlbumListener() {
       @Override
       public void albumAdded(Album album) {
-        eraseAllPhotos();
-        drawAllPhotos(album.getPhotos());
+        if (album.equals(albumModel.getCurrentAlbum())) {
+          eraseAllPhotos();
+          drawAllPhotos(album.getPhotos());
+        }
       }
 
       @Override
@@ -302,7 +303,22 @@ public class MapViewerContainer implements ContainerInitializer {
       public void geopPositionUpdated(Photo photo,
           fr.umlv.IRPhoto.album.Photo.GeoPosition geo) {
         if (photo.getAlbum().equals(albumModel.getCurrentAlbum())) {
-          addPhoto(photo);
+          // if the photo is already drawn on the map
+          if (waypointsMap.containsValue(photo)) {
+            for (Entry<Waypoint, Photo> entry : waypointsMap.entrySet()) {
+              if (entry.getValue().equals(photo)) {
+                // changes its coordinates
+                entry.getKey().setPosition(
+                    new GeoPosition(photo.getGeoPosition().getLatitude(), photo
+                        .getGeoPosition().getLongitude()));
+                submitWaypointSet();
+                break;
+              }
+            }
+          } else {
+            // add the photo at the location
+            addPhoto(photo);
+          }
         }
       }
     });
