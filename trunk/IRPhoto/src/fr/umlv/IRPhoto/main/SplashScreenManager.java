@@ -1,4 +1,4 @@
-package main;
+package fr.umlv.IRPhoto.main;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
