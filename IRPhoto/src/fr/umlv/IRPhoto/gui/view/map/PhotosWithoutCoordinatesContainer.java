@@ -31,6 +31,7 @@ import fr.umlv.IRPhoto.album.Photo.GeoPosition;
 import fr.umlv.IRPhoto.gui.model.album.AlbumModel;
 import fr.umlv.IRPhoto.gui.model.album.listener.AlbumListener;
 import fr.umlv.IRPhoto.gui.model.album.listener.AlbumSelectionListener;
+import fr.umlv.IRPhoto.gui.model.album.listener.AlbumUpdateListener;
 import fr.umlv.IRPhoto.gui.model.album.listener.PhotoUpdateListener;
 import fr.umlv.IRPhoto.gui.view.ContainerInitializer;
 import fr.umlv.IRPhoto.util.GraphicalConstants;
@@ -68,6 +69,9 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
 
   // executor service
   private ExecutorService executor;
+
+  // executor service
+  private ExecutorService executor2;
 
   // map to store photos labels
   private final HashMap<Photo, JLabel> photosLabels;
@@ -180,6 +184,45 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
         }
       }
     });
+    albumModel.addAlbumUpdateListener(new AlbumUpdateListener() {
+      @Override
+      public void albumCleared(Album album) {
+        if (album.equals(albumModel.getSelectedAlbum())) {
+          shutdownAll();
+          photosListPanel.removeAll();
+          scrollPane.revalidate();
+        }
+      }
+
+      @Override
+      public void albumRenamed(Album album, String newName) {
+        // do nothing
+
+      }
+
+      @Override
+      public void photoAdded(Album album, final Photo photo) {
+        if (album.equals(albumModel.getSelectedAlbum())) {
+          if (photo.getGeoPosition() == null) {
+            if (executor2 == null || executor2.isShutdown()) {
+              executor2 = Executors.newFixedThreadPool(MAX_THREADS);
+            }
+            executor2.execute(new Runnable() {
+              @Override
+              public void run() {
+                addPhoto(photo);
+                SwingUtilities.invokeLater(new Runnable() {
+                  @Override
+                  public void run() {
+                    scrollPane.revalidate();
+                  }
+                });
+              }
+            });
+          }
+        }
+      }
+    });
     // listen to albums selections
     albumModel.addAlbumSelectionListener(new AlbumSelectionListener() {
       @Override
@@ -215,6 +258,9 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
     // shutdowns the current executor
     if (executor != null && !executor.isTerminated()) {
       executor.shutdownNow();
+    }
+    if (executor2 != null && !executor2.isTerminated()) {
+      executor2.shutdownNow();
     }
     // hack to be sure that running tasks are terminated too. With this,
     // unexpected displays are avoided.

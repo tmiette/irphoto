@@ -3,11 +3,6 @@ package main;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -26,11 +21,6 @@ import fr.umlv.IRPhoto.gui.view.MainContainer;
  * 
  */
 public class Main {
-
-  /**
-   * Logger name.
-   */
-  public static final String loggerName = "logger";
 
   /**
    * 
@@ -69,22 +59,6 @@ public class Main {
 
     // manages splash screen
     SplashScreenManager.start();
-
-    // this block configure the logger with handler and formatter
-    final Logger logger = Logger.getLogger(loggerName);
-    final FileHandler fh;
-    try {
-      fh = new FileHandler("IrPhotoLogFile.log", true);
-      logger.addHandler(fh);
-      logger.setLevel(Level.ALL);
-      SimpleFormatter formatter = new SimpleFormatter();
-      fh.setFormatter(formatter);
-      logger.log(Level.WARNING, "Logger started");
-    } catch (SecurityException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     // creates album model
     final AlbumModel model = new AlbumModelImpl();
