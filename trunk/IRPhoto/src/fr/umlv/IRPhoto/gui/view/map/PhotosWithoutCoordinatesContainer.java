@@ -163,7 +163,7 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
     albumModel.addAlbumListener(new AlbumListener() {
       @Override
       public void albumAdded(Album album) {
-        if (album.equals(albumModel.getCurrentAlbum())) {
+        if (album.equals(albumModel.getSelectedAlbum())) {
           shutdownAll();
           photosListPanel.removeAll();
           scrollPane.revalidate();
@@ -173,7 +173,7 @@ public class PhotosWithoutCoordinatesContainer implements ContainerInitializer {
 
       @Override
       public void albumRemoved(Album album) {
-        if (album.equals(albumModel.getCurrentAlbum())) {
+        if (album.equals(albumModel.getSelectedAlbum())) {
           shutdownAll();
           photosListPanel.removeAll();
           scrollPane.revalidate();

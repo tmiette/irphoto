@@ -282,7 +282,7 @@ public class MapViewerContainer implements ContainerInitializer {
     albumModel.addAlbumListener(new AlbumListener() {
       @Override
       public void albumAdded(Album album) {
-        if (album.equals(albumModel.getCurrentAlbum())) {
+        if (album.equals(albumModel.getSelectedAlbum())) {
           eraseAllPhotos();
           drawAllPhotos(album.getPhotos());
         }
@@ -290,7 +290,7 @@ public class MapViewerContainer implements ContainerInitializer {
 
       @Override
       public void albumRemoved(Album album) {
-        if (album.equals(albumModel.getCurrentAlbum())) {
+        if (album.equals(albumModel.getSelectedAlbum())) {
           eraseAllPhotos();
         }
       }
@@ -301,7 +301,7 @@ public class MapViewerContainer implements ContainerInitializer {
       @Override
       public void geopPositionUpdated(Photo photo,
           fr.umlv.IRPhoto.album.Photo.GeoPosition geo) {
-        if (photo.getAlbum().equals(albumModel.getCurrentAlbum())) {
+        if (photo.getAlbum().equals(albumModel.getSelectedAlbum())) {
           // if the photo is already drawn on the map
           if (waypointsMap.containsValue(photo)) {
             for (Entry<Waypoint, Photo> entry : waypointsMap.entrySet()) {
