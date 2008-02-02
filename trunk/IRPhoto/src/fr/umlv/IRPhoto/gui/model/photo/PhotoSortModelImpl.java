@@ -7,10 +7,39 @@ import java.util.List;
 import fr.umlv.IRPhoto.album.Album;
 import fr.umlv.IRPhoto.album.Photo;
 
+/**
+ * This class is a simple implementation of an photo sort model.
+ * 
+ * @author MIETTE Tom
+ * @author MOURET Sebastien
+ * 
+ */
 public class PhotoSortModelImpl implements PhotoSortModel {
 
+  /**
+   * Returns a photos list which names match to prefix expression.
+   * 
+   * @param prefix
+   *            the prefix expression.
+   * @return the list of photos.
+   */
+  private static List<Photo> getPhotoListMatching(Album album, String prefix) {
+    ArrayList<Photo> list = new ArrayList<Photo>();
+    for (Photo photo : album.getPhotos()) {
+      String name = photo.getName().toLowerCase();
+      if (name.startsWith(prefix.toLowerCase())) {
+        list.add(photo);
+      }
+    }
+    return list;
+  }
+
+  // listeners
   private final ArrayList<PhotoSortListener> listeners;
 
+  /**
+   * Default constructor.
+   */
   public PhotoSortModelImpl() {
     this.listeners = new ArrayList<PhotoSortListener>();
   }
@@ -20,9 +49,17 @@ public class PhotoSortModelImpl implements PhotoSortModel {
     this.listeners.add(listener);
   }
 
-  @Override
-  public void sortPhoto(Album album, Comparator<Photo> comparator) {
-    this.firePhotoSorted(album.getSortedPhotos(comparator));
+  /**
+   * This method notifies each listener when a list of photos is sorted or
+   * matched.
+   * 
+   * @param photos
+   *            the list of photos sorted or matched.
+   */
+  protected void firePhotoSorted(List<Photo> photos) {
+    for (PhotoSortListener listener : this.listeners) {
+      listener.photoSorted(photos);
+    }
   }
 
   @Override
@@ -37,28 +74,9 @@ public class PhotoSortModelImpl implements PhotoSortModel {
     }
   }
 
-  protected void firePhotoSorted(List<Photo> photos) {
-    for (PhotoSortListener listener : this.listeners) {
-      listener.photoSorted(photos);
-    }
-  }
-
-  /**
-   * Returns a photos list which name matches to prefix expression.
-   * 
-   * @param prefix
-   *            photo name to looking for
-   * @return photos list matching prefix name
-   */
-  private static List<Photo> getPhotoListMatching(Album album, String prefix) {
-    ArrayList<Photo> list = new ArrayList<Photo>();
-    for (Photo photo : album.getPhotos()) {
-      String name = photo.getName().toLowerCase();
-      if (name.startsWith(prefix.toLowerCase())) {
-        list.add(photo);
-      }
-    }
-    return list;
+  @Override
+  public void sortPhoto(Album album, Comparator<Photo> comparator) {
+    this.firePhotoSorted(album.getSortedPhotos(comparator));
   }
 
 }
