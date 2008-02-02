@@ -144,7 +144,8 @@ public class AlbumModelImpl implements AlbumModel {
                 album.addPhoto(photo);
                 this.firePhotoAdded(album, photo);
               } catch (FileNotFoundException e) {
-                System.err.println(e.getMessage());
+                // the photo file does not exists
+                System.err.println("Cannot load photo : " + e.getMessage());
               }
             }
           }

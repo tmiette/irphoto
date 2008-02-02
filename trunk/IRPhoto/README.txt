@@ -93,5 +93,9 @@ Known bugs
 
 The following section lists all known bugs of IRPhoto :
 
-	1. 
-	2.
+	1. If the path of a saved album or a saved photo is modified when the application
+	is closed, the album is still reloaded with "empty" pictures.
+	
+	2. The roll over miniature on map (JLabel with a photo icon) appears with its last 
+	icon on its default location (top center) when the collapse button is clicked the 
+	fist time.

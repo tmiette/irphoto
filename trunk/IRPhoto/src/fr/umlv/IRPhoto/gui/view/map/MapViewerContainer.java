@@ -9,6 +9,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -172,9 +174,25 @@ public class MapViewerContainer implements ContainerInitializer {
     // initialize thumb nail panel
     final JLabel thumbnailLabel = new JLabel();
     thumbnailLabel.setLocation(DEFAULT_THUMBNAIL_LOCATION);
-    final JPanel thumbnailPanel = new JPanel();
+    final JPanel thumbnailPanel = new JPanel() {
+      private static final long serialVersionUID = 2248964603112983554L;
+
+      @Override
+      public void validate() {
+        super.validate();
+        // hide thumbnail
+        thumbnailLabel.setIcon(null);
+      }
+    };
     thumbnailPanel.setOpaque(false);
     thumbnailPanel.add(thumbnailLabel);
+    thumbnailPanel.addComponentListener(new ComponentAdapter() {
+      @Override
+      public void componentResized(ComponentEvent e) {
+        // hide thumbnail
+        thumbnailLabel.setIcon(null);
+      }
+    });
 
     // initialize map viewer
     this.map = new IRPhotoJXMapKit().getMainMap();
