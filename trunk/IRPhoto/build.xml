@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project name="HMM 2000" default="all" basedir=".">
-	
+
 	<description>
             A software of photo albums.
     </description>
@@ -13,7 +13,8 @@
 	<property name="src" value="${basedir}/src" />
 	<property name="classes" value="${basedir}/classes" />
 	<property name="classpath" value="${classes}" />
-	<property name="javadocDirectory" value="${basedir}/docs/doc" />
+	<property name="javadocDirectory" value="${basedir}/docs/api" />
+	<property name="splashScreen" value="icons/splash.png" />
 
 	<target name="all" depends="jar">
 	</target>
@@ -21,19 +22,19 @@
 	<target name="javadoc">
 		<echo>Generating javadoc in ${javadocDirectory} ...</echo>
 		<mkdir dir="${javadocDirectory}" />
-		<javadoc sourcepath="${src}" destdir="${javadocDirectory}">
+		<javadoc linksource="false" sourcepath="${src}" destdir="${javadocDirectory}">
 		</javadoc>
 	</target>
 
 	<target name="compile">
 		<echo>Compiling sources...</echo>
-		<mkdir dir="${bin}" />
 		<mkdir dir="${classes}" />
-		<javac classpath="${lib}/swingx-2007_11_11.jar:${lib}/swingx-ws-2007_11_11.jar:${lib}/metadata-extractor-2.3.1:" srcdir="${src}" destdir="${classes}" />
+		<javac classpath="${lib}/swingx-2007_11_11.jar:${lib}/swingx-ws-2007_11_11.jar:${lib}/metadata-extractor-2.3.1.jar:" srcdir="${src}" destdir="${classes}" />
 	</target>
 
 	<target name="jar" depends="compile">
 		<echo>Creating jar archive...</echo>
+		<mkdir dir="${bin}" />
 		<jar destfile="${bin}/${project-name}.jar">
 			<fileset dir="${classes}">
 			</fileset>
@@ -42,7 +43,8 @@
 			</fileset>
 			<manifest>
 				<attribute name="MAIN-CLASS" value="fr.umlv.IRPhoto.main.Main" />
-				<attribute name="CLASS-PATH" value="${lib}/swingx-2007_11_11.jar ${lib}/swingx-ws-2007_11_11.jar ${lib}/metadata-extractor-2.3.1" />
+				<attribute name="CLASS-PATH" value="${lib}/swingx-2007_11_11.jar ${lib}/swingx-ws-2007_11_11.jar ${lib}/metadata-extractor-2.3.1.jar" />
+				<attribute name="SPLASHSCREEN-IMAGE" value="${splashScreen}" />
 				<attribute name="IMPLEMENTATION_VENDOR" value="${authors}" />
 				<attribute name="IMPLEMENTATION_VERSION" value="${version}" />
 			</manifest>
